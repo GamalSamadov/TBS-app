@@ -11,6 +11,5 @@ admin.site.register(CustomUser, UserModel)
 
 admin.site.register(Admin)
 admin.site.register(Ustoz)
-admin.site.register(Kurs)
-admin.site.register(Fan)
+admin.site.register(Hujra)
 admin.site.register(Mudarris)

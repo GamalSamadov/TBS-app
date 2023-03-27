@@ -1,0 +1,250 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+
+{% block page_heading %}
+  Ustoz {{ustoz.admin.username }} profili{% endblock page_heading %}
+
+{% block main_content %}
+ 
+  <div class="row">
+
+      <div class="col-lg-6">
+
+          <!-- Default Card Example -->
+          <div class="card mb-4">
+             
+              <div class="card-body">
+                <div class="d-flex flex-column align-items-center text-center">
+                    {% if ustoz.profil_surati %}
+                      <img src="{{ ustoz.profil_surati }}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
+                    {% else %}
+                      {% if ustoz.jins == 'Erkak' %}
+                        <img src="{% static "img/undraw_profile.svg" %}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
+                      {% elif ustoz.jins == 'Ayol' %}
+                        <img src="{% static "img/undraw_profile_1.svg" %}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
+                      {% endif %}
+                    {% endif %}
+                  <div class="mt-3">
+                    <h4>
+                      {% if ustoz.admin.first_name %}{{ ustoz.admin.first_name }}{% else %}Ism-familya{% endif %} {% if ustoz.admin.last_name %}{{ ustoz.admin.last_name }}{% else %}kiritilmagan{% endif %}
+                    </h4>
+                    <div class="btn-light btn-icon-split btn-sm">
+                      <span class="icon text-white-50">
+                        <i class="fa-solid fa-at">
+                          
+                        </i>
+                      </span>
+                      <span class='text'>{% if ustoz.admin.username %}{{ ustoz.admin.username }}{% else %}nomsiz{% endif %}</span>
+                    </div>
+                    
+                    {% comment %} <p class="text-muted font-size-sm">Staff</p> {% endcomment %}
+                    {% comment %} <button class="btn btn-primary">Follow</button>
+                    <button class="btn btn-outline-primary">Message</button> {% endcomment %}
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <!-- Basic Card Example -->
+          <div class="card shadow mb-4">
+              <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Ustoz haqida qo'shimcha ma'lumot</h6>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Oxirgi saytga kirish vaqti</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {% if ustoz.admin.last_login != None%}
+                      {{ ustoz.admin.last_login}}
+                    {% else %}
+                      Hali kirganicha yo'q!
+                    {% endif %}
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Saytga kiritilish vaqti</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {% if ustoz.admin.date_joined != None%}
+                      {{ ustoz.admin.date_joined}}
+                    {% else %}
+                      Muommo!
+                    {% endif %}
+                  </div>
+                </div>
+                <hr>
+              </div>
+          </div>
+
+      </div>
+
+    <div class="col-lg-6">
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Ism va familya</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if user.first_name %}{{ user.first_name }}{% else %}Nom{% endif %} {% if user.last_name %}{{ user.last_name }}{% else %}kiritilmagan{{ user.first_name }}{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">
+                Elektron pochta
+              </h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if ustoz.admin.email %}{{ ustoz.admin.email }}{% else %}Email kiritilmagan{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Parolga ishora</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if ustoz.password_hint %}{{ ustoz.password_hint }}{% else %}Parolgan ishora kiritilmagan{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Adres</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if ustoz.adres %}{{ ustoz.adres }}{% else %}Adres kiritilmagan{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Jins</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if ustoz.jins %}{{ ustoz.jins }}{% else %}Jins kiritilmagan{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-12">
+              <a class="btn btn-primary btn-icon-split" href="{% url 'ustoz_profil_tahrirlash' ustoz.admin.id %}">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-pencil"></i>
+                    
+                  </i>
+                </span>
+                <span class='text'>Tahrirlash</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+        
+      <div class="card shadow mb-4">
+        <!-- Card Header - Accordion -->
+        <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse"
+            role="button" aria-expanded="true" aria-controls="collapseCardExample">
+            <h6 class="m-0 font-weight-bold text-primary">Ustozga mansub malumotlar</h6>
+        </a>
+        <!-- Card Content - Collapse -->
+        <div class="collapse show" id="collapseCardExample">
+          <div class="col-xl-12 col-md-6 mb-10 py-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <a href="#">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Mudarrislar soni</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">0 ta</div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="text-gray-300">Ko'rish uchun bosing...</div>
+                            <!-- <i class="fas fa-dollar-sign fa-2x text-gray-300"></i> -->
+                            <i class="fa-solid fa-screen-users text-gray-300"></i>
+                        </div>
+                      </div>
+                    </a>
+                </div>
+            </div>
+          </div>
+
+          <div class="col-xl-12 col-md-6 mb-10 py-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <a href="#">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Talabalar soni</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">0 ta</div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="text-gray-300">Ko'rish uchun bosing...</div>
+                            <!-- <i class="fas fa-dollar-sign fa-2x text-gray-300"></i> -->
+                            <i class="fa-solid fa-screen-users text-gray-300"></i>
+                        </div>
+                      </div>
+                    </a>
+                </div>
+            </div>
+          </div>
+
+          <div class="col-xl-12 col-md-6 mb-10 py-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <a href="#">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Hujralar soni</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">0 ta</div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="text-gray-300">Ko'rish uchun bosing...</div>
+                            <!-- <i class="fas fa-dollar-sign fa-2x text-gray-300"></i> -->
+                            <i class="fa-solid fa-screen-users text-gray-300"></i>
+                        </div>
+                      </div>
+                    </a>
+                </div>
+            </div>
+          </div>
+
+          <div class="col-xl-12 col-md-6 mb-10 py-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <a href="#">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Fanlar soni</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">0 ta</div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="text-gray-300">Ko'rish uchun bosing...</div>
+                            <!-- <i class="fas fa-dollar-sign fa-2x text-gray-300"></i> -->
+                            <i class="fa-solid fa-screen-users text-gray-300"></i>
+                        </div>
+                      </div>
+                    </a>
+                </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock main_content %}

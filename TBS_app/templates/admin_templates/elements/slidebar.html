@@ -21,6 +21,26 @@
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Boshqaruv</span></a>
   </li>
+  
+  {% url 'ustozlar' as ustozlar %}
+  <li class="nav-item {% if request.path == ustozlar %} active {% endif %}">
+    <a class="nav-link" href="{% url 'ustozlar' %}">
+        <i class="fa-solid fa-chalkboard-user"></i>
+        <span>Ustozlar</span></a>
+  </li>
+  {% url 'hujralar' as hujralar %}
+  <li class="nav-item {% if request.path == hujralar %} active {% endif %}">
+    <a class="nav-link" href="{% url 'hujralar' %}">
+        <i class="fa-solid fa-school-flag"></i>
+        <span>Hujralar</span></a>
+  </li>
+
+  {% url 'kurslar' as kurslar %}
+  <li class="nav-item {% if request.path == kurslar %} active {% endif %}">
+    <a class="nav-link" href="{% url 'kurslar' %}">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <span>Kurslar</span></a>
+  </li>
 
   <!-- Divider -->
   <hr class="sidebar-divider">

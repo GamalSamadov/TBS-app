@@ -1,0 +1,26 @@
+.upload{
+  position: relative;
+  margin: auto;
+}
+
+.upload .round{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: #169cd6;
+  width: 42px;
+  height: 42px;
+  line-height: 39px;
+  border-radius: 50%;
+
+}
+
+.upload .round:hover{
+  background: #0e6f98;
+}
+
+#defaultBtn{
+  opacity: 0;
+
+}
+

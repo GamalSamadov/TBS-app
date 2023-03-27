@@ -1,0 +1,208 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+
+{% block page_heading %}
+  Ustoz {{ustoz.admin.username}} profilini tahrirlash
+{% endblock page_heading %}
+
+
+{% block main_content %}
+ 
+  <div class="row">
+    
+      
+      <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-body">
+              <form role="form" method="POST" action="{% url 'ustoz_profil_tahrirlash' ustoz.admin.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+                {% csrf_token %}
+                <div class="d-flex flex-column align-items-center text-center">
+                  <div class="upload">
+                    {% if ustoz.profil_surati %}
+                      <img src="{{ ustoz.profil_surati }}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
+                    {% else %}
+                      {% if ustoz.jins == 'Erkak' %}
+                          <img src="{% static "img/undraw_profile.svg" %}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
+                        {% elif ustoz.jins == 'Ayol' %}
+                          <img src="{% static "img/undraw_profile_1.svg" %}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
+                      {% endif %}
+                    {% endif %}
+                    <button class="round" id="customBtn" onclick="defaultBtnActive()" type="button">
+                      <i class="fa-solid fa-camera" style="color: #fff;"></i>
+                      <input type="file" name="profil_surati" accept="image/*" id="defaultBtn">
+                    </button>
+                  </div>
+                  <br>
+                  
+                  {% if ustoz.profil_surati %}
+                    <br>
+                    <a href="{% url 'ustoz_profil_suratni_uchirish' ustoz.admin.id %}" class="btn btn-danger btn-icon-split btn-sm">
+                      <span class="icon text-white-50">
+                        <i class="fas fa-trash"></i>
+                      </span>
+                      <span class="text">
+                        Suratni o'chirish
+                      </span>
+                    </a>
+                  {% endif %}
+                  <br>
+                  <hr>
+                </div>
+                
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0"><label for="email">Elektron pochta</label></h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <input type="email" class="form-control email" id="email" name='email' value="{{ ustoz.admin.email }}">
+                    <div class="in_feedback_email" style="display: none;">
+                    </div>
+                    <p class='text-sm text-success emailSuccessOutPut'></p>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0"><label for="username">Foydalanuvchi nomi</label></h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <input type="text" class="form-control" id="username" name='username' value='{{ustoz.admin.username}}'>
+                    <div class="in_feedback_username" style="display: none;">
+                    </div>
+                    <p class='text-sm text-success usernameSuccessOutPut'></p>
+                  </div>
+                </div>
+                <hr>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0"><label for="password">Parol</label></h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <input type="password" class="form-control" id="password" name='parol' placeholder="Diqqat! Faqat o'zgartirmoqchi bo'lsangiz bu yerga yozing!">
+                    <i class="fa-sharp fa-solid fa-eye" id="showPassword"></i>
+                    <i class="fa-solid fa-eye-slash" id="hidePassword" style="display:none"></i>
+                  </div>
+                </div>
+                <hr>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0"><label for="password_hint">Parolga ishora</label></h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <input type="text" class="form-control" id="password_hint" name='parolga_ishora' value="{{ustoz.parolga_ishora}}">
+                  </div>
+                </div>
+                <hr>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0"><label for="ism">Ism</label></h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <input type="text" class="form-control" id="ism" name='ism' value="{{ ustoz.admin.first_name }}">
+                  </div>
+                </div>
+                <hr>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0"><label for="familya">Familya</label></h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <input type="text" class="form-control" id="familya" name='familya' value="{{ ustoz.admin.last_name }}">
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0"><label for="adres">Adres</label></h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <input type="text" class="form-control" id="adres" name='adres' value="{{ ustoz.adres }}">
+                  </div>
+                </div>
+                <hr>
+                <br>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0"><label for="email">Jins</label></h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <select name="jins" id="jins-select" class="form-control">
+                      <option value="{{ ustoz.jins }}" selected>Diqqat! Alishtirsangiz ma'lumot o'zgaradi</option>
+                      <option value="Erkak">Erkak</option>
+                      <option value="Ayol">Ayol</option>
+                    </select>
+                  </div>
+                </div>
+                <hr>
+                <br>
+              
+              <div class="row">
+                <div class="col-sm-12">
+                  <button class="btn btn-success btn-icon-split" type="submit" id='save'>
+                    <span class="icon text-white-50">
+                      <i class="fa-sharp fa-solid fa-check"></i>
+                    </span>
+                    <span class='text'>Kiritish</span>
+                  </button>
+                  <a class="btn btn-light btn-icon-split" href="{% url 'ustoz_profil' ustoz.admin.id %}">
+                    <span class="icon text-white-50">
+                      <i class="fa-solid fa-arrow-left"></i>
+                    </span>
+                    <span class='text'>Ortga</span>
+                  </a>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+  
+            
+  </div>
+ 
+{% endblock main_content %}
+
+{% block custom_script %}
+  <script src="{% static 'js/admin-pic-change.js' %}"></script>
+  <script src="{% static 'js/check-email-and-username.js' %}"></script>
+{% endblock custom_script %}
+
+{% block custom_css %}
+  <link href="{% static 'css/admin-profile-tahrirlash.css' %}" rel="stylesheet">
+  <style>
+    form #showPassword {
+      cursor: pointer;
+      transition: all;
+      float: right;
+      right: 10px;
+      margin-left: -25px;
+      margin-top: -25px;
+      position: relative;
+      z-index: 2;
+    }
+
+    form #hidePassword {
+      cursor: pointer;
+      transition: all;
+      float: right;
+      right: 10px;
+      margin-left: -25px;
+      margin-top: -25px;
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+{% endblock custom_css %}
+
+{% block sweet_alerts %}
+  <!-- Sweet alerts -->
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'sweet_alert/saveForm.js' %}"></script>
+{% endblock sweet_alerts %}

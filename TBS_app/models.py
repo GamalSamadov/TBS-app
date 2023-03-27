@@ -15,50 +15,31 @@ class Admin(models.Model):
     id = models.AutoField(primary_key=True)
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     password_hint = models.CharField(max_length=50, null=True)
-    profile_pic = models.FileField(null=True, upload_to='admin/profile_pic/')
+    profile_pic = models.FileField(null=True, upload_to='admin/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
-
-    def delete_picture(self):
-        self.profile_pic.delete()
-        self.profile_pic = None
-        
 
 
 class Ustoz(models.Model):
     id = models.AutoField(primary_key=True)
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    address = models.TextField()
-    gender = models.CharField(max_length=50, null=True)
-    password_hint = models.CharField(max_length=50, null=True)
-    profile_pic = models.ImageField(
-        null=True)
+    adres = models.TextField(null=True)
+    jins = models.CharField(max_length=50, null=True)
+    parolga_ishora = models.CharField(max_length=50, null=True)
+    profil_surati = models.ImageField(
+        null=True)  
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
 
-class Kurs(models.Model):
+class Hujra(models.Model):
     id = models.AutoField(primary_key=True)
-    course_name = models.CharField(max_length=255)
+    ism = models.CharField(max_length=255)
+    adres = models.TextField()
+    ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    objects = models.Manager()
-
-    # def __str__(self):
-    #     return self.course_name
-
-
-class Fan(models.Model):
-    id = models.AutoField(primary_key=True)
-    subject_name = models.CharField(max_length=255)
-    # need to give defauult course
-    course_id = models.ForeignKey(
-        Kurs, on_delete=models.CASCADE, default=1)
-    ustoz_id = models.ForeignKey(Ustoz, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    end_date = models.DateTimeField(null=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
@@ -66,11 +47,14 @@ class Fan(models.Model):
 class Mudarris(models.Model):
     id = models.AutoField(primary_key=True)
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    gender = models.CharField(max_length=50)
-    profile_pic = models.FileField(null=True)
-    address = models.TextField()
-    course_id = models.ForeignKey(
-        Kurs, on_delete=models.CASCADE, default=1)
+    adres = models.TextField(null=True)
+    jins = models.CharField(max_length=50, null=True)
+    parolga_ishora = models.CharField(max_length=50, null=True)
+    profil_surati = models.ImageField(
+        null=True)  
+    pasport_surati = models.FileField(null=True)
+    hujra = models.ForeignKey(
+        Hujra, on_delete=models.CASCADE, default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -78,37 +62,108 @@ class Mudarris(models.Model):
 
 class Talaba(models.Model):
     id = models.AutoField(primary_key=True)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    gender = models.CharField(max_length=50)
-    profile_pic = models.FileField(null=True)
-    address = models.TextField()
-    course_id = models.ForeignKey(
-        Kurs, on_delete=models.DO_NOTHING, default=1)
+    ism = models.CharField(max_length=255)
+    familya = models.CharField(max_length=255)
+    jins = models.CharField(max_length=50)
+    profil_surati = models.FileField(null=True)
+    hujra = models.ForeignKey(
+        Hujra, on_delete=models.CASCADE, default=1)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
 
-class MudarrisKundalikBaho(models.Model):
+class FanUstozTalaba(models.Model):
+    id = models.AutoField(primary_key=True)
+    Ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE, null=True)
+    talaba = models.ManyToManyField(Talaba)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+
+class FanUstozMudarris(models.Model):
+    id = models.AutoField(primary_key=True)
+    ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE, null=True)
+    mudarris = models.ManyToManyField(Mudarris)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+
+class FanMudarrisTalaba(models.Model):
+    id = models.AutoField(primary_key=True)
+    mudarris = models.ForeignKey(Mudarris, on_delete=models.CASCADE, null=True)
+    talaba = models.ManyToManyField(Talaba)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+
+class KundalikBahoUstozTalaba(models.Model):
+    id = models.AutoField(primary_key=True)
+    ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE)
+    talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE)
+    baho = models.FloatField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+
+class KundalikBahoUstozMudarris(models.Model):
+    id = models.AutoField(primary_key=True)
+    ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE)
+    mudarris = models.ForeignKey(Mudarris, on_delete=models.CASCADE)
+    baho = models.FloatField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+
+class KundalikBahoMudarrisTalaba(models.Model):
     id = models.AutoField(primary_key=True)
     mudarris = models.ForeignKey(Mudarris, on_delete=models.CASCADE)
-    fan = models.ForeignKey(Fan, on_delete=models.CASCADE)
-    baho = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    objects = models.Manager()
-
-
-class TalabaKundalikBaho(models.Model):
-    id = models.AutoField(primary_key=True)
     talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE)
-    fan = models.ForeignKey(Fan, on_delete=models.CASCADE)
-    baho = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    baho = models.FloatField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
+
+class ImtihonBahoUstozTalaba(models.Model):
+    id = models.AutoField(primary_key=True)
+    ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE)
+    talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE)
+    ustozga_baho = models.FloatField(default=0)
+    umuniy_baho = models.FloatField(default=0)
+    izoh = models.TextField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+
+class ImtihonBahoUstozMudarris(models.Model):
+    id = models.AutoField(primary_key=True)
+    ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE)
+    mudarris = models.ForeignKey(Mudarris, on_delete=models.CASCADE)
+    ustozga_baho = models.FloatField(default=0)
+    umuniy_baho = models.FloatField(default=0)
+    izoh = models.TextField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
+
+
+class ImtihonBahoMudarrisTalaba(models.Model):
+    id = models.AutoField(primary_key=True)
+    mudarris = models.ForeignKey(Mudarris, on_delete=models.CASCADE)
+    talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE)
+    ustozga_baho = models.FloatField(default=0)
+    umuniy_baho = models.FloatField(default=0)
+    izoh = models.TextField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
 
 
 # Creating Django Signals
@@ -124,8 +179,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         if instance.user_type == 2:
             Ustoz.objects.create(admin=instance)
         if instance.user_type == 3:
-            Mudarris.objects.create(admin=instance, course_id=Kurs.objects.first(),
-                                    address="", profile_pic="", gender="")
+            Mudarris.objects.create(admin=instance)
 
 @ receiver(post_save, sender=CustomUser)
 def save_user_profile(sender, instance, **kwargs):
