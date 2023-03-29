@@ -17,7 +17,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <div class="d-flex flex-column align-items-center text-center">
-                  <div class="upload">
+                  <div class="upload mb-3">
                     {% if admin.admin.profile_pic %}
                       <img src="{{ admin.admin.profile_pic }}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
                     {% else %}
@@ -30,7 +30,7 @@
                   </div>
                   
                   {% if admin.admin.profile_pic %}
-                    <br>
+                  <div class='mb-5 mt-3'>
                     <a href="#myModal" class="btn btn-danger btn-icon-split btn-sm" data-toggle="modal">
                       <span class="icon text-white-50">
                         <i class="fas fa-trash"></i>
@@ -39,6 +39,7 @@
                         Suratni o'chirish
                       </span>
                     </a>
+                  </div>
 
 
                     <div id="myModal" class="modal fade">
@@ -64,7 +65,6 @@
                       </div>
                     </div>
                   {% endif %}
-                  <hr>
                 </div>
 
                 <div class="row mt-2">

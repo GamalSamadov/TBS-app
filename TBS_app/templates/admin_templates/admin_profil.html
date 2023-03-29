@@ -17,7 +17,11 @@
               <div class="card-body">
                 <div class="d-flex flex-column align-items-center text-center">
                     {% if admin.admin.profile_pic %}
-                      <img src="{{ admin.admin.profile_pic }}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
+                      <div class="image-container-profil">
+                        <div class="profil_surati rounded-circle img-thumbnail">
+                          <img src="{{ admin.admin.profile_pic }}" alt="Admin" class="" width="150">
+                        </div>
+                      </div>
                     {% else %}
                       <img src="{% static "img/undraw_profile.svg" %}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
                     {% endif %}
@@ -139,4 +143,18 @@
 
   </div>
 
+  <div class='popup-image-profil'>
+    <span>&times;</span>
+    <img src="{{ admin.admin.profile_pic }}">
+  </div>
+
 {% endblock main_content %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'css/profil-surati-show.css' %}">
+{% endblock custom_css %}
+
+{% block custom_script %}
+      <script src="{% static 'js/profil-surati-show.js' %}"></script>
+{% endblock custom_script %}
+
