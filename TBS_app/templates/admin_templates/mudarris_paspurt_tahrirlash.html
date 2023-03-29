@@ -2,44 +2,39 @@
 {% load static %}
 
 {% block page_heading %}
-  Ustoz {{ustoz.admin.first_name}} {{ustoz.admin.last_name}} profilini tahrirlash
+  Mudarris {{mudarris.admin.first_name}} {{mudarris.admin.last_name}} paspurtini tahrirlash
 {% endblock page_heading %}
 
 {% block main_content %}
  
-<form role="form" method="POST" action="{% url 'ustoz_profil_tahrirlash' ustoz.admin.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+
+<form role="form" method="POST" action="{% url 'mudarris_paspurt_tahrirlash' mudarris.admin.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
   {% csrf_token %}
   <div class="row">
-    
-      
+
       <div class="col-lg-6">
         <div class="card mb-4">
             <div class="card-body">
                 <div class="d-flex flex-column align-items-center text-center">
-                  <div class="upload">
-                    {% if ustoz.profil_surati %}
-                      <img src="{{ ustoz.profil_surati }}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
-                    {% else %}
-                      {% if ustoz.jins == 'Erkak' %}
-                          <img src="{% static "img/undraw_profile.svg" %}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
-                        {% elif ustoz.jins == 'Ayol' %}
-                          <img src="{% static "img/undraw_profile_1.svg" %}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
-                      {% endif %}
-                    {% endif %}
-                    <button class="round" id="customBtn" onclick="defaultBtnActive()" type="button">
-                      <i class="fa-solid fa-camera" style="color: #fff;"></i>
-                      <input type="file" name="profil_surati" accept="image/*" id="defaultBtn">
-                    </button>
+                  <div class="container pas-img">
+                    <input type="file" id="paspurt_surati" accept="image/*" hidden name='pasport_surati'>
+                    <div class="img-area" data-img="">
+                      <i class='bx bxs-cloud-upload icon'></i>
+                      <h3>Kurat kiritish</h3>
+                      <p>Suratning hajmi maksimum <span>2MB</span> bo'lishi kerak</p>
+                    </div>
+                    <div class="select-image"><i class="fa-solid fa-pen"></i>   Yangi so'rat kiritish</div>
+                    <br>
+                    <p class='text-warning'>Suratning hajmi maksimum <span>2MB</span> bo'lishi kerak</p>
                   </div>
-                  <br>
                   
-                  {% if ustoz.profil_surati %}
+                  {% if mudarris.pasport_surati %}
                     <a href="#myModal" class="btn btn-danger btn-icon-split btn-sm" data-toggle="modal">
                       <span class="icon text-white-50">
                         <i class="fas fa-trash"></i>
                       </span>
                       <span class="text">
-                        Suratni o'chirish
+                        Pasputr suratni o'chirish
                       </span>
                     </a>
 
@@ -51,7 +46,7 @@
                             <div class="icon-box">
                               <i class="fa-solid fa-trash"></i>
                             </div>						
-                            <h4 class="modal-title w-100">Chindan ham "{{ustoz.admin.first_name}} {{ustoz.admin.last_name}}" ustozning suratini o'chirmoqchimisiz?</h4>	
+                            <h4 class="modal-title w-100">Chindan ham "{{mudarris.admin.first_name}} {{mudarris.admin.last_name}}" mudarrisning paspurt suratini o'chirmoqchimisiz?</h4>	
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                           </div>
                           <div class="modal-body">
@@ -59,7 +54,7 @@
                           </div>
                           <div class="modal-footer justify-content-center">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
-                            <a href="{% url 'ustoz_profil_suratni_uchirish' ustoz.admin.id %}">
+                            <a href="{% url 'mudarris_paspurt_suratni_uchirish' mudarris.admin.id %}">
                               <button type="button" class="btn btn-danger">O'chirish</button>
                             </a>
                           </div>
@@ -68,124 +63,42 @@
                     </div>
 
                   {% endif %}
-                  <hr>
                 </div>
                 
-                <div class="row">
-                  <div class="col-sm-3">
-                    <h6 class="mb-0"><label for="email">Elektron pochta</label></h6>
-                  </div>
-                  <div class="col-sm-9 text-secondary">
-                    <input type="email" class="form-control email" id="email" name='email' value="{{ ustoz.admin.email }}">
-                    <div class="in_feedback_email" style="display: none;">
-                    </div>
-                    <p class='text-sm text-success emailSuccessOutPut'></p>
-                  </div>
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <h6 class="mb-0"><label for="username">Foydalanuvchi nomi</label></h6>
-                  </div>
-                  <div class="col-sm-9 text-secondary">
-                    <input type="text" class="form-control" id="username" name='username' value='{{ustoz.admin.username}}'>
-                    <div class="in_feedback_username" style="display: none;">
-                    </div>
-                    <p class='text-sm text-success usernameSuccessOutPut'></p>
-                  </div>
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <h6 class="mb-0"><label for="password">Parol</label></h6>
-                  </div>
-                  <div class="col-sm-9 text-secondary">
-                    <input type="password" class="form-control" id="password" name='parol' placeholder="Diqqat! Faqat o'zgartirmoqchi bo'lsangiz bu yerga yozing!">
-                    <i class="fa-sharp fa-solid fa-eye" id="showPassword"></i>
-                    <i class="fa-solid fa-eye-slash" id="hidePassword" style="display:none"></i>
-                  </div>
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <h6 class="mb-0"><label for="password_hint">Parolga ishora</label></h6>
-                  </div>
-                  <div class="col-sm-9 text-secondary">
-                    <input type="text" class="form-control" id="password_hint" name='parolga_ishora' value="{{ustoz.parolga_ishora}}">
-                  </div>
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <h6 class="mb-0"><label for="ism">Ism</label></h6>
-                  </div>
-                  <div class="col-sm-9 text-secondary">
-                    <input type="text" class="form-control" id="ism" name='ism' value="{{ ustoz.admin.first_name }}">
-                  </div>
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <h6 class="mb-0"><label for="familya">Familya</label></h6>
-                  </div>
-                  <div class="col-sm-9 text-secondary">
-                    <input type="text" class="form-control" id="familya" name='familya' value="{{ ustoz.admin.last_name }}">
-                  </div>
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <h6 class="mb-0"><label for="adres">Adres</label></h6>
-                  </div>
-                  <div class="col-sm-9 text-secondary">
-                    <textarea rows="4" cols="50" name='adres' id='adres' class='form-control'>{{ ustoz.adres }}</textarea>
-                  </div>
-                </div>
-                <hr>
-                <div class="row">
-                  <div class="col-sm-3">
-                    <h6 class="mb-0"><label for="email">Jins</label></h6>
-                  </div>
-                  <div class="col-sm-9 text-secondary">
-                    <select name="jins" id="jins-select" class="form-control">
-                      <option value="{{ ustoz.jins }}" selected>Diqqat! Alishtirsangiz ma'lumot o'zgaradi</option>
-                      <option value="Erkak">Erkak</option>
-                      <option value="Ayol">Ayol</option>
-                    </select>
-                  </div>
-                </div>
-                <hr>
-              
                 
-              </div>
+                
             </div>
-          </div>
-          
-          
-          
         </div>
-        <div class="row mb-5">
-          <div class="col-sm-12">
-            <button class="btn btn-success btn-icon-split" type="submit" id='save'>
-              <span class="icon text-white-50">
-                <i class="fa-sharp fa-solid fa-check"></i>
-              </span>
-              <span class='text'>Kiritish</span>
-            </button>
-            <a class="btn btn-light btn-icon-split" href="{% url 'ustoz_profil' ustoz.admin.id %}">
-              <span class="icon text-white-50">
-                <i class="fa-solid fa-arrow-left"></i>
-              </span>
-              <span class='text'>Ortga</span>
-            </a>
-          </div>
-        </div>
-    </form>
- 
+      </div>
+      
+      
+      
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <button class="btn btn-success btn-icon-split" type="submit" id='save'>
+        <span class="icon text-white-50">
+          <i class="fa-sharp fa-solid fa-check"></i>
+        </span>
+        <span class='text'>Kiritish</span>
+      </button>
+      <a class="btn btn-light btn-icon-split" href="{% url 'mudarris_profil' mudarris.admin.id %}">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-arrow-left"></i>
+        </span>
+        <span class='text'>Ortga</span>
+      </a>
+    </div>
+  </div>
+
+</form>
+       
+ <br>
 {% endblock main_content %}
 
 {% block custom_script %}
   <script src="{% static 'js/admin-pic-change.js' %}"></script>
+  <script src="{% static 'js/upload-pasport-img.js' %}"></script>
   <script>
 
     const usernameField = document.getElementById('username');
@@ -327,6 +240,8 @@
     }
   </style>
   <link rel="stylesheet" href="{% static 'css/delete-alert.css' %}">
+  <link rel="stylesheet" href="{% static 'css/upload-pasport-img.css' %}">
+
 {% endblock custom_css %}
 
 {% block sweet_alerts %}

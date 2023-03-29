@@ -1,23 +1,52 @@
 {% extends 'admin_templates/elements/base.html' %}
 {% load static %}
 {% block page_heading %}
-  Hujralar
+  Xujralar
 {% endblock page_heading %}
 
+{% block custom_css %}
+  <!-- Custom styles for this page -->
+  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+
+  <style>
+    #profile-pic:hover{
+      transform: scale(1.2);
+    }
+
+   
+  </style>
+  <link rel="stylesheet" href="{% static 'css/delete-alert.css' %}">
+{% endblock custom_css %}
+
+
 {% block main_content %}
+
+
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="mb-4">
+        <a href="{% url 'hujra_kiritish' %}" class="btn btn-primary btn-icon-split">
+          <span class="icon text-white-50">
+            <i class="fa-solid fa-plus"></i>
+          </span>
+          <span class="text">Xujra kiritish</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Barcha hujralar tablitsasi</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Barcha Xujralar tablitsasi</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <table class="table table-bzordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Hujraning ismi</th>
-                        <th>Hujraning manzili</th>
-                        <th>Kiritilgan sanasi</th>
-                        <th>Hujra ustozi</th>
+                        <th>Xujraning ismi</th>
+                        <th>Xujraning manzili</th>
+                        <th>Xujra ustozi</th>
                         <th>Mudarrislar soni</th>
                         <th>Talabalar soni</th>
                         <th>Amalyot</th>
@@ -25,30 +54,73 @@
                 </thead>
                 <tfoot>
                     <tr>
-                      <th>Hujraning ismi</th>
-                      <th>Hujraning manzili</th>
-                      <th>Kiritilgan sanasi</th>
-                      <th>Hujra ustozi</th>
+                      <th>Xujraning ismi</th>
+                      <th>Xujraning manzili</th>
+                      <th>Xujra ustozi</th>
                       <th>Mudarrislar soni</th>
                       <th>Talabalar soni</th>
                       <th>Amalyot</th>
                     </tr>
                 </tfoot>
                 <tbody>
+                  {% for hujra in hujralar %}
                     <tr>
-                        <td>Tiger Nixon</td>
-                        <td>System Architect System Architect System Architect</td>
-                        <td>Edinburgh</td>
-                        <td>61</td>
-                        <td>2011/04/25</td>
-                        <td>$320,800</td>
-                        <td>$320,800</td>
+                      <td><a href="{% url 'hujra_profil' hujra.id %}">{{ hujra.ism }}</a></td>
+                      <td>{{ hujra.adres }}</td>
+                      <td>   <a href="{% url 'ustoz_profil' hujra.ustoz.admin.id %}">{{ hujra.ustoz.admin.first_name }}{{ hujra.ustoz.admin.last_name }}</a></td>
+                   
+                      <td>0</td>
+                      <td>0</td>
+                      <td>
+                        <a href="{% url 'hujra_profil' hujra.id %}" class="btn btn-info btn-circle">
+                          <i class="fa-solid fa-address-card"></i>
+                        </a>
+                        <a href="#myModal" class="btn btn-danger btn-circle delete" data-toggle="modal">
+                          <i class="fa-sharp fa-solid fa-trash-can"></i>
+                        </a>
+                      </td>
                     </tr>
+
+                    <div id="myModal" class="modal fade">
+                      <div class="modal-dialog modal-confirm">
+                        <div class="modal-content">
+                          <div class="modal-header flex-column">
+                            <div class="icon-box">
+                              <i class="fa-solid fa-trash"></i>
+                            </div>						
+                            <h4 class="modal-title w-100">Chindan ham "{{ hujra.ism }}" xujrasini o'chirmoqchimisiz?</h4>	
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Agar chindan ham o'chirmoqchi bo'lsangiz "O'chirish" tugmasini bosing.</p>
+                          </div>
+                          <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
+                            <a href="{% url 'hujra_uchirish' hujra.id %}">
+                              <button type="button" class="btn btn-danger">O'chirish</button>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  
+                  {% empty %}
+                  <tr>
+                    <td><h3>Xujralar yo'q. <i class="fa-solid fa-face-frown"></i> Xujra kiriting. </h3></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  {% endfor %}
+
                 </tbody>
             </table>
         </div>
     </div>
   </div>
+  
 {% endblock main_content %}
 
 
@@ -61,8 +133,3 @@
   <!-- Page level custom scripts -->
   <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
 {% endblock custom_script %}
-
-{% block custom_css %}
-  <!-- Custom styles for this page -->
-  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
-{% endblock custom_css %}

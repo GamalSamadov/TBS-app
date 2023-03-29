@@ -1,7 +1,7 @@
 {% extends 'admin_templates/elements/base.html' %}
 {% load static %}
 {% block page_heading %}
-  Ustoz kiritish
+  Mudarris kiritish
 {% endblock page_heading %}
 
 {% block main_content %}
@@ -10,10 +10,10 @@
   <div class="col-lg-6">
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Ustoz kiritish</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Mudarris kiritish</h6>
       </div>
       <div class="card-body">
-        <form role="form" method="POST" action="{% url 'ustoz_kiritish' %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+        <form role="form" method="POST" action="{% url 'mudarris_kiritish' %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
           {% csrf_token %}
 
             <div class="row">
@@ -40,7 +40,6 @@
               </div>
             </div>
             <hr>
-            <br>
             <div class="row">
               <div class="col-sm-3">
                 <h6 class="mb-0"><label for="password">Parol</label></h6>
@@ -52,7 +51,6 @@
               </div>
             </div>
             <hr>
-            <br>
             <div class="row">
               <div class="col-sm-3">
                 <h6 class="mb-0"><label for="password_hint">Parolga ishora</label></h6>
@@ -62,7 +60,6 @@
               </div>
             </div>
             <hr>
-            <br>
             <div class="row">
               <div class="col-sm-3">
                 <h6 class="mb-0"><label for="ism">Ism</label></h6>
@@ -72,7 +69,6 @@
               </div>
             </div>
             <hr>
-            <br>
             <div class="row">
               <div class="col-sm-3">
                 <h6 class="mb-0"><label for="familya">Familya</label></h6>
@@ -87,11 +83,25 @@
                 <h6 class="mb-0"><label for="adres">Adres</label></h6>
               </div>
               <div class="col-sm-9 text-secondary">
-                <textarea rows="4" cols="50" name='adres' id='adres' class='form-control'></textarea>
+                <textarea rows="4" cols="50" name='adres' id='adres' class='form-control'>
+
+                </textarea>
               </div>
             </div>
             <hr>
-            <br>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0"><label for='ustoz'>Hujra</label></h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <select name="hujra" id="hujra" class='form-control'>
+                  {% for hujra in hujralar %}
+                    <option value="{{hujra.id}}">{{ hujra.ism }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <hr>
             <div class="row">
               <div class="col-sm-3">
                 <h6 class="mb-0"><label for="email">Jins</label></h6>
@@ -104,13 +114,21 @@
               </div>
             </div>
             <hr>
-            <br>
             <div class="row">
               <div class="col-sm-3">
-                <h6 class="mb-0"><label for="profil-surati">Profil Surati</label></h6>
+                <h6 class="mb-0"><label for="profil-surati">Profil surati</label></h6>
               </div>
               <div class="col-sm-9 text-secondary">
                 <input type="file" class="form-control" id="profil-surati" name='profil_surati'>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0"><label for="profil-surati">Pasport surati</label></h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="file" class="form-control" id="pasport-surati" name='pasport_surati'>
               </div>
             </div>
             <hr>
@@ -124,7 +142,7 @@
                 </span>
                 <span class='text'>Kiritish</span>
               </button>
-              <a class="btn btn-light btn-icon-split" href="{% url 'ustozlar' %}">
+              <a class="btn btn-light btn-icon-split" href="{% url 'mudarrislar' %}">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-arrow-left"></i>
                 </span>

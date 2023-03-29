@@ -1,0 +1,91 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+
+{% block page_heading %}
+"{{ hujra.ism }}" Xujrasi profilini tahrirlash
+{% endblock page_heading %}
+
+{% block main_content %}
+
+<form role="form" method="POST" action="{% url 'hujra_profil_tahrirlash' hujra.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+  {% csrf_token %}
+  <div class="row">
+    
+      
+      <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex flex-column align-items-center text-center">
+                  <img src="{% static "img/xujra.png" %}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
+                </div>
+                <br>
+                <hr>
+              
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0"><label for='ism'>Ism</label></h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <input type="text" name='ism' id='ism' value="{{ hujra.ism }}" class='form-control'>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0"><label for='adres'>Adres</label></h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <textarea rows="4" cols="50" name='adres' id='adres' class='form-control'>{{ hujra.adres }}</textarea>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0"><label for='ustoz'>Ustoz</label></h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <select name="ustoz" id="ustoz" class='form-control'>
+                        <option value="">{{ hujra.ustoz.admin.first_name }} {{hujra.ustoz.admin.last_name}} - Hozirgi ustoz</option>
+                        {% for ustoz in ustozlar %}
+                          {% if ustoz != hujra.ustoz %}
+                            <option value="{{ ustoz.id }}">{{ ustoz.admin.first_name }} {{ ustoz.admin.first_name }}</option>{% endif %}
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                  <hr>
+      
+           
+
+                </div>
+              </div>
+            </div>
+            
+            
+            
+          </div>
+          <div class="row">
+            <div class="col-sm-12">
+              <button class="btn btn-success btn-icon-split" type="submit" id='save'>
+                <span class="icon text-white-50">
+                  <i class="fa-sharp fa-solid fa-check"></i>
+                </span>
+                <span class='text'>Tahrirlash</span>
+              </button>
+              <a class="btn btn-light btn-icon-split" href="{% url 'hujra_profil' hujra.id %}">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-arrow-left"></i>
+                </span>
+                <span class='text'>Ortga</span>
+              </a>
+            </div>
+          </div>
+        </form>
+{% endblock main_content %}
+
+{% block sweet_alerts %}
+  <!-- Sweet alerts -->
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'sweet_alert/saveForm.js' %}"></script>
+{% endblock sweet_alerts %}

@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.conf import settings
+import os
 
 
 # Overriding the Default Django Auth User and adding One More Field (user_type)
@@ -27,7 +29,7 @@ class Ustoz(models.Model):
     adres = models.TextField(null=True)
     jins = models.CharField(max_length=50, null=True)
     parolga_ishora = models.CharField(max_length=50, null=True)
-    profil_surati = models.ImageField(
+    profil_surati = models.FileField(
         null=True)  
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -54,7 +56,7 @@ class Mudarris(models.Model):
         null=True)  
     pasport_surati = models.FileField(null=True)
     hujra = models.ForeignKey(
-        Hujra, on_delete=models.CASCADE, default=1)
+        Hujra, on_delete=models.CASCADE, default=1, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -67,7 +69,7 @@ class Talaba(models.Model):
     jins = models.CharField(max_length=50)
     profil_surati = models.FileField(null=True)
     hujra = models.ForeignKey(
-        Hujra, on_delete=models.CASCADE, default=1)
+        Hujra, on_delete=models.CASCADE, default=1, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -102,8 +104,7 @@ class FanMudarrisTalaba(models.Model):
 
 class KundalikBahoUstozTalaba(models.Model):
     id = models.AutoField(primary_key=True)
-    ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE)
-    talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE)
+    fan = models.ForeignKey(FanUstozTalaba, on_delete=models.CASCADE, null=True)
     baho = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -112,8 +113,7 @@ class KundalikBahoUstozTalaba(models.Model):
 
 class KundalikBahoUstozMudarris(models.Model):
     id = models.AutoField(primary_key=True)
-    ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE)
-    mudarris = models.ForeignKey(Mudarris, on_delete=models.CASCADE)
+    fan = models.ForeignKey(FanUstozMudarris, on_delete=models.CASCADE, null=True)
     baho = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -122,8 +122,7 @@ class KundalikBahoUstozMudarris(models.Model):
 
 class KundalikBahoMudarrisTalaba(models.Model):
     id = models.AutoField(primary_key=True)
-    mudarris = models.ForeignKey(Mudarris, on_delete=models.CASCADE)
-    talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE)
+    fan = models.ForeignKey(FanMudarrisTalaba, on_delete=models.CASCADE, null=True)
     baho = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -132,8 +131,7 @@ class KundalikBahoMudarrisTalaba(models.Model):
 
 class ImtihonBahoUstozTalaba(models.Model):
     id = models.AutoField(primary_key=True)
-    ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE)
-    talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE)
+    fan = models.ForeignKey(FanUstozTalaba, on_delete=models.CASCADE, null=True)
     ustozga_baho = models.FloatField(default=0)
     umuniy_baho = models.FloatField(default=0)
     izoh = models.TextField(max_length=255)
@@ -144,8 +142,7 @@ class ImtihonBahoUstozTalaba(models.Model):
 
 class ImtihonBahoUstozMudarris(models.Model):
     id = models.AutoField(primary_key=True)
-    ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE)
-    mudarris = models.ForeignKey(Mudarris, on_delete=models.CASCADE)
+    fan = models.ForeignKey(FanUstozMudarris, on_delete=models.CASCADE, null=True)
     ustozga_baho = models.FloatField(default=0)
     umuniy_baho = models.FloatField(default=0)
     izoh = models.TextField(max_length=255)
@@ -156,8 +153,7 @@ class ImtihonBahoUstozMudarris(models.Model):
 
 class ImtihonBahoMudarrisTalaba(models.Model):
     id = models.AutoField(primary_key=True)
-    mudarris = models.ForeignKey(Mudarris, on_delete=models.CASCADE)
-    talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE)
+    fan = models.ForeignKey(FanMudarrisTalaba, on_delete=models.CASCADE, null=True)
     ustozga_baho = models.FloatField(default=0)
     umuniy_baho = models.FloatField(default=0)
     izoh = models.TextField(max_length=255)
@@ -179,7 +175,7 @@ def create_user_profile(sender, instance, created, **kwargs):
         if instance.user_type == 2:
             Ustoz.objects.create(admin=instance)
         if instance.user_type == 3:
-            Mudarris.objects.create(admin=instance)
+            Mudarris.objects.create(admin=instance, hujra=Hujra.objects.first(), parolga_ishora='', jins='', profil_surati='', pasport_surati='')
 
 @ receiver(post_save, sender=CustomUser)
 def save_user_profile(sender, instance, **kwargs):

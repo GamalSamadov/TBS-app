@@ -1,0 +1,72 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+{% block page_heading %}
+  Xujra kiritish
+{% endblock page_heading %}
+
+{% block main_content %}
+
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Xujra kiritish</h6>
+      </div>
+      <div class="card-body">
+        <form role="form" method="POST" action="{% url 'hujra_kiritish' %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+          {% csrf_token %}
+
+            {% for field in form %}
+              <div class="row">
+                <div class="col-sm-3">
+                  <h6 class="mb-0">{{ field.label_tag }}</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                  {{ field }}                  
+                </div>
+              </div>
+              <hr>
+            {% endfor %}
+            
+            <br>
+          
+          <div class="row">
+            <div class="col-sm-12">
+              <button class="btn btn-success btn-icon-split" type="submit" id='save'>
+                <span class="icon text-white-50">
+                  <i class="fa-sharp fa-solid fa-check"></i>
+                </span>
+                <span class='text'>Kiritish</span>
+              </button>
+              <a class="btn btn-light btn-icon-split" href="{% url 'hujralar' %}">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-arrow-left"></i>
+                </span>
+                <span class='text'>Ortga</span>
+              </a>
+            </div>
+          </div>
+
+        </form>
+      </div>
+  </div>
+  </div>
+</div>
+
+{% endblock main_content %}
+
+
+{% block custom_script %}
+{% endblock custom_script %}
+
+{% block sweet_alerts %}
+  <!-- Sweet alerts -->
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'sweet_alert/addForm.js' %}"></script>
+{% endblock sweet_alerts %}
+
+{% block custom_css %}
+
+{% endblock custom_css %}
+

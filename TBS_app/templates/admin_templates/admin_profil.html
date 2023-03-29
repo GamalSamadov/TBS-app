@@ -16,14 +16,14 @@
              
               <div class="card-body">
                 <div class="d-flex flex-column align-items-center text-center">
-                    {% if admin.profile_pic %}
-                      <img src="{{ admin.profile_pic }}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
+                    {% if admin.admin.profile_pic %}
+                      <img src="{{ admin.admin.profile_pic }}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
                     {% else %}
                       <img src="{% static "img/undraw_profile.svg" %}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
                     {% endif %}
                   <div class="mt-3">
                     <h4>
-                      {% if user.first_name %}{{ user.first_name }}{% else %}Ism-familya{% endif %} {% if user.last_name %}{{ user.last_name }}{% else %}kiritilmagan{{ user.first_name }}{% endif %}
+                      {% if admin.first_name %}{{ admin.first_name }}{% else %}Ism-familya{% endif %} {% if admin.last_name %}{{ admin.last_name }}{% else %}kiritilmagan{{ admin.first_name }}{% endif %}
                     </h4>
                     <div class="btn-light btn-icon-split btn-sm">
                       <span class="icon text-white-50">
@@ -31,7 +31,7 @@
                           
                         </i>
                       </span>
-                      <span class='text'>{% if user.username %}{{ user.username }}{% else %}nomsiz{% endif %}</span>
+                      <span class='text'>{% if admin.username %}{{ admin.username }}{% else %}nomsiz{% endif %}</span>
                     </div>
                     
                     {% comment %} <p class="text-muted font-size-sm">Staff</p> {% endcomment %}
@@ -42,17 +42,47 @@
               </div>
           </div>
 
-          <!-- Basic Card Example -->
           <div class="card shadow mb-4">
-              <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Admin haqida qo'shimcha ma'lumot</h6>
-              </div>
+            <!-- Card Header - Accordion -->
+            <a href="#collapseCardExample1" class="d-block card-header py-3" data-toggle="collapse"
+                role="button" aria-expanded="true" aria-controls="collapseCardExample1">
+                <h6 class="m-0 font-weight-bold text-primary">Adminga mansub malumotlar</h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse show" id="collapseCardExample1">
               <div class="card-body">
-                  The styling for this basic card example is created by using default Bootstrap
-                  utility classes. By using utility classes, the style of the card component can be
-                  easily modified with no need for any custom CSS!
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Oxirgi saytga kirish vaqti</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {% if admin.last_login != None%}
+                      {{ admin.last_login}}
+                    {% else %}
+                      Hali kirganicha yo'q!
+                    {% endif %}
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Saytga kiritilish vaqti</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {% if admin.date_joined != None%}
+                      {{ admin.date_joined}}
+                    {% else %}
+                      Muommo!
+                    {% endif %}
+                  </div>
+                </div>
               </div>
+    
+              
+              
+            </div>
           </div>
+
 
       </div>
 
@@ -65,7 +95,7 @@
               <h6 class="mb-0">Ism va familya</h6>
             </div>
             <div class="col-sm-9 text-secondary">
-              {% if user.first_name %}{{ user.first_name }}{% else %}Ism-familya{% endif %} {% if user.last_name %}{{ user.last_name }}{% else %}kiritilmagan{{ user.first_name }}{% endif %}
+              {% if admin.first_name %}{{ admin.first_name }}{% else %}Ism-familya{% endif %} {% if admin.last_name %}{{ admin.last_name }}{% else %}kiritilmagan{{ admin.first_name }}{% endif %}
             </div>
           </div>
           <hr>
@@ -76,7 +106,7 @@
               </h6>
             </div>
             <div class="col-sm-9 text-secondary">
-              {% if user.email %}{{ user.email }}{% else %}Email kiritilmagan{% endif %}
+              {% if admin.email %}{{ admin.email }}{% else %}Email kiritilmagan{% endif %}
             </div>
           </div>
           <hr>
@@ -85,7 +115,7 @@
               <h6 class="mb-0">Parolga ishora</h6>
             </div>
             <div class="col-sm-9 text-secondary">
-              {% if admin.password_hint %}{{ admin.password_hint }}{% else %}Parolgan ishora kiritilmagan{% endif %}
+              {% if admin.admin.password_hint %}{{ admin.admin.password_hint }}{% else %}Parolgan ishora kiritilmagan{% endif %}
             </div>
           </div>
           <hr>

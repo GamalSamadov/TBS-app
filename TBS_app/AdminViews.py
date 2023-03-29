@@ -1,34 +1,30 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.core.files.storage import FileSystemStorage 
 from django.urls import reverse
 from validate_email import validate_email # To upload Profile Picture
 import json
-
+import os
 from .models import *
 from .forms import *
 
 
+# Asosiy
 def admin_asosiy(request):
-    user = CustomUser.objects.get(id=request.user.id)
-    admin = Admin.objects.get(admin=request.user.id)
+    admin = CustomUser.objects.get(id=request.user.id)
     context = {
-        'user' : user,
         'admin' : admin,
     }
     return render(request, 'admin_templates/asosiy.html', context)
 
 
+# Admin
 def admin_profil(request):
-    user = CustomUser.objects.get(id=request.user.id)
-    admin = Admin.objects.get(admin=request.user.id)
+    admin = CustomUser.objects.get(id=request.user.id)
     context = {
-        'user' : user,
         'admin' : admin,
     }
     return render(request, 'admin_templates/admin_profil.html', context)
@@ -37,62 +33,64 @@ def admin_profil(request):
 @require_http_methods(["GET", "POST"])
 def admin_profil_tahrirlash(request):
     if request.method == 'GET':
-        user = CustomUser.objects.get(id=request.user.id)
-        admin = Admin.objects.get(admin=request.user.id)
-        form = AdminProfileForm()
-        form.fields['username'].initial = user.username
-        form.fields['email'].initial = user.email
-        form.fields['first_name'].initial = user.first_name
-        form.fields['last_name'].initial = user.last_name
-        form.fields['password_hint'].initial = admin.password_hint
+        admin = CustomUser.objects.get(id=request.user.id)
         context = {
-            "user": user,
-            'form': form,
             'admin':admin,
         }
         return render(request, 'admin_templates/admin_profil_tahrirlash.html', context)
     
     if request.method == 'POST':
-        form = AdminProfileForm(request.POST, request.FILES)
-        if form.is_valid():
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            password = form.cleaned_data['password']
-            password_hint = form.cleaned_data['password_hint']
+        email =  request.POST.get('email')
+        username = request.POST.get('username')
+        parol = request.POST.get('parol')
+        parolga_ishora = request.POST.get('parolga_ishora')
+        ism = request.POST.get('ism')
+        familya = request.POST.get('familya')
 
+        try:
+            admin = Admin.objects.get(admin=request.user.id)
             if len(request.FILES) != 0:
                 profile_pic = request.FILES['profile_pic']
                 fs = FileSystemStorage()
+                if admin.profile_pic:
+                    appDir = os.path.dirname(os.path.abspath(__file__))
+                    directory = os.path.dirname(appDir)
+                    fs.delete(directory + str(admin.profile_pic))
                 filename = fs.save(profile_pic.name, profile_pic)
                 profile_pic_url = fs.url(filename)
             else:
                 profile_pic_url = None
-            try:
-                customuser = CustomUser.objects.get(id=request.user.id)
-                admin = Admin.objects.get(admin=request.user.id)
-                customuser.first_name = first_name
-                customuser.last_name = last_name
-                if admin.password_hint != None:
-                    admin.password_hint = password_hint
-                admin.password_hint = password_hint
-                if password != None and password != "":
-                    customuser.set_password(password)
-                if profile_pic_url != None:
-                    admin.profile_pic = profile_pic_url
-                customuser.save()
-                admin.save()
-                messages.success(request, "Admin profil muvaffaqiyatli yangilandi")
-                return redirect('admin_profil')
-            except:
-                messages.error(request, "Afsuski admin profil yangilanmadi")
-                return redirect('admin_profil')
-        else:
+                
+            customuser = CustomUser.objects.get(id=request.user.id)
+            customuser.first_name = ism
+            customuser.last_name = familya
+            if username != None and username != "":
+                customuser.username = username
+            if email != None and email != "":
+                customuser.email = email
+            if parol != None and parol != "":
+                customuser.set_password(parol)
+            
+            admin.password_hint = parolga_ishora
+            if profile_pic_url != None:
+                admin.profile_pic = profile_pic_url
+            customuser.save()
+            admin.save()
+            messages.success(request, "Admin profil muvaffaqiyatli yangilandi")
             return redirect('admin_profil')
+        except:
+            messages.error(request, "Afsuski admin profil yangilanmadi")
+            return redirect('admin_profil')   
 
 
 def admin_profil_suratni_uchirish(request):
     admin = Admin.objects.get(admin=request.user.id)
     try:
+        fs = FileSystemStorage()
+        if admin.profile_pic:
+            appDir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.dirname(appDir)
+            fs.delete(directory + str(admin.profile_pic))
         admin.profile_pic = None
         admin.save()    
         messages.success(request, "Admin profil surati muvaffaqiyatli o'chirildi")
@@ -102,12 +100,11 @@ def admin_profil_suratni_uchirish(request):
         return redirect('admin_profil')
 
 
+# Ustozlar
 def ustozlar(request):
-    user = CustomUser.objects.get(id=request.user.id)
-    admin = Admin.objects.get(admin=request.user.id)
+    admin = CustomUser.objects.get(id=request.user.id)
     ustozlar = Ustoz.objects.all()
     context = {
-        'user' : user,
         'admin' : admin,
         'ustozlar' : ustozlar
     }
@@ -117,11 +114,9 @@ def ustozlar(request):
 @require_http_methods(["GET", "POST"])
 def ustoz_kiritish(request):
     if request.method == 'GET':
-        user = CustomUser.objects.get(id=request.user.id)
-        admin = Admin.objects.get(admin=request.user.id)
+        admin = CustomUser.objects.get(id=request.user.id)
         form = UstozKiritishForm()
         context = {
-            'user' : user,
             'admin' : admin,
             'form' : form
         }
@@ -161,11 +156,9 @@ def ustoz_kiritish(request):
 
 
 def ustoz_profil(request, id):
-    user = CustomUser.objects.get(id=request.user.id)
-    admin = Admin.objects.get(admin=request.user.id)
+    admin = CustomUser.objects.get(id=request.user.id)
     ustoz = Ustoz.objects.get(admin=id)
     context = {
-        'user' : user,
         'admin' : admin,
         'ustoz' : ustoz,
 
@@ -176,11 +169,9 @@ def ustoz_profil(request, id):
 @require_http_methods(["GET", "POST"])
 def ustoz_profil_tahrirlash(request, id):
     if request.method == 'GET':
-        user = CustomUser.objects.get(id=request.user.id)
-        admin = Admin.objects.get(admin=request.user.id)
+        admin = CustomUser.objects.get(id=request.user.id)
         ustoz = Ustoz.objects.get(admin=id)
         context = {
-            'user' : user,
             'admin' : admin,
             'ustoz' : ustoz
         }
@@ -194,14 +185,6 @@ def ustoz_profil_tahrirlash(request, id):
         parolga_ishora = request.POST.get('parolga_ishora')
         adres = request.POST.get('adres')
         jins = request.POST.get('jins')
-
-        if len(request.FILES) != 0:
-            profil_surati = request.FILES['profil_surati']
-            fs = FileSystemStorage()
-            filename = fs.save(profil_surati.name, profil_surati)
-            profil_surati_url = fs.url(filename)
-        else:
-            profil_surati_url = None
         
         try:
             ustoz = Ustoz.objects.get(admin=id)
@@ -210,10 +193,25 @@ def ustoz_profil_tahrirlash(request, id):
             ustoz.admin.last_name = familya
             ustoz.admin.email = email
             ustoz.admin.username = username
+
             if parol != None and parol != "":
                 ustoz.admin.password = parol
+
+            if len(request.FILES) != 0:
+                profil_surati = request.FILES['profil_surati']
+                fs = FileSystemStorage()
+                if ustoz.profil_surati:
+                    appDir = os.path.dirname(os.path.abspath(__file__))
+                    directory = os.path.dirname(appDir)
+                    fs.delete(directory + str(ustoz.profil_surati))
+                filename = fs.save(profil_surati.name, profil_surati)
+                profil_surati_url = fs.url(filename)
+            else:
+                profil_surati_url = None
+
             if profil_surati_url != None:
                 ustoz.profil_surati = profil_surati_url
+
             ustoz.parolga_ishora = parolga_ishora
             ustoz.adres = adres
             ustoz.jins = jins
@@ -230,10 +228,18 @@ def ustoz_profil_tahrirlash(request, id):
 def ustoz_profil_suratni_uchirish(request, id):
     ustoz = Ustoz.objects.get(admin=id)
     try:
-        ustoz.profil_surati = None
-        ustoz.save()    
-        messages.success(request, "Ustoz profil surati muvaffaqiyatli o'chirildi")
-        return HttpResponseRedirect(reverse('ustoz_profil', kwargs={'id': id}))
+        if ustoz.profil_surati:
+            fs = FileSystemStorage()
+            appDir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.dirname(appDir)
+            fs.delete(directory + str(ustoz.profil_surati))
+            ustoz.profil_surati = None
+            ustoz.save()    
+            messages.success(request, "Ustoz profil surati muvaffaqiyatli o'chirildi")
+            return HttpResponseRedirect(reverse('ustoz_profil', kwargs={'id': id}))
+        else:
+            messages.error(request, "Uztozning surati yo'q. Avval ustozga surat kiriting...")
+            return HttpResponseRedirect(reverse('ustoz_profil', kwargs={'id': id}))
     except:
         messages.error(request, "Afsuski ustoz profil surati o'chirilmadi")
         return HttpResponseRedirect(reverse('ustoz_profil', kwargs={'id': id}))
@@ -242,6 +248,10 @@ def ustoz_profil_suratni_uchirish(request, id):
 def ustozni_uchirish(request, id):
     user = CustomUser.objects.get(id=id)
     try:
+        if user.ustoz.profil_surati:
+            appDir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.dirname(appDir)
+            os.remove(directory + str(user.ustoz.profil_surati))
         user.delete()
         messages.success(request, "Ustoz o\'chirildi.")
         return redirect('ustozlar')
@@ -250,50 +260,348 @@ def ustozni_uchirish(request, id):
         return redirect('ustozlar')
 
 
+# Hujralar
 def hujralar(request):
-    user = CustomUser.objects.get(id=request.user.id)
-    admin = Admin.objects.get(admin=request.user.id)
+    admin = CustomUser.objects.get(id=request.user.id)
+    hujralar = Hujra.objects.all()
     context = {
-        'user' : user,
         'admin' : admin,
+        'hujralar' : hujralar,
+
     }
     return render(request, 'admin_templates/hujralar.html', context)
 
 
-def kurslar(request):
-    user = CustomUser.objects.get(id=request.user.id)
-    admin = Admin.objects.get(admin=request.user.id)
+@require_http_methods(['GET', 'POST'])
+def hujra_kiritish(request):
+    if request.method == 'GET':
+        admin = CustomUser.objects.get(id=request.user.id)
+        form = HujraKiritishForm()
+        context = {
+            'admin' : admin,
+            'form' : form
+        }
+        return render(request, 'admin_templates/hujra_kiritish.html', context)
+    if request.method == 'POST':
+        form = HujraKiritishForm(request.POST)
+        if form.is_valid():
+            ism = form.cleaned_data['ism']
+            adres = form.cleaned_data['adres']
+            ustoz_id = form.cleaned_data['ustoz']
+            try:
+                ustoz = Ustoz.objects.get(admin=ustoz_id)
+                hujra = Hujra(ism=ism, adres=adres, ustoz=ustoz)
+                hujra.save()
+                messages.success(request, "Hujra muvaffaqiyatli kiritildi")
+                return redirect('hujralar')
+            except:
+                messages.error(request, "Afsuski ba'zi xatolar sababli hujra kiritilmadi...")
+                return redirect('hujralar')
+
+
+def hujra_profil(request, id):
+    admin = CustomUser.objects.get(id=request.user.id)
+    hujra = Hujra.objects.get(id=id)
     context = {
-        'user' : user,
         'admin' : admin,
+        'hujra' : hujra,
+
     }
-    return render(request, 'admin_templates/kurslar.html', context)
+    return render(request, 'admin_templates/hujra_profil.html', context)
 
 
-def ustozlar_kurs_profil(request, id):
-    ustoz = Ustoz.objects.filter()
-    user = CustomUser.objects.filter()
-    admin = Admin.objects.get(admin=request.user.id)
-    kurs = Kurs.objects.get(id=id)
+@require_http_methods(['GET', 'POST'])
+def hujra_profil_tahrirlash(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.get(id=request.user.id)
+        hujra = Hujra.objects.get(id=id)
+        ustozlar = Ustoz.objects.all()
+        context = {
+            'admin' : admin,
+            'hujra' : hujra,
+            'ustozlar' : ustozlar,
+        }
+        return render(request, 'admin_templates/hujra_profil_tahrirlash.html', context)
+    if request.method == 'POST':
+        ism =  request.POST.get('ism')
+        adres = request.POST.get('adres')
+        ustoz_id = request.POST.get('ustoz')
+        try:
+            hujra = Hujra.objects.get(id=id)
+            hujra.ism = ism
+            hujra.adres = adres
+            if ustoz_id != "":
+                ustoz = Ustoz.objects.get(id=ustoz_id)
+                hujra.ustoz = ustoz
+            hujra.save()
+            messages.success(request, "Hujra muvaffaqiyatli tahrirlandi")
+            return HttpResponseRedirect(reverse('hujra_profil', kwargs={'id': id}))
+        except:
+                messages.error(request, "Afsuski hujra tahrirlanmadi")
+                return HttpResponseRedirect(reverse('hujra_profil', kwargs={'id': id}))
+
+
+def hujra_uchirish(request, id):
+    hujra = Hujra.objects.get(id=id)
+    try:
+        hujra.delete()
+        messages.success(request, "Hujra o'chirildi.")
+        return redirect("hujralar")
+
+    except:
+        messages.error(request, "Hujrani o'chirishda xatolik ro'y berdi.")
+        return redirect("hujralar")
+
+
+# Mudarrislar
+def mudarrislar(request):
+    admin = CustomUser.objects.get(id=request.user.id)
+    mudarrislar = Mudarris.objects.all()
     context = {
-        'user' : user,
         'admin' : admin,
-        'kurs' : kurs,
+        'mudarrislar' : mudarrislar
     }
-    return render(request, 'admin_templates/ustoz_kurs_profil.html', context)
+    return render(request, 'admin_templates/mudarrislar.html', context)
 
 
+@require_http_methods(["GET", "POST"])
+def mudarris_kiritish(request):
+    if request.method == 'GET':
+        admin = CustomUser.objects.get(id=request.user.id)
+        hujralar = Hujra.objects.all()
+        context = {
+            'admin' : admin,
+            'hujralar' : hujralar,
+        }
+        return render(request, 'admin_templates/mudarris_kiritish.html', context)
+    if request.method == 'POST':
+        email =  request.POST.get('email')
+        username = request.POST.get('username')
+        parol = request.POST.get('parol')
+        parolga_ishora = request.POST.get('parolga_ishora')
+        ism = request.POST.get('ism')
+        familya = request.POST.get('familya')
+        adres = request.POST.get('adres')
+        jins = request.POST.get('jins')
+        hujra_id = request.POST.get('hujra')
+
+        if len(request.FILES) != 0:
+            profil_surati = request.FILES['profil_surati']
+            pasport_surati = request.FILES['pasport_surati']
+            fs = FileSystemStorage()
+            profile_filename = fs.save(profil_surati.name, profil_surati)
+            profil_surati_url = fs.url(profile_filename)
+            pasport_filename = fs.save(pasport_surati.name, pasport_surati)
+            pasport_surati_url = fs.url(pasport_filename)
+        else:
+            profil_surati_url = None
+            pasport_surati_url = None
+        # try:
+        hujra = Hujra.objects.get(id=hujra_id)
+        user = CustomUser.objects.create_user(username=username, password=parol, email=email, first_name=ism, last_name=familya, user_type=3)
+        user.mudarris.parolga_ishora = parolga_ishora
+        user.mudarris.adres = adres
+        user.mudarris.jins = jins
+        if profil_surati_url != None:
+            user.mudarris.profil_surati = profil_surati_url
+        if pasport_surati_url != None:
+            user.mudarris.pasport_surati = pasport_surati_url
+        user.mudarris.hujra = hujra
+        user.save()
+        messages.success(
+            request, "Mudarris kiritish muvaffaqiyatli amalga oshirildi :)")
+        return redirect('mudarrislar')
+        # except:
+        #     messages.error(
+        #         request, "Mudarris kiritish ba'zi muommolar uchun amalga oshirilmadi :(")
+        #     return redirect('mudarrislar')
+
+
+def mudarris_profil(request, id):
+    admin = CustomUser.objects.get(id=request.user.id)
+    mudarris = Mudarris.objects.get(admin=id)
+    context = {
+        'admin' : admin,
+        'mudarris' : mudarris,
+
+    }
+    return render(request, 'admin_templates/mudarris_profil.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def mudarris_profil_tahrirlash(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.get(id=request.user.id)
+        mudarris = Mudarris.objects.get(admin=id)
+        hujralar = Hujra.objects.all()
+        context = {
+            'admin' : admin,
+            'mudarris' : mudarris,
+            'hujralar' : hujralar,
+        }
+        return render(request, 'admin_templates/mudarris_profil_tahrirlash.html', context)
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        ism = request.POST.get('ism')
+        familya = request.POST.get('familya')
+        parol = request.POST.get('parol')
+        parolga_ishora = request.POST.get('parolga_ishora')
+        adres = request.POST.get('adres')
+        jins = request.POST.get('jins')
+        hujra_id = request.POST.get('hujra')
+        
+        try:
+            mudarris = Mudarris.objects.get(admin=id)
+            mudarris.admin.first_name = ism
+            mudarris.admin.last_name = familya
+            mudarris.admin.email = email
+            mudarris.admin.username = username
+
+            if parol != None and parol != "":
+                mudarris.admin.password = parol
+
+            if len(request.FILES) != 0:
+                profil_surati = request.FILES['profil_surati']
+                fs = FileSystemStorage()
+                if mudarris.profil_surati:
+                    appDir = os.path.dirname(os.path.abspath(__file__))
+                    directory = os.path.dirname(appDir)
+                    fs.delete(directory + str(mudarris.profil_surati))
+
+                profilFileName = fs.save(profil_surati.name, profil_surati)
+                profil_surati_url = fs.url(profilFileName)
+            else:
+                profil_surati_url = None
+
+            if profil_surati_url != None:
+                mudarris.profil_surati = profil_surati_url
+            
+            hujra = Hujra.objects.get(id=hujra_id)
+            mudarris.hujra = hujra
+
+            mudarris.parolga_ishora = parolga_ishora
+            mudarris.adres = adres
+
+            if jins != '':
+                mudarris.jins = jins
+
+            mudarris.save()
+
+            messages.success(request, "Mudarris profil muvaffaqiyatli yangilandi")
+            return HttpResponseRedirect(reverse('mudarris_profil', kwargs={'id': id}))
+        except:
+            messages.error(request, "Mudarris profilni yangilashda xato ro'y berdi :(")
+            return HttpResponseRedirect(reverse('mudarris_profil', kwargs={'id': id}))
+
+        
+def mudarris_profil_suratni_uchirish(request, id):
+    mudarris = Mudarris.objects.get(admin=id)
+    try:
+        if mudarris.profil_surati:
+            fs = FileSystemStorage()
+            appDir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.dirname(appDir)
+            fs.delete(directory + str(mudarris.profil_surati))
+            mudarris.profil_surati = None
+            mudarris.save()    
+            messages.success(request, "Mudarris profil surati muvaffaqiyatli o'chirildi")
+            return HttpResponseRedirect(reverse('mudarris_profil', kwargs={'id': id}))
+        else:
+            messages.error(request, "Mudarrisning surati yo'q. Avval mudarrisga profil suratini kiriting...")
+            return HttpResponseRedirect(reverse('mudarris_profil', kwargs={'id': id}))
+    except:
+        messages.error(request, "Afsuski mudarris profil surati o'chirilmadi")
+        return HttpResponseRedirect(reverse('mudarris_profil', kwargs={'id': id}))
+
+
+@require_http_methods(["GET", "POST"])
+def mudarris_paspurt_tahrirlash(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.get(id=request.user.id)
+        mudarris = Mudarris.objects.get(admin=id)
+        context = {
+        'admin' : admin,
+        'mudarris' : mudarris,
+        }
+        return render(request, 'admin_templates/mudarris_paspurt_tahrirlash.html', context)
+    if request.method == 'POST':
+        mudarris = Mudarris.objects.get(admin=id)
+        if len(request.FILES) != 0:
+            pasport_surati = request.FILES['pasport_surati']
+            fs = FileSystemStorage()
+            if mudarris.pasport_surati:
+                appDir = os.path.dirname(os.path.abspath(__file__))
+                directory = os.path.dirname(appDir)
+                fs.delete(directory + str(mudarris.pasport_surati))
+            profilFileName = fs.save(pasport_surati.name, pasport_surati)
+            paspurt_surati_url = fs.url(profilFileName)
+        else:
+            paspurt_surati_url = None
+        try:
+            if paspurt_surati_url != None:
+                mudarris.pasport_surati = paspurt_surati_url
+            mudarris.save()
+            messages.success(request, "Mudarris paspurti muvaffaqiyatli yangilandi")
+            return HttpResponseRedirect(reverse('mudarris_profil', kwargs={'id': id}))
+        except:
+            messages.error(request, "Mudarris paspurtini yangilashda xato ro'y berdi")
+            return HttpResponseRedirect(reverse('mudarris_profil', kwargs={'id': id}))
+
+
+def mudarris_pasport_suratni_uchirish(request, id):
+    mudarris = Mudarris.objects.get(admin=id)
+    try:
+        if mudarris.pasport_surati:
+            fs = FileSystemStorage()
+            appDir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.dirname(appDir)
+            fs.delete(directory + str(mudarris.pasport_surati))
+            mudarris.pasport_surati = None
+            mudarris.save()    
+            messages.success(request, "Mudarris pasport surati muvaffaqiyatli o'chirildi")
+            return HttpResponseRedirect(reverse('mudarris_profil', kwargs={'id': id}))
+        else:
+            messages.error(request, "Mudarrisning surati yo'q. Avval mudarrisning pasport suratini kiriting...")
+            return HttpResponseRedirect(reverse('mudarris_profil', kwargs={'id': id}))
+    except:
+        messages.error(request, "Afsuski mudarris pasport surati o'chirilmadi")
+        return HttpResponseRedirect(reverse('mudarris_profil', kwargs={'id': id}))
+
+
+def mudarrisni_uchirish(request, id):
+    user = CustomUser.objects.get(id=id)
+    try:
+        if user.mudarris.profil_surati:
+            appDir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.dirname(appDir)
+            os.remove(directory + str(user.mudarris.profil_surati))
+        if user.mudarris.paspurt_surati:
+            appDir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.dirname(appDir)
+            os.remove(directory + str(user.mudarris.paspurt_surati))
+        user.delete()
+        messages.success(request, "Mudarris o\'chirildi.")
+        return redirect('mudarrislar')
+    except:
+        messages.error(request, "Mudarrisni ba'zi sabablarga ko'ra o'chirib bo'lmadi.")
+        return redirect('mudarrislar')
+
+
+# Username ni tekshirish
 class UsernameTekshirish(View):
     def post(self, request):
         data = json.loads(request.body)
         username = data['username']
         if not str(username).isalnum():
             return JsonResponse({'username_error' : 'Nomi faqat harf va raqamdan iborat bo\'lishi kerak!'}, status=400)
-        if CustomUser.objects.filter(username=username).exists() and str(CustomUser.objects.filter(username=username).username) != str(username):
+        if CustomUser.objects.filter(username=username).exists():
             return JsonResponse({'username_error' : 'Bunday nom bazada mavjud. Boshqa nom yozing...'}, status=400)
-        return JsonResponse({'username_valid' : True})
+        else:
+            return JsonResponse({'username_valid' : True})
 
 
+# Emailni tekshirish
 class EmailTekshirish(View):
     def post(self, request):
         data = json.loads(request.body)
@@ -301,8 +609,7 @@ class EmailTekshirish(View):
 
         if not validate_email(email):
             return JsonResponse({'email_error' : 'Email to\'g\'ri emas!'}, status=400)
-        if CustomUser.objects.filter(email=email).exists() and str(CustomUser.objects.filter(email=email).email) != str(email):
-            return JsonResponse({'email_error' : 'Email mavjud. Boshqa email yozing...'}, status=400)
+        if CustomUser.objects.filter(email=email).exists():
+            return JsonResponse({'email_error' : 'Bunday email mavjud. Boshqa email yozing...'}, status=400)
         return JsonResponse({'email_valid' : True})
-
 

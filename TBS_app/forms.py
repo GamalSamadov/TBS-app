@@ -46,3 +46,15 @@ class UstozKiritishForm(forms.Form):
         attrs={"class": "form-control"}))
     profil_surati = forms.FileField(label="Profil surati", required=False, widget=forms.FileInput(
         attrs={"class": "form-control", 'name' : 'profil_surati',}))
+
+
+class HujraKiritishForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(HujraKiritishForm, self).__init__(*args, **kwargs)
+        self.fields['ustoz'].choices = [
+            (ustoz.id, ustoz.first_name + ' ' + ustoz.last_name) for ustoz in CustomUser.objects.filter(user_type=2)]
+    ism = forms.CharField(label='Hujra ismi', max_length=50, required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
+    adres = forms.CharField(label='Hujra adresi', max_length=255, widget=forms.Textarea(attrs={"class": "form-control", "rows":'4', "cols":'50'}))
+    ustoz = forms.ChoiceField(
+        label='Hujra ustozi', required=True, widget=forms.Select(attrs={'class': 'form-control'}))
+    
