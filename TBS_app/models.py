@@ -66,8 +66,10 @@ class Talaba(models.Model):
     id = models.AutoField(primary_key=True)
     ism = models.CharField(max_length=255)
     familya = models.CharField(max_length=255)
+    adres = models.TextField(null=True)
     jins = models.CharField(max_length=50)
     profil_surati = models.FileField(null=True)
+    pasport_surati = models.FileField(null=True)
     hujra = models.ForeignKey(
         Hujra, on_delete=models.CASCADE, default=1, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

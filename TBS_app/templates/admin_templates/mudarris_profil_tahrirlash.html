@@ -16,7 +16,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <div class="d-flex flex-column align-items-center text-center">
-                  <div class="upload">
+                  <div class="upload mb-3">
                     {% if mudarris.profil_surati %}
                       <img src="{{ mudarris.profil_surati }}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
                     {% else %}
@@ -31,10 +31,9 @@
                       <input type="file" name="profil_surati" accept="image/*" id="defaultBtn">
                     </button>
                   </div>
-                  <br>
                   
                   {% if mudarris.profil_surati %}
-                    <br>
+                  <div class='mb-5 mt-3'>
                     <a href="#myModal" class="btn btn-danger btn-icon-split btn-sm" data-toggle="modal">
                       <span class="icon text-white-50">
                         <i class="fas fa-trash"></i>
@@ -43,6 +42,7 @@
                         Suratni o'chirish
                       </span>
                     </a>
+                  </div>
 
 
                     <div id="myModal" class="modal fade">
@@ -52,7 +52,7 @@
                             <div class="icon-box">
                               <i class="fa-solid fa-trash"></i>
                             </div>						
-                            <h4 class="modal-title w-100">Chindan ham "{{mudarris.admin.first_name}} {{mudarris.admin.last_name}}" ustozning suratini o'chirmoqchimisiz?</h4>	
+                            <h4 class="modal-title w-100">Chindan ham "{{mudarris.admin.first_name}} {{mudarris.admin.last_name}}" mudarrisning suratini o'chirmoqchimisiz?</h4>	
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                           </div>
                           <div class="modal-body">
@@ -69,8 +69,6 @@
                     </div>
 
                   {% endif %}
-                  <br>
-                  <hr>
                 </div>
                 
                 <div class="row">

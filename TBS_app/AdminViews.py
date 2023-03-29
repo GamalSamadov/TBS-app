@@ -588,6 +588,217 @@ def mudarrisni_uchirish(request, id):
         return redirect('mudarrislar')
 
 
+# talabalar
+def talabalar(request):
+    admin = CustomUser.objects.get(id=request.user.id)
+    talabalar = Talaba.objects.all()
+    context = {
+        'admin' : admin,
+        'talabalar' : talabalar
+    }
+    return render(request, 'admin_templates/talabalar.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def talaba_kiritish(request):
+    if request.method == 'GET':
+        admin = CustomUser.objects.get(id=request.user.id)
+        hujralar = Hujra.objects.all()
+        context = {
+            'admin' : admin,
+            'hujralar' : hujralar,
+        }
+        return render(request, 'admin_templates/talaba_kiritish.html', context)
+    if request.method == 'POST':
+        ism = request.POST.get('ism')
+        familya = request.POST.get('familya')
+        adres = request.POST.get('adres')
+        jins = request.POST.get('jins')
+        hujra_id = request.POST.get('hujra')
+        try:
+            if len(request.FILES) != 0:
+                profil_surati = request.FILES['profil_surati']
+                pasport_surati = request.FILES['pasport_surati']
+                fs = FileSystemStorage()
+                profile_filename = fs.save(profil_surati.name, profil_surati)
+                profil_surati_url = fs.url(profile_filename)
+                pasport_filename = fs.save(pasport_surati.name, pasport_surati)
+                pasport_surati_url = fs.url(pasport_filename)
+            else:
+                profil_surati_url = None
+                pasport_surati_url = None
+        
+            hujra = Hujra.objects.get(id=hujra_id)
+            talaba = Talaba(ism=ism, familya=familya, adres=adres, jins=jins, profil_surati=profil_surati_url, pasport_surati=pasport_surati_url, hujra=hujra)
+            talaba.save()
+            messages.success(
+                request, "Talaba kiritish muvaffaqiyatli amalga oshirildi :)")
+            return redirect('talabalar')
+        except:
+            messages.error(
+                request, "Talaba kiritish ba'zi muommolar uchun amalga oshirilmadi :(")
+            return redirect('talabalar')
+
+
+def talaba_profil(request, id):
+    admin = CustomUser.objects.get(id=request.user.id)
+    talaba = Talaba.objects.get(id=id)
+    context = {
+        'admin' : admin,
+        'talaba' : talaba,
+
+    }
+    return render(request, 'admin_templates/talaba_profil.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def talaba_profil_tahrirlash(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.get(id=request.user.id)
+        talaba = Talaba.objects.get(id=id)
+        hujralar = Hujra.objects.all()
+        context = {
+            'admin' : admin,
+            'talaba' : talaba,
+            'hujralar' : hujralar,
+        }
+        return render(request, 'admin_templates/talaba_profil_tahrirlash.html', context)
+    if request.method == 'POST':
+        ism = request.POST.get('ism')
+        familya = request.POST.get('familya')
+        adres = request.POST.get('adres')
+        jins = request.POST.get('jins')
+        hujra_id = request.POST.get('hujra')
+        
+        try:
+            talaba = Talaba.objects.get(id=id)
+            talaba.ism = ism
+            talaba.familya = familya
+            if len(request.FILES) != 0:
+                profil_surati = request.FILES['profil_surati']
+                fs = FileSystemStorage()
+                if talaba.profil_surati:
+                    appDir = os.path.dirname(os.path.abspath(__file__))
+                    directory = os.path.dirname(appDir)
+                    fs.delete(directory + str(talaba.profil_surati))
+
+                profilFileName = fs.save(profil_surati.name, profil_surati)
+                profil_surati_url = fs.url(profilFileName)
+            else:
+                profil_surati_url = None
+
+            if profil_surati_url != None:
+                talaba.profil_surati = profil_surati_url
+            
+            hujra = Hujra.objects.get(id=hujra_id)
+            talaba.hujra = hujra
+            talaba.adres = adres
+
+            if jins != '':
+                talaba.jins = jins
+
+            talaba.save()
+
+            messages.success(request, "Talaba profil muvaffaqiyatli yangilandi")
+            return HttpResponseRedirect(reverse('talaba_profil', kwargs={'id': id}))
+        except:
+            messages.error(request, "Talaba profilni yangilashda xato ro'y berdi :(")
+            return HttpResponseRedirect(reverse('talaba_profil', kwargs={'id': id}))
+
+        
+def talaba_profil_suratni_uchirish(request, id):
+    talaba = Talaba.objects.get(id=id)
+    try:
+        if talaba.profil_surati:
+            fs = FileSystemStorage()
+            appDir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.dirname(appDir)
+            fs.delete(directory + str(talaba.profil_surati))
+            talaba.profil_surati = None
+            talaba.save()    
+            messages.success(request, "Talaba profil surati muvaffaqiyatli o'chirildi")
+            return HttpResponseRedirect(reverse('talaba_profil', kwargs={'id': id}))
+        else:
+            messages.error(request, "Mudarrisning surati yo'q. Avval mudarrisga profil suratini kiriting...")
+            return HttpResponseRedirect(reverse('talaba_profil', kwargs={'id': id}))
+    except:
+        messages.error(request, "Afsuski talaba profil surati o'chirilmadi")
+        return HttpResponseRedirect(reverse('talaba_profil', kwargs={'id': id}))
+
+
+@require_http_methods(["GET", "POST"])
+def talaba_paspurt_tahrirlash(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.get(id=request.user.id)
+        talaba = Talaba.objects.get(id=id)
+        context = {
+        'admin' : admin,
+        'talaba' : talaba,
+        }
+        return render(request, 'admin_templates/talaba_paspurt_tahrirlash.html', context)
+    if request.method == 'POST':
+        talaba = Talaba.objects.get(id=id)
+        if len(request.FILES) != 0:
+            pasport_surati = request.FILES['pasport_surati']
+            fs = FileSystemStorage()
+            if talaba.pasport_surati:
+                appDir = os.path.dirname(os.path.abspath(__file__))
+                directory = os.path.dirname(appDir)
+                fs.delete(directory + str(talaba.pasport_surati))
+            profilFileName = fs.save(pasport_surati.name, pasport_surati)
+            paspurt_surati_url = fs.url(profilFileName)
+        else:
+            paspurt_surati_url = None
+        try:
+            if paspurt_surati_url != None:
+                talaba.pasport_surati = paspurt_surati_url
+            talaba.save()
+            messages.success(request, "Talaba paspurti muvaffaqiyatli yangilandi")
+            return HttpResponseRedirect(reverse('talaba_profil', kwargs={'id': id}))
+        except:
+            messages.error(request, "Talaba paspurtini yangilashda xato ro'y berdi")
+            return HttpResponseRedirect(reverse('talaba_profil', kwargs={'id': id}))
+
+
+def talaba_pasport_suratni_uchirish(request, id):
+    talaba = Talaba.objects.get(id=id)
+    try:
+        if talaba.pasport_surati:
+            fs = FileSystemStorage()
+            appDir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.dirname(appDir)
+            fs.delete(directory + str(talaba.pasport_surati))
+            talaba.pasport_surati = None
+            talaba.save()    
+            messages.success(request, "Talaba pasport surati muvaffaqiyatli o'chirildi")
+            return HttpResponseRedirect(reverse('talaba_profil', kwargs={'id': id}))
+        else:
+            messages.error(request, "Talabaning surati yo'q. Avval talabaning pasport suratini kiriting...")
+            return HttpResponseRedirect(reverse('talaba_profil', kwargs={'id': id}))
+    except:
+        messages.error(request, "Afsuski talaba pasport surati o'chirilmadi")
+        return HttpResponseRedirect(reverse('talaba_profil', kwargs={'id': id}))
+
+
+def talabani_uchirish(request, id):
+    talaba = Talaba.objects.get(id=id)
+    try:
+        if talaba.profil_surati:
+            appDir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.dirname(appDir)
+            os.remove(directory + str(talaba.profil_surati))
+        if talaba.paspurt_surati:
+            appDir = os.path.dirname(os.path.abspath(__file__))
+            directory = os.path.dirname(appDir)
+            os.remove(directory + str(talaba.paspurt_surati))
+        talaba.delete()
+        messages.success(request, "Talaba o\'chirildi.")
+        return redirect('talabalar')
+    except:
+        messages.error(request, "Talabani ba'zi sabablarga ko'ra o'chirib bo'lmadi.")
+        return redirect('talabalar')
+
+
 # Username ni tekshirish
 class UsernameTekshirish(View):
     def post(self, request):

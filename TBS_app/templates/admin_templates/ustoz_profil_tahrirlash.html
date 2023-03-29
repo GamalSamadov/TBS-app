@@ -16,7 +16,7 @@
         <div class="card mb-4">
             <div class="card-body">
                 <div class="d-flex flex-column align-items-center text-center">
-                  <div class="upload">
+                  <div class="upload mb-3">
                     {% if ustoz.profil_surati %}
                       <img src="{{ ustoz.profil_surati }}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
                     {% else %}
@@ -31,17 +31,18 @@
                       <input type="file" name="profil_surati" accept="image/*" id="defaultBtn">
                     </button>
                   </div>
-                  <br>
                   
                   {% if ustoz.profil_surati %}
-                    <a href="#myModal" class="btn btn-danger btn-icon-split btn-sm" data-toggle="modal">
-                      <span class="icon text-white-50">
-                        <i class="fas fa-trash"></i>
-                      </span>
-                      <span class="text">
-                        Suratni o'chirish
-                      </span>
-                    </a>
+                    <div class='mb-5 mt-3'>
+                      <a href="#myModal" class="btn btn-danger btn-icon-split btn-sm" data-toggle="modal">
+                        <span class="icon text-white-50">
+                          <i class="fas fa-trash"></i>
+                        </span>
+                        <span class="text">
+                          Suratni o'chirish
+                        </span>
+                      </a>
+                    </div>
 
 
                     <div id="myModal" class="modal fade">
@@ -68,7 +69,6 @@
                     </div>
 
                   {% endif %}
-                  <hr>
                 </div>
                 
                 <div class="row">
@@ -153,10 +153,7 @@
                       <option value="Ayol">Ayol</option>
                     </select>
                   </div>
-                </div>
-                <hr>
-              
-                
+                </div>              
               </div>
             </div>
           </div>

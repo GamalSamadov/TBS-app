@@ -34,7 +34,6 @@ urlpatterns = [
     path('xujralar/<int:id>/tahrirlash/', AdminViews.hujra_profil_tahrirlash, name="hujra_profil_tahrirlash"),
     path('xujralar/<int:id>/o\'chirish/', AdminViews.hujra_uchirish, name="hujra_uchirish"),
 
-
     path('mudarrislar/', AdminViews.mudarrislar, name="mudarrislar"),
     path('mudarrislar/kiritish/', AdminViews.mudarris_kiritish, name="mudarris_kiritish"),
     path('mudarrislar/<int:id>/', AdminViews.mudarris_profil, name="mudarris_profil"),
@@ -43,6 +42,15 @@ urlpatterns = [
     path('mudarrislar/<int:id>/o\'chirish/', AdminViews.mudarrisni_uchirish, name="mudarrisni_uchirish"),
     path('mudarrislar/<int:id>/tahrirlash/profil_so\'ratni_o\'chirish/', AdminViews.mudarris_profil_suratni_uchirish, name="mudarris_profil_suratni_uchirish"),
     path('mudarrislar/<int:id>/tahrirlash/paspurt_so\'ratni_o\'chirish/', AdminViews.mudarris_pasport_suratni_uchirish, name="mudarris_paspurt_suratni_uchirish"),
+  
+    path('talabalar/', AdminViews.talabalar, name="talabalar"),
+    path('talabalar/kiritish/', AdminViews.talaba_kiritish, name="talaba_kiritish"),
+    path('talabalar/<int:id>/', AdminViews.talaba_profil, name="talaba_profil"),
+    path('talabalar/<int:id>/tahrirlash/', AdminViews.talaba_profil_tahrirlash, name="talaba_profil_tahrirlash"),
+    path('talabalar/<int:id>/tahrirlash/paspurt/', AdminViews.talaba_paspurt_tahrirlash, name="talaba_paspurt_tahrirlash"),
+    path('talabalar/<int:id>/o\'chirish/', AdminViews.talabani_uchirish, name="talabani_uchirish"),
+    path('talabalar/<int:id>/tahrirlash/profil_so\'ratni_o\'chirish/', AdminViews.talaba_profil_suratni_uchirish, name="talaba_profil_suratni_uchirish"),
+    path('talabalar/<int:id>/tahrirlash/paspurt_so\'ratni_o\'chirish/', AdminViews.talaba_pasport_suratni_uchirish, name="talaba_pasport_suratni_uchirish"),
 
   
     # # Ustoz Urls

@@ -2,13 +2,13 @@
 {% load static %}
 
 {% block page_heading %}
-  Mudarris {{mudarris.admin.first_name}} {{mudarris.admin.last_name}} paspurtini tahrirlash
+  Talaba {{ talaba.ism }} {{ talaba.familya }} paspurtini tahrirlash
 {% endblock page_heading %}
 
 {% block main_content %}
  
 
-<form role="form" method="POST" action="{% url 'mudarris_paspurt_tahrirlash' mudarris.admin.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+<form role="form" method="POST" action="{% url 'talaba_paspurt_tahrirlash' talaba.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
   {% csrf_token %}
   <div class="row">
 
@@ -18,9 +18,9 @@
                 <div class="d-flex flex-column align-items-center text-center">
                   <div class="container pas-img">
                     <input type="file" id="paspurt_surati" accept="image/*" hidden name='pasport_surati'>
-                    {% if mudarris.pasport_surati %}
+                    {% if talaba.pasport_surati %}
                       <div class="image-container img-area">
-                        <div class="pasport_surati"><img src="{{ mudarris.pasport_surati }}" alt=""></div>
+                        <div class="pasport_surati"><img src="{{ talaba.pasport_surati }}" alt=""></div>
                       </div>
                     {% else %}
                       <div class="img-area" data-img="">
@@ -34,13 +34,13 @@
                     <p class='text-warning'>Suratning hajmi maksimum <span>2MB</span> bo'lishi kerak</p>
                   </div>
                   
-                  {% if mudarris.pasport_surati %}
+                  {% if talaba.pasport_surati %}
                     <a href="#myModal" class="btn btn-danger btn-icon-split btn-sm" data-toggle="modal">
                       <span class="icon text-white-50">
                         <i class="fas fa-trash"></i>
                       </span>
                       <span class="text">
-                        Pasputr suratni o'chirish
+                        Paspurt suratni o'chirish
                       </span>
                     </a>
 
@@ -52,7 +52,7 @@
                             <div class="icon-box">
                               <i class="fa-solid fa-trash"></i>
                             </div>						
-                            <h4 class="modal-title w-100">Chindan ham "{{mudarris.admin.first_name}} {{mudarris.admin.last_name}}" mudarrisning paspurt suratini o'chirmoqchimisiz?</h4>	
+                            <h4 class="modal-title w-100">Chindan ham "{{ talaba.ism }} {{ talaba.familya }}" talabaning paspurt suratini o'chirmoqchimisiz?</h4>	
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                           </div>
                           <div class="modal-body">
@@ -60,7 +60,7 @@
                           </div>
                           <div class="modal-footer justify-content-center">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
-                            <a href="{% url 'mudarris_paspurt_suratni_uchirish' mudarris.admin.id %}">
+                            <a href="{% url 'talaba_pasport_suratni_uchirish' talaba.id %}">
                               <button type="button" class="btn btn-danger">O'chirish</button>
                             </a>
                           </div>
@@ -80,7 +80,7 @@
       
       
   </div>
-  <div class="row mb-3">
+  <div class="row mb-5">
     <div class="col-sm-12">
       <button class="btn btn-success btn-icon-split" type="submit" id='save'>
         <span class="icon text-white-50">
@@ -88,7 +88,7 @@
         </span>
         <span class='text'>Kiritish</span>
       </button>
-      <a class="btn btn-light btn-icon-split" href="{% url 'mudarris_profil' mudarris.admin.id %}">
+      <a class="btn btn-light btn-icon-split" href="{% url 'talaba_profil' talaba.id %}">
         <span class="icon text-white-50">
           <i class="fa-solid fa-arrow-left"></i>
         </span>
@@ -98,7 +98,7 @@
   </div>
 
 </form>
-
+    
 {% comment %} Paspurt show {% endcomment %}
 {% if mudarris.pasport_surati %}
 <div class='popup-image'>
@@ -107,11 +107,10 @@
 </div>
 {% endif %}
 
-       
 {% endblock main_content %}
 
 {% block custom_script %}
-  <script src="{% static 'js/upload-pasport-img.js' %}"></script> 
+  <script src="{% static 'js/upload-pasport-img.js' %}"></script>
   <script src="{% static 'js/paspurt-surati-show.js' %}"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>

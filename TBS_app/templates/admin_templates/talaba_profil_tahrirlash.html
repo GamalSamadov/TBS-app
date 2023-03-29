@@ -1,0 +1,171 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+
+{% block page_heading %}
+  Talaba "{{ talaba.ism }} {{ talaba.familya }}"" profilini tahrirlash
+{% endblock page_heading %}
+
+{% block main_content %}
+ 
+
+  <form role="form" method="POST" action="{% url 'talaba_profil_tahrirlash' talaba.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+    {% csrf_token %}
+    <div class="row">
+    
+        <div class="col-lg-6">
+          <div class="card mb-4">
+              <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                    <div class="upload mb-3">
+                      {% if talaba.profil_surati %}
+                        <img src="{{ talaba.profil_surati }}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
+                      {% else %}
+                        {% if talaba.jins == 'Erkak' %}
+                            <img src="{% static "img/undraw_profile.svg" %}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
+                          {% elif talaba.jins == 'Ayol' %}
+                            <img src="{% static "img/undraw_profile_1.svg" %}" alt="Admin" class="rounded-circle img-thumbnail img" width="150" id='img'>
+                        {% endif %}
+                      {% endif %}
+                      <button class="round" id="customBtn" onclick="defaultBtnActive()" type="button">
+                        <i class="fa-solid fa-camera" style="color: #fff;"></i>
+                        <input type="file" name="profil_surati" accept="image/*" id="defaultBtn">
+                      </button>
+                    </div>
+                    
+                    {% if talaba.profil_surati %}
+                    <div class='mb-5 mt-3'>
+                      <a href="#myModal" class="btn btn-danger btn-icon-split btn-sm" data-toggle="modal">
+                        <span class="icon text-white-50">
+                          <i class="fas fa-trash"></i>
+                        </span>
+                        <span class="text">
+                          Suratni o'chirish
+                        </span>
+                      </a>
+                    </div>
+
+
+                      <div id="myModal" class="modal fade">
+                        <div class="modal-dialog modal-confirm">
+                          <div class="modal-content">
+                            <div class="modal-header flex-column">
+                              <div class="icon-box">
+                                <i class="fa-solid fa-trash"></i>
+                              </div>						
+                              <h4 class="modal-title w-100">Chindan ham "{{ talaba.ism }} {{ talaba.familya }}" talabaning suratini o'chirmoqchimisiz?</h4>	
+                                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                              <p>Agar chindan ham o'chirmoqchi bo'lsangiz "O'chirish" tugmasini bosing.</p>
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
+                              <a href="{% url 'talaba_profil_suratni_uchirish' talaba.id %}">
+                                <button type="button" class="btn btn-danger">O'chirish</button>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    {% endif %}
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0"><label for="ism">Ism</label></h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <input type="text" class="form-control" id="ism" name='ism' value="{{ talaba.ism }}">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0"><label for="familya">Familya</label></h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <input type="text" class="form-control" id="familya" name='familya' value="{{ talaba.familya }}">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0"><label for="adres">Adres</label></h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <textarea rows="4" cols="50" name='adres' id='adres' class='form-control'>{{ talaba.adres }}</textarea>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0"><label for="email">Jins</label></h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <select name="jins" id="jins-select" class="form-control">
+                        <option value="{{ talaba.jins }}" selected>Diqqat! Alishtirsangiz ma'lumot o'zgaradi</option>
+                        <option value="Erkak">Erkak</option>
+                        <option value="Ayol">Ayol</option>
+                      </select>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h6 class="mb-0"><label for="email">Xujra</label></h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                      <select id="hujra-select" class="form-control" name='hujra'>
+                        <option value="{{ talaba.hujra.id }}" selected>{{ talaba.hujra.ism }} - Hozirgi xujra</option>
+                        {% for hujra in hujralar %}
+                          {% if hujra.id != talaba.hujra.id %}
+                            <option value="{{ hujra.id }}">{{ hujra.ism }}</option>
+                          {% endif %}
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <br>
+              </div>
+          </div>
+        </div>
+        
+        
+    </div>
+    <div class="row mb-5">
+      <div class="col-sm-12">
+        <button class="btn btn-success btn-icon-split" type="submit" id='save'>
+          <span class="icon text-white-50">
+            <i class="fa-sharp fa-solid fa-check"></i>
+          </span>
+          <span class='text'>Saqlash</span>
+        </button>
+        <a class="btn btn-light btn-icon-split" href="{% url 'talaba_profil' talaba.id %}">
+          <span class="icon text-white-50">
+            <i class="fa-solid fa-arrow-left"></i>
+          </span>
+          <span class='text'>Ortga</span>
+        </a>
+      </div>
+    </div>
+
+  </form>
+       
+{% endblock main_content %}
+
+{% block custom_script %}
+  <script src="{% static 'js/admin-pic-change.js' %}"></script>
+{% endblock custom_script %}
+
+{% block custom_css %}
+  <link href="{% static 'css/admin-profile-tahrirlash.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/delete-alert.css' %}">
+{% endblock custom_css %}
+
+{% block sweet_alerts %}
+  <!-- Sweet alerts -->
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'sweet_alert/saveForm.js' %}"></script>
+{% endblock sweet_alerts %}
