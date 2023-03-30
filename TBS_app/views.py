@@ -6,7 +6,7 @@ from TBS_app.EmailBackEnd import EmailBackEnd
 
 
 def loginPage(request):
-    return render(request, 'login.html')
+    return render(request, 'login_updated.html')
 
 
 def doLogin(request):
