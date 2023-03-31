@@ -56,7 +56,7 @@
                       <td> {{ fan.ustoz.admin.first_name }} </td>
                       <td> {{ fan.tugash_vaqti }} </td> 
                       <td>
-                        <a href="" class="btn btn-info btn-circle">
+                        <a href="{% url 'fan_ustoz_talaba_profil' fan.id %}" class="btn btn-info btn-circle">
                           <i class="fa-solid fa-address-card"></i>
                       </a>
                         <a href="#myModal" class="btn btn-danger btn-circle delete" data-toggle="modal">
@@ -80,7 +80,7 @@
                         </div>
                         <div class="modal-footer justify-content-center">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
-                          <a href="">
+                          <a href="{% url 'fan_ustoz_talaba_uchirish' fan.id %}">
                             <button type="button" class="btn btn-danger">O'chirish</button>
                           </a>
                         </div>

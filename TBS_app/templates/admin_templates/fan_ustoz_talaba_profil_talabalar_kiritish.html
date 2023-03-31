@@ -31,9 +31,7 @@
           <div class="col-sm-9 text-secondary">
             <select name="talabalar" id="talabalar" class='form-control' multiple>
               {% for talaba in talabalar %}
-                {% if talaba is not None %}
-                  <option value="{{talaba.id}}">{{ talaba.ism }} {{ talaba.familya }}</option>  
-                {% endif %}
+                <option value="{{talaba.id}}">{{ talaba.ism }} {{ talaba.familya }}</option>
               {% endfor %}
             </select> 
           </div>

@@ -799,6 +799,7 @@ def talabani_uchirish(request, id):
         return redirect('talabalar')
 
 
+# Fanlar Ustoz - talaba
 def fanlar_ustoz_talaba(request):
     admin = CustomUser.objects.get(id=request.user.id)
     fanlar = FanUstozTalaba.objects.select_related('ustoz').all()
@@ -851,6 +852,22 @@ def fan_ustoz_talaba_profil(request, id):
     return render(request, 'admin_templates/fan_ustoz_talaba_profil.html', context)
 
 
+@require_http_methods(["GET", "POST"])
+def fan_ustoz_talaba_profil_tahrirlash(request, id):
+     if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        fan = FanUstozTalaba.objects.select_related('ustoz').get(id=id)
+        ustozlar = Ustoz.objects.all()
+        context = {
+            'admin' : admin,
+            'fan' : fan,
+            'ustozlar' : ustozlar,
+        }
+        return render(request, 'admin_templates/fan_ustoz_talaba_profil_tahrirlash.html', context)
+     if request.method == 'POST':
+         pass
+
+
 def fan_ustoz_talaba_profil_talabalar(request, id):
     admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
     fan = FanUstozTalaba.objects.select_related('ustoz').prefetch_related('talaba').get(id=id)
@@ -870,7 +887,8 @@ def fan_ustoz_talaba_profil_talabalar_kiritish(request, id):
         fan = FanUstozTalaba.objects.prefetch_related('talaba').get(id=id)
         talabalar = []
         for i in Talaba.objects.all():
-            talabalar.append(i if i not in fan.talaba.all() else None)
+            if i not in fan.talaba.all():
+                talabalar.append(i)
         context = {
             'admin' : admin,
             'fan' : fan,
@@ -890,6 +908,26 @@ def fan_ustoz_talaba_profil_talabalar_kiritish(request, id):
             messages.error(request, 'Fanga talaba kiritishda qandaydur muommo yuz berdi')
             return HttpResponseRedirect(reverse('fan_ustoz_talaba_profil_talabalar', kwargs={'id': id}))
 
+
+def fan_ustoz_talaba_profil_talabalar_uchirish(request, fanId, talabaId):
+    fan = FanUstozTalaba.objects.prefetch_related('talaba').get(id=fanId)
+    talaba = Talaba.objects.get(id=talabaId)
+    fan.talaba.remove(talaba)
+    print(fan.talaba.all())
+    messages.success(request, f'Fan "{fan.ism}"dan talaba "" o\'chirildi')
+    return HttpResponseRedirect(reverse('fan_ustoz_talaba_profil_talabalar', kwargs={'id': fanId}))
+
+
+
+def fan_ustoz_talaba_uchirish(request, id):
+    fan = FanUstozTalaba.objects.get(id=id)
+    try:
+        fan.delete()
+        messages.success(request, 'Fan o\'chirildi')
+        return redirect('fanlar_ustoz_talaba')
+    except:
+        messages.error(request, 'Fanni o\'chirishda qandaydir muommo ro\'y berdi')
+        return redirect('fanlar_ustoz_talaba')
 
 
 # Username ni tekshirish

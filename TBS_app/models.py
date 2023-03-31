@@ -81,7 +81,7 @@ class FanUstozTalaba(models.Model):
     id = models.AutoField(primary_key=True)
     ism = models.CharField(max_length=255, null=True)
     ustoz = models.ForeignKey(Ustoz, on_delete=models.CASCADE, null=True)
-    talaba = models.ManyToManyField(Talaba)
+    talaba = models.ManyToManyField(Talaba, related_name='fanlar')
     tugash_vaqti = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
