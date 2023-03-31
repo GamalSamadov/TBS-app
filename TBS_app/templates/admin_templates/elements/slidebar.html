@@ -1,9 +1,7 @@
 {% load static %}
 
-<!-- Sidebar -->
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-  <!-- Sidebar - Brand -->
   <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'admin_asosiy' %}">
       <div class="sidebar-brand-icon">
         <i class="fa-sharp fa-solid fa-school-flag"></i>
@@ -11,10 +9,8 @@
       <div class="sidebar-brand-text mx-3">TBS <sup>tm</sup></div>
   </a>
 
-  <!-- Divider -->
   <hr class="sidebar-divider my-0">
 
-  <!-- Nav Item - Dashboard -->
   {% url 'admin_asosiy' as admin_asosiy %}
   <li class="nav-item {% if request.path == admin_asosiy %} active {% endif %}">
       <a class="nav-link" href="{% url 'admin_asosiy' %}">
@@ -49,24 +45,24 @@
         <span>Talabalar</span></a>
   </li>
 
-  
-  <!-- Nav Item - Pages Collapse Menu -->
-  <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFanlar"
+    {% url 'fanlar_ustoz_talaba' as fanlar_ustoz_talaba %}  
+    {% url 'fanlar_ustoz_mudarris' as fanlar_ustoz_mudarris %}  
+    {% url 'fanlar_mudarris_talaba' as fanlar_mudarris_talaba %}  
+    <li class="nav-item {% if request.path == fanlar_ustoz_talaba or request.path == fanlar_ustoz_mudarris or request.path == fanlar_mudarris_talaba %} active {% endif %}">
+      <a class="nav-link {% if request.path != fanlar_ustoz_talaba and request.path != fanlar_ustoz_mudarris and request.path != fanlar_mudarris_talaba %} collapsed {% endif %}" href="#" data-toggle="collapse" data-target="#collapseFanlar"
           aria-expanded="true" aria-controls="collapseTwo">
           <i class="fa-solid fa-book"></i>
           <span>Fanlar</span>
       </a>
-      <div id="collapseFanlar" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+      <div id="collapseFanlar" class="collapse {% if request.path == fanlar_ustoz_talaba or request.path == fanlar_ustoz_mudarris or request.path == fanlar_mudarris_talaba %} show {% endif %}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="">Ustoz talaba</a>
+            <a class="collapse-item {% if request.path == fanlar_ustoz_talaba or request.path == fanlar_ustoz_mudarris or request.path == fanlar_mudarris_talaba %} active {% endif %}" href="{% url 'fanlar_ustoz_talaba' %}">Ustoz talaba</a>
             <a class="collapse-item" href="">Ustoz mudarris</a>
             <a class="collapse-item" href="">Mudarris talaba</a>
           </div>
       </div>
-  </li>
+    </li>
 
-  <!-- Nav Item - Utilities Collapse Menu -->
   <li class="nav-item">
       <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKbaho"
           aria-expanded="true" aria-controls="collapseUtilities">
@@ -99,27 +95,18 @@
       </div>
   </li>
 
-  <!-- Divider -->
   <hr class="sidebar-divider">
 
-  
-
-  <!-- Nav Item - Charts -->
   <li class="nav-item">
       <a class="nav-link" href="">
         <i class="fa-solid fa-gear"></i>
           <span>Parametrlar</span></a>
   </li>
 
-  
-
-  <!-- Divider -->
   <hr class="sidebar-divider d-none d-md-block">
 
-  <!-- Sidebar Toggler (Sidebar) -->
   <div class="text-center d-none d-md-inline">
       <button class="rounded-circle border-0" id="sidebarToggle"></button>
   </div>
 
 </ul>
-<!-- End of Sidebar -->

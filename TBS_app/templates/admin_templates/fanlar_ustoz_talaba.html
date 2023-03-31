@@ -4,19 +4,11 @@
 {% block custom_css %}
   <!-- Custom styles for this page -->
   <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
-
-  <style>
-    #profile-pic:hover{
-      transform: scale(1.2);
-    }
-
-   
-  </style>
   <link rel="stylesheet" href="{% static 'css/delete-alert.css' %}">
 {% endblock custom_css %}
 
 {% block page_heading %}
-  Talabalar
+  Fanlar Ustoz - talaba
 {% endblock page_heading %}
 
 {% block main_content %}
@@ -24,11 +16,11 @@
 <div class="row">
   <div class="col-lg-6">
     <div class="mb-4">
-      <a href="{% url 'talaba_kiritish' %}" class="btn btn-primary btn-icon-split">
+      <a href="{% url 'fan_ustoz_talaba_kiritish' %}" class="btn btn-primary btn-icon-split">
         <span class="icon text-white-50">
-          <i class="fa-sharp fa-solid fa-user-plus"></i>
+          <i class="fa-solid fa-plus"></i>
         </span>
-        <span class="text">Talaba kiritish</span>
+        <span class="text">Fan kiritish</span>
       </a>
     </div>
   </div>
@@ -36,51 +28,37 @@
 
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Barcha talabalar tablitsasi</h6>
+      <h6 class="m-0 font-weight-bold text-primary">Barcha fanlar tablitsasi</h6>
   </div>
   <div class="card-body">
       <div class="table-responsive">
           <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
               <thead>
                   <tr>
-                      <th>Profil surati</th>
                       <th>Ism</th>
-                      <th>Jins</th>
+                      <th>Ustoz</th>
+                      <th>Tugash vaqti</th>
                       <th>Amalyot</th>
                   </tr>
               </thead>
               <tfoot>
                   <tr>
-                    <th>Profil surati</th>
                     <th>Ism</th>
-                    <th>Jins</th>
+                    <th>Ustoz</th>
+                    <th>Tugash vaqti</th>
                     <th>Amalyot</th>
                   </tr>
               </tfoot>
               <tbody>
-                {% for talaba in talabalar %}
+                {% for fan in fanlar %}
                   <tr>
+                      <td> <a href="{% url 'fan_ustoz_talaba_profil' fan.id %}">{{ fan.ism }}</a> </td>
+                      <td> {{ fan.ustoz.admin.first_name }} </td>
+                      <td> {{ fan.tugash_vaqti }} </td> 
                       <td>
-                        <a href="{% url 'talaba_profil' talaba.id %}">
-                          {% if talaba.profil_surati %}
-                              <img src="{{ talaba.profil_surati }}" alt="Admin" class="avatar-md rounded-circle img-thumbnail" width="50" id='profile-pic'>
-                            </a>
-                          {% else %}
-                              {% if talaba.jins == 'Erkak' %}
-                                <img src="{% static 'img/undraw_profile.svg' %}" alt="Admin" class="avatar-md rounded-circle img-thumbnail" width="50" id='profile-pic'>
-                              {% elif talaba.jins == 'Ayol' %}
-                                <img src="{% static 'img/undraw_profile_1.svg' %}" alt="Admin" class="avatar-md rounded-circle img-thumbnail" width="50" id='profile-pic'>
-                              {% endif %}
-                            
-                          {% endif %}
-                        </a>
-                      </td>
-                      <td> {{ talaba.ism }} {{ talaba.familya }} </td>
-                      <td> {{ talaba.jins }} </td> 
-                      <td>
-                        <a href="{% url 'talaba_profil' talaba.id %}" class="btn btn-info btn-circle">
+                        <a href="" class="btn btn-info btn-circle">
                           <i class="fa-solid fa-address-card"></i>
-                        </a>
+                      </a>
                         <a href="#myModal" class="btn btn-danger btn-circle delete" data-toggle="modal">
                           <i class="fa-sharp fa-solid fa-trash-can"></i>
                         </a>
@@ -94,7 +72,7 @@
                           <div class="icon-box">
                             <i class="fa-solid fa-trash"></i>
                           </div>						
-                          <h4 class="modal-title w-100">Chindan ham "{{talaba.ism}} {{talaba.familya}}" talabani o'chirmoqchimisiz?</h4>	
+                          <h4 class="modal-title w-100">Chindan ham "{{ fan.ism }}" fanini o'chirmoqchimisiz?</h4>	
                                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">
@@ -102,7 +80,7 @@
                         </div>
                         <div class="modal-footer justify-content-center">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
-                          <a href="{% url 'talabani_uchirish' talaba.id %}">
+                          <a href="">
                             <button type="button" class="btn btn-danger">O'chirish</button>
                           </a>
                         </div>
@@ -112,8 +90,7 @@
 
                 {% empty %}
                 <tr>
-                  <td><h3>Talabalar yo'q. <i class="fa-solid fa-face-frown"></i> Talaba kiriting. </h3></td>
-                  <td></td>
+                  <td><h3>Fanlar yo'q. <i class="fa-solid fa-face-frown"></i> Fan kiriting. </h3></td>
                   <td></td>
                   <td></td>
                 </tr>

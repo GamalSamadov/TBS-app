@@ -799,6 +799,99 @@ def talabani_uchirish(request, id):
         return redirect('talabalar')
 
 
+def fanlar_ustoz_talaba(request):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fanlar = FanUstozTalaba.objects.select_related('ustoz').all()
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar
+    }
+    return render(request, 'admin_templates/fanlar_ustoz_talaba.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def fan_ustoz_talaba_kiritish(request):
+    if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        ustozlar = Ustoz.objects.select_related('admin').all()
+        talabalar = Talaba.objects.all()
+        context = {
+            'admin' : admin,
+            'ustozlar' : ustozlar,
+            'talabalar' : talabalar
+        }
+        return render(request, 'admin_templates/fan_ustoz_talaba_kiritish.html', context)
+    if request.method == 'POST':
+        ism = request.POST.get('ism')
+        ustoz_id = request.POST.get('ustoz')
+        talabalar = request.POST.getlist('talabalar')
+        tugash_vaqti = request.POST.get('tugash_vaqti')
+        try:
+            ustoz = Ustoz.objects.select_related('admin').get(admin=ustoz_id)
+            fan = FanUstozTalaba.objects.create(ism=ism, ustoz=ustoz, tugash_vaqti=tugash_vaqti)
+            for i in talabalar:
+                fan.talaba.add(Talaba.objects.get(id=i))
+            
+            messages.success(request, 'Fan kiritildi')
+            return redirect('fanlar_ustoz_talaba')
+        except:
+            messages.error(request, 'Fanni kiritishda qandaydur muommo yuz berdi')
+            return redirect('fanlar_ustoz_talaba')
+
+
+def fan_ustoz_talaba_profil(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    fan = FanUstozTalaba.objects.select_related('ustoz').prefetch_related('talaba').get(id=id)
+    talabalar_soni = fan.talaba.count()
+    context = {
+        'admin' : admin,
+        'fan' : fan,
+        'talabalar_soni' : talabalar_soni
+    }
+    return render(request, 'admin_templates/fan_ustoz_talaba_profil.html', context)
+
+
+def fan_ustoz_talaba_profil_talabalar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    fan = FanUstozTalaba.objects.select_related('ustoz').prefetch_related('talaba').get(id=id)
+    talabalar = fan.talaba.all()
+    context = {
+        'admin' : admin,
+        'fan' : fan,
+        'talabalar' : talabalar
+    }
+    return render(request, 'admin_templates/fan_ustoz_talaba_profil_talabalar.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def fan_ustoz_talaba_profil_talabalar_kiritish(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        fan = FanUstozTalaba.objects.prefetch_related('talaba').get(id=id)
+        talabalar = []
+        for i in Talaba.objects.all():
+            talabalar.append(i if i not in fan.talaba.all() else None)
+        context = {
+            'admin' : admin,
+            'fan' : fan,
+            'talabalar' : talabalar
+            
+        }
+        return render(request, 'admin_templates/fan_ustoz_talaba_profil_talabalar_kiritish.html', context)
+    if request.method == 'POST':
+        talabalar = request.POST.getlist('talabalar')
+        try:
+            fan = FanUstozTalaba.objects.prefetch_related('talaba').get(id=id)
+            for i in talabalar:
+                fan.talaba.add(Talaba.objects.get(id=i))
+            messages.success(request, 'Fanga talaba/lar kiritildi')
+            return HttpResponseRedirect(reverse('fan_ustoz_talaba_profil_talabalar', kwargs={'id': id}))
+        except:
+            messages.error(request, 'Fanga talaba kiritishda qandaydur muommo yuz berdi')
+            return HttpResponseRedirect(reverse('fan_ustoz_talaba_profil_talabalar', kwargs={'id': id}))
+
+
+
 # Username ni tekshirish
 class UsernameTekshirish(View):
     def post(self, request):

@@ -65,12 +65,25 @@
                 <tbody>
                   {% for hujra in hujralar %}
                     <tr>
-                      <td><a href="{% url 'hujra_profil' hujra.id %}">{{ hujra.ism }}</a></td>
-                      <td>{{ hujra.adres }}</td>
-                      <td>   <a href="{% url 'ustoz_profil' hujra.ustoz.admin.id %}">{{ hujra.ustoz.admin.first_name }}{{ hujra.ustoz.admin.last_name }}</a></td>
-                   
-                      <td>0</td>
-                      <td>0</td>
+                      <td>
+                        <a href="{% url 'hujra_profil' hujra.id %}">
+                          {{ hujra.ism }}
+                        </a>
+                      </td>
+                      <td>
+                        {{ hujra.adres }}
+                      </td>
+                      <td>
+                        <a href="{% url 'ustoz_profil' hujra.ustoz.admin.id %}">
+                          {{ hujra.ustoz.admin.first_name }}{{ hujra.ustoz.admin.last_name }}
+                        </a>
+                      </td>
+                      <td>
+                        0
+                      </td>
+                      <td>
+                        0
+                      </td>
                       <td>
                         <a href="{% url 'hujra_profil' hujra.id %}" class="btn btn-info btn-circle">
                           <i class="fa-solid fa-address-card"></i>

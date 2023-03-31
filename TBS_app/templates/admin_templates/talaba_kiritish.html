@@ -6,6 +6,8 @@
 
 {% block main_content %}
 
+<form role="form" method="POST" action="{% url 'talaba_kiritish' %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+  {% csrf_token %}
 <div class="row">
   <div class="col-lg-6">
     <div class="card shadow mb-4">
@@ -13,8 +15,6 @@
           <h6 class="m-0 font-weight-bold text-primary">Talaba kiritish</h6>
       </div>
       <div class="card-body">
-        <form role="form" method="POST" action="{% url 'talaba_kiritish' %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
-          {% csrf_token %}
             <div class="row">
               <div class="col-sm-3">
                 <h6 class="mb-0"><label for="ism">Ism</label></h6>
@@ -87,30 +87,31 @@
               </div>
             </div>
             <hr>
-            <br>
           
-          <div class="row">
-            <div class="col-sm-12">
-              <button class="btn btn-success btn-icon-split" type="submit" id='save'>
-                <span class="icon text-white-50">
-                  <i class="fa-sharp fa-solid fa-check"></i>
-                </span>
-                <span class='text'>Kiritish</span>
-              </button>
-              <a class="btn btn-light btn-icon-split" href="{% url 'talabalar' %}">
-                <span class="icon text-white-50">
-                  <i class="fa-solid fa-arrow-left"></i>
-                </span>
-                <span class='text'>Ortga</span>
-              </a>
-            </div>
-          </div>
+         
 
-        </form>
+        </div>
       </div>
+    </div>
   </div>
+
+  <div class="row mb-5">
+    <div class="col-sm-12">
+      <button class="btn btn-success btn-icon-split" type="submit" id='save'>
+        <span class="icon text-white-50">
+          <i class="fa-sharp fa-solid fa-check"></i>
+        </span>
+        <span class='text'>Kiritish</span>
+      </button>
+      <a class="btn btn-light btn-icon-split" href="{% url 'talabalar' %}">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-arrow-left"></i>
+        </span>
+        <span class='text'>Ortga</span>
+      </a>
+    </div>
   </div>
-</div>
+</form>
 
 {% endblock main_content %}
 

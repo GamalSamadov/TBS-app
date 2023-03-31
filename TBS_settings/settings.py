@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'TBS_app',
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -39,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'TBS_app.LoginCheckMiddleWare.LoginCheckMiddleWare',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 
 
 ]
@@ -139,3 +141,9 @@ AUTH_USER_MODEL = "TBS_app.CustomUser"
 
 # Registering Custom Backend "EmailBackEnd"
 AUTHENTICATION_BACKENDS = ['TBS_app.EmailBackEnd.EmailBackEnd']
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]

@@ -52,7 +52,12 @@ urlpatterns = [
     path('talabalar/<int:id>/tahrirlash/profil_so\'ratni_o\'chirish/', AdminViews.talaba_profil_suratni_uchirish, name="talaba_profil_suratni_uchirish"),
     path('talabalar/<int:id>/tahrirlash/paspurt_so\'ratni_o\'chirish/', AdminViews.talaba_pasport_suratni_uchirish, name="talaba_pasport_suratni_uchirish"),
 
-  
+    path('fanlar/ustoz_talaba/', AdminViews.fanlar_ustoz_talaba, name="fanlar_ustoz_talaba"),
+    path('fanlar/ustoz_talaba/<int:id>/', AdminViews.fan_ustoz_talaba_profil, name="fan_ustoz_talaba_profil"),
+    path('fanlar/ustoz_talaba/<int:id>/talabalar/', AdminViews.fan_ustoz_talaba_profil_talabalar, name="fan_ustoz_talaba_profil_talabalar"),
+    path('fanlar/ustoz_talaba/<int:id>/talabalar/kiritish/', AdminViews.fan_ustoz_talaba_profil_talabalar_kiritish, name="fan_ustoz_talaba_profil_talabalar_kiritish"),
+    path('fanlar/ustoz_talaba/kiritish/', AdminViews.fan_ustoz_talaba_kiritish, name='fan_ustoz_talaba_kiritish'),
+    
     # # Ustoz Urls
     path('ustoz_asosiy/', UstozViews.ustoz_asosiy, name="ustoz_asosiy"),
 
