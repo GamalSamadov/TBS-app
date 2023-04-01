@@ -29,7 +29,7 @@
             <h6 class="mb-0"><label for='ustoz'>Talabalar</label></h6>
           </div>
           <div class="col-sm-9 text-secondary">
-            <select name="talabalar" id="talabalar" class='form-control' multiple>
+            <select name="talabalar" id="talabalar" class='form-control' multiple required>
               {% for talaba in talabalar %}
                 <option value="{{talaba.id}}">{{ talaba.ism }} {{ talaba.familya }}</option>
               {% endfor %}

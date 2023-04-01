@@ -29,7 +29,7 @@
             <h6 class="mb-0"><label for='ustoz'>Mudarrislar</label></h6>
           </div>
           <div class="col-sm-9 text-secondary">
-            <select name="mudarrislar" id="mudarrislar" class='form-control' multiple>
+            <select name="mudarrislar" id="mudarrislar" class='form-control' multiple required>
               {% for mudarris in mudarrislar %}
                 <option value="{{mudarris.id}}">{{ mudarris.admin.first_name }} {{ mudarris.admin.last_name }}</option>
               {% endfor %}

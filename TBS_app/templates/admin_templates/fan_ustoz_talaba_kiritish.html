@@ -31,7 +31,7 @@
               <h6 class="mb-0"><label for="ism">Ism</label></h6>
             </div>
             <div class="col-sm-9 text-secondary">
-              <input type="text" class="form-control" id="ism" name='ism'>
+              <input type="text" class="form-control" id="ism" name='ism' required>
             </div>
           </div>
           <hr>
@@ -40,7 +40,7 @@
               <h6 class="mb-0"><label for='ustoz'>Ustoz</label></h6>
             </div>
             <div class="col-sm-9 text-secondary">
-              <select name="ustoz" id="ustoz" class='form-control'>
+              <select name="ustoz" id="ustoz" class='form-control' required>
                 {% for ustoz in ustozlar %}
                   <option value="{{ustoz.admin.id}}">{{ ustoz.admin.first_name }} {{ ustoz.admin.last_name }}</option>
                 {% endfor %}
@@ -53,7 +53,7 @@
               <h6 class="mb-0"><label for='ustoz'>Talabalar</label></h6>
             </div>
             <div class="col-sm-9 text-secondary">
-              <select name="talabalar" id="talabalar" class='form-control' multiple>
+              <select name="talabalar" id="talabalar" class='form-control' multiple required>
                 {% for talaba in talabalar %}
                   <option value="{{talaba.id}}">{{ talaba.ism }} {{ talaba.familya }}</option>
                 {% endfor %}
@@ -66,7 +66,7 @@
               <h6 class="mb-0"><label for="ism">Tugash vaqti</label></h6>
             </div>
             <div class="col-sm-9 text-secondary">
-              <input type="date" class="form-control" id="tugash_vaqti" name='tugash_vaqti'>
+              <input type="date" class="form-control" id="tugash_vaqti" name='tugash_vaqti' required>
             </div>
           </div>
           <hr>
