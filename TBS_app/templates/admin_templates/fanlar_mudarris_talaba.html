@@ -8,7 +8,7 @@
 {% endblock custom_css %}
 
 {% block page_heading %}
-  Fanlar Ustoz - talaba
+  Fanlar Mudarris - talaba
 {% endblock page_heading %}
 
 {% block main_content %}
@@ -16,7 +16,7 @@
 <div class="row">
   <div class="col-lg-6">
     <div class="mb-4">
-      <a href="{% url 'fan_ustoz_talaba_kiritish' %}" class="btn btn-primary btn-icon-split">
+      <a href="{% url 'fan_mudarris_talaba_kiritish' %}" class="btn btn-primary btn-icon-split">
         <span class="icon text-white-50">
           <i class="fa-solid fa-plus"></i>
         </span>
@@ -36,7 +36,7 @@
               <thead>
                   <tr>
                       <th>Ism</th>
-                      <th>Ustoz</th>
+                      <th>Mudarris</th>
                       <th>Tugash vaqti</th>
                       <th>Amalyot</th>
                   </tr>
@@ -44,7 +44,7 @@
               <tfoot>
                   <tr>
                     <th>Ism</th>
-                    <th>Ustoz</th>
+                    <th>Mudarris</th>
                     <th>Tugash vaqti</th>
                     <th>Amalyot</th>
                   </tr>
@@ -52,11 +52,11 @@
               <tbody>
                 {% for fan in fanlar %}
                   <tr>
-                      <td> <a href="{% url 'fan_ustoz_talaba_profil' fan.id %}">{{ fan.ism }}</a> </td>
-                      <td> {{ fan.ustoz.admin.username }} </td>
+                      <td> <a href="{% url 'fan_mudarris_talaba_profil' fan.id %}">{{ fan.ism }}</a> </td>
+                      <td> {{ fan.mudarris.admin.username }} </td>
                       <td> {{ fan.tugash_vaqti }} </td> 
                       <td>
-                        <a href="{% url 'fan_ustoz_talaba_profil' fan.id %}" class="btn btn-info btn-circle">
+                        <a href="{% url 'fan_mudarris_talaba_profil' fan.id %}" class="btn btn-info btn-circle">
                           <i class="fa-solid fa-address-card"></i>
                       </a>
                         <a href="#myModal" class="btn btn-danger btn-circle delete" data-toggle="modal">
@@ -80,7 +80,7 @@
                         </div>
                         <div class="modal-footer justify-content-center">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
-                          <a href="{% url 'fan_ustoz_talaba_uchirish' fan.id %}">
+                          <a href="{% url 'fan_mudarris_talaba_uchirish' fan.id %}">
                             <button type="button" class="btn btn-danger">O'chirish</button>
                           </a>
                         </div>

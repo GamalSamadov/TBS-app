@@ -7,7 +7,7 @@
 
 {% block main_content %}
 
-<form role="form" method="POST" action="{% url 'fan_ustoz_talaba_profil_tahrirlash' fan.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+<form role="form" method="POST" action="{% url 'fan_ustoz_mudarris_profil_tahrirlash' fan.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
   {% csrf_token %}
   <div class="row">
     
@@ -53,7 +53,7 @@
                       
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      <input type="date" name='tugash_vaqti' id='tugash_vaqti' value="" class='form-control'>
+                      <input type="date" value="" name='tugash_vaqti' id='tugash_vaqti'  class='form-control'>
                       <p class='mt-3 text-info'>Hozir turgan vaqt ==> {{ fan.tugash_vaqti }}</p>
                     </div>
                   </div>
@@ -75,7 +75,7 @@
                 </span>
                 <span class='text'>Tahrirlash</span>
               </button>
-              <a class="btn btn-light btn-icon-split" href="{% url 'fan_ustoz_talaba_profil' fan.id %}">
+              <a class="btn btn-light btn-icon-split" href="{% url 'fan_ustoz_mudarris_profil' fan.id %}">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-arrow-left"></i>
                 </span>
@@ -96,6 +96,7 @@
 {% block custom_script %}
 <script>
 
+  document.getElementById("tugash_vaqti").defaultValue = {{ fan.tugash_vaqti }};
 
 
 </script>

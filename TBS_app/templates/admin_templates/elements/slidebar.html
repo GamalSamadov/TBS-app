@@ -48,6 +48,7 @@
     {% url 'fanlar_ustoz_talaba' as fanlar_ustoz_talaba %}  
     {% url 'fanlar_ustoz_mudarris' as fanlar_ustoz_mudarris %}  
     {% url 'fanlar_mudarris_talaba' as fanlar_mudarris_talaba %}  
+
     <li class="nav-item {% if request.path == fanlar_ustoz_talaba or request.path == fanlar_ustoz_mudarris or request.path == fanlar_mudarris_talaba %} active {% endif %}">
       <a class="nav-link {% if request.path != fanlar_ustoz_talaba and request.path != fanlar_ustoz_mudarris and request.path != fanlar_mudarris_talaba %} collapsed {% endif %}" href="#" data-toggle="collapse" data-target="#collapseFanlar"
           aria-expanded="true" aria-controls="collapseTwo">
@@ -56,9 +57,9 @@
       </a>
       <div id="collapseFanlar" class="collapse {% if request.path == fanlar_ustoz_talaba or request.path == fanlar_ustoz_mudarris or request.path == fanlar_mudarris_talaba %} show {% endif %}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item {% if request.path == fanlar_ustoz_talaba or request.path == fanlar_ustoz_mudarris or request.path == fanlar_mudarris_talaba %} active {% endif %}" href="{% url 'fanlar_ustoz_talaba' %}">Ustoz talaba</a>
-            <a class="collapse-item" href="">Ustoz mudarris</a>
-            <a class="collapse-item" href="">Mudarris talaba</a>
+            <a class="collapse-item {% if request.path == fanlar_ustoz_talaba %} active {% endif %}" href="{% url 'fanlar_ustoz_talaba' %}">Ustoz talaba</a>
+            <a class="collapse-item {% if request.path == fanlar_ustoz_mudarris %} active {% endif %}" href="{% url 'fanlar_ustoz_mudarris' %}">Ustoz mudarris</a>
+            <a class="collapse-item {% if request.path == fanlar_mudarris_talaba %} active {% endif %}" href="{% url 'fanlar_mudarris_talaba' %}">Mudarris talaba</a>
           </div>
       </div>
     </li>

@@ -24,9 +24,9 @@
                     </h4>
                     <div class="btn-success btn-icon-split btn-sm">
                       <span class="icon text-white-50">
-                        <div><i class="fa-solid fa-chalkboard-user"></i> Ustoz</div>
+                        <div><i class="fa-solid fa-chalkboard-user"></i> Mudarris</div>
                       </span>
-                      <span class='text'>{% if fan.ustoz.admin %}{{ fan.ustoz.admin.first_name }} {{ fan.ustoz.admin.last_name }}{% else %}Ustoz kiritilmagan{% endif %}</span>
+                      <span class='text'>{% if fan.mudarris.admin %}{{ fan.mudarris.admin.first_name }} {{ fan.mudarris.admin.last_name }}{% else %}Mudarris kiritilmagan{% endif %}</span>
                     </div>
                   </div>
                 </div>
@@ -61,16 +61,16 @@
           <hr>
           <div class="row">
             <div class="col-sm-3">
-              <h6 class="mb-0">Ustoz</h6>
+              <h6 class="mb-0">Mudarris</h6>
             </div>
             <div class="col-sm-9 text-secondary">
-              {% if fan.ustoz %} {{ fan.ustoz.admin.first_name }} {{ fan.ustoz.admin.last_name }}{% else %}Ustoz kiritilmagan{% endif %}
+              {% if fan.mudarris %} {{ fan.mudarris.admin.first_name }} {{ fan.mudarris.admin.last_name }}{% else %}Ustoz kiritilmagan{% endif %}
             </div>
           </div>
           <hr>
           <div class="row">
             <div class="col-sm-12">
-              <a class="btn btn-primary btn-icon-split" href="{% url 'fan_ustoz_talaba_profil_tahrirlash' fan.id %}">
+              <a class="btn btn-primary btn-icon-split" href="{% url 'fan_mudarris_talaba_profil_tahrirlash' fan.id %}">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-pencil"></i>
                     
@@ -94,7 +94,7 @@
           <div class="col-xl-12 col-md-6 mb-10 py-4">
             <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
-                    <a href="{% url 'fan_ustoz_talaba_profil_talabalar' fan.id %}">
+                    <a href="{% url 'fan_mudarris_talaba_profil_talabalar' fan.id %}">
                       <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">

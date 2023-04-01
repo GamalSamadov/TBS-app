@@ -865,7 +865,22 @@ def fan_ustoz_talaba_profil_tahrirlash(request, id):
         }
         return render(request, 'admin_templates/fan_ustoz_talaba_profil_tahrirlash.html', context)
      if request.method == 'POST':
-         pass
+        ism = request.POST.get('ism')
+        ustoz_id = request.POST.get('ustoz')
+        tugash_vaqti = request.POST.get('tugash_vaqti')
+        try:
+            fan = FanUstozTalaba.objects.get(id=id)
+            ustoz = Ustoz.objects.get(id=ustoz_id)
+            fan.ism = ism
+            fan.ustoz = ustoz
+            if tugash_vaqti != None and tugash_vaqti != '':
+                fan.tugash_vaqti = tugash_vaqti
+            fan.save()
+            messages.success(request, 'Fan yangilandi')
+            return HttpResponseRedirect(reverse('fan_ustoz_talaba_profil', kwargs={'id': id}))
+        except:
+            messages.error(request, 'Fanni yangilashda muommo yuz berdi')
+            return HttpResponseRedirect(reverse('fan_ustoz_talaba_profil', kwargs={'id': id}))
 
 
 def fan_ustoz_talaba_profil_talabalar(request, id):
@@ -912,11 +927,13 @@ def fan_ustoz_talaba_profil_talabalar_kiritish(request, id):
 def fan_ustoz_talaba_profil_talabalar_uchirish(request, fanId, talabaId):
     fan = FanUstozTalaba.objects.prefetch_related('talaba').get(id=fanId)
     talaba = Talaba.objects.get(id=talabaId)
-    fan.talaba.remove(talaba)
-    print(fan.talaba.all())
-    messages.success(request, f'Fan "{fan.ism}"dan talaba "" o\'chirildi')
-    return HttpResponseRedirect(reverse('fan_ustoz_talaba_profil_talabalar', kwargs={'id': fanId}))
-
+    try:
+        fan.talaba.remove(talaba)
+        messages.success(request, f'Fan "{fan.ism}"dan talaba "" o\'chirildi')
+        return HttpResponseRedirect(reverse('fan_ustoz_talaba_profil_talabalar', kwargs={'id': fanId}))
+    except:
+        messages.error(request, f'Fan "{fan.ism}"dan talaba "" o\'chirildi')
+        return HttpResponseRedirect(reverse('fan_ustoz_talaba_profil_talabalar', kwargs={'id': fanId}))
 
 
 def fan_ustoz_talaba_uchirish(request, id):
@@ -928,6 +945,303 @@ def fan_ustoz_talaba_uchirish(request, id):
     except:
         messages.error(request, 'Fanni o\'chirishda qandaydir muommo ro\'y berdi')
         return redirect('fanlar_ustoz_talaba')
+
+
+# Fanlar Ustoz - mudarris
+def fanlar_ustoz_mudarris(request):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fanlar = FanUstozMudarris.objects.select_related('ustoz').all()
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar
+    }
+    return render(request, 'admin_templates/fanlar_ustoz_mudarris.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def fan_ustoz_mudarris_kiritish(request):
+    if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        ustozlar = Ustoz.objects.select_related('admin').all()
+        mudarrislar = Mudarris.objects.all()
+        context = {
+            'admin' : admin,
+            'ustozlar' : ustozlar,
+            'mudarrislar' : mudarrislar
+        }
+        return render(request, 'admin_templates/fan_ustoz_mudarris_kiritish.html', context)
+    if request.method == 'POST':
+        ism = request.POST.get('ism')
+        ustoz_id = request.POST.get('ustoz')
+        mudarrislar = request.POST.getlist('mudarrislar')
+        tugash_vaqti = request.POST.get('tugash_vaqti')
+        try:
+            ustoz = Ustoz.objects.select_related('admin').get(admin=ustoz_id)
+            fan = FanUstozMudarris.objects.create(ism=ism, ustoz=ustoz, tugash_vaqti=tugash_vaqti)
+            for i in mudarrislar:
+                fan.mudarris.add(Mudarris.objects.get(id=i))
+            
+            messages.success(request, 'Fan kiritildi')
+            return redirect('fanlar_ustoz_mudarris')
+        except:
+            messages.error(request, 'Fanni kiritishda qandaydur muommo yuz berdi')
+            return redirect('fanlar_ustoz_mudarris')
+
+
+def fan_ustoz_mudarris_profil(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    fan = FanUstozMudarris.objects.select_related('ustoz').prefetch_related('mudarris').get(id=id)
+    mudarrislar_soni = fan.mudarris.count()
+    context = {
+        'admin' : admin,
+        'fan' : fan,
+        'mudarrislar_soni' : mudarrislar_soni
+    }
+    return render(request, 'admin_templates/fan_ustoz_mudarris_profil.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def fan_ustoz_mudarris_profil_tahrirlash(request, id):
+     if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        fan = FanUstozMudarris.objects.prefetch_related('mudarris').get(id=id)
+        ustozlar = Ustoz.objects.all()
+        context = {
+            'admin' : admin,
+            'fan' : fan,
+            'ustozlar' : ustozlar,
+        }
+        return render(request, 'admin_templates/fan_ustoz_mudarris_profil_tahrirlash.html', context)
+     if request.method == 'POST':
+        try:
+            ism = request.POST.get('ism')
+            ustoz_id = request.POST.get('ustoz')
+            tugash_vaqti = request.POST.get('tugash_vaqti')
+            fan = FanUstozMudarris.objects.get(id=id)
+            ustoz = Ustoz.objects.get(id=ustoz_id)
+            fan.ism = ism
+            fan.ustoz = ustoz
+            if tugash_vaqti != None and tugash_vaqti != '':
+                fan.tugash_vaqti = tugash_vaqti
+            fan.save()
+            messages.success(request, 'Fan yangilandi')
+            return HttpResponseRedirect(reverse('fan_ustoz_mudarris_profil', kwargs={'id': id}))
+        except:
+            messages.error(request, 'Fanni yangilashda muommo yuz berdi')
+            return HttpResponseRedirect(reverse('fan_ustoz_mudarris_profil', kwargs={'id': id}))
+
+
+def fan_ustoz_mudarris_profil_mudarrislar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    fan = FanUstozMudarris.objects.select_related('ustoz').prefetch_related('mudarris').get(id=id)
+    mudarrislar = fan.mudarris.all()
+    context = {
+        'admin' : admin,
+        'fan' : fan,
+        'mudarrislar' : mudarrislar
+    }
+    return render(request, 'admin_templates/fan_ustoz_mudarris_profil_mudarrislar.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def fan_ustoz_mudarris_profil_mudarrislar_kiritish(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        fan = FanUstozMudarris.objects.prefetch_related('mudarris').get(id=id)
+        mudarrislar = []
+        for i in Mudarris.objects.select_related('admin').all():
+            if i not in fan.mudarris.all():
+                mudarrislar.append(i)
+        context = {
+            'admin' : admin,
+            'fan' : fan,
+            'mudarrislar' : mudarrislar
+            
+        }
+        return render(request, 'admin_templates/fan_ustoz_mudarris_profil_mudarrislar_kiritish.html', context)
+    if request.method == 'POST':
+        mudarrislar = request.POST.getlist('mudarrislar')
+        try:
+            fan = FanUstozMudarris.objects.prefetch_related('mudarris').get(id=id)
+            for i in mudarrislar:
+                fan.mudarris.add(Mudarris.objects.get(id=i))
+            messages.success(request, 'Fanga mudarris/lar kiritildi')
+            return HttpResponseRedirect(reverse('fan_ustoz_mudarris_profil_mudarrislar', kwargs={'id': id}))
+        except:
+            messages.error(request, 'Fanga mudarris/lar kiritishda qandaydur muommo yuz berdi')
+            return HttpResponseRedirect(reverse('fan_ustoz_mudarris_profil_mudarrislar', kwargs={'id': id}))
+
+
+def fan_ustoz_mudarris_profil_mudarrislar_uchirish(request, fanId, mudarrisId):
+    fan = FanUstozMudarris.objects.prefetch_related('mudarris').get(id=fanId)
+    mudarris = Mudarris.objects.get(id=mudarrisId)
+    try:
+        fan.mudarris.remove(mudarris)
+        messages.success(request, f'Fan "{fan.ism}"dan mudarris "" o\'chirildi')
+        return HttpResponseRedirect(reverse('fan_ustoz_mudarris_profil_mudarrislar', kwargs={'id': fanId}))
+    except:
+        messages.error(request, f'Fan "{fan.ism}"dan mudarris "" o\'chirishda muommo ro\'y berdi')
+        return HttpResponseRedirect(reverse('fan_ustoz_mudarris_profil_mudarrislar', kwargs={'id': fanId}))
+
+
+def fan_ustoz_mudarris_uchirish(request, id):
+    fan = FanUstozMudarris.objects.get(id=id)
+    try:
+        fan.delete()
+        messages.success(request, 'Fan o\'chirildi')
+        return redirect('fanlar_ustoz_mudarris')
+    except:
+        messages.error(request, 'Fanni o\'chirishda qandaydir muommo ro\'y berdi')
+        return redirect('fanlar_ustoz_mudarris')
+
+
+# Fanlar Mudarris - talaba
+def fanlar_mudarris_talaba(request):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fanlar = FanMudarrisTalaba.objects.select_related('mudarris').all()
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar
+    }
+    return render(request, 'admin_templates/fanlar_mudarris_talaba.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def fan_mudarris_talaba_kiritish(request):
+    if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        mudarrislar = Mudarris.objects.select_related('admin').all()
+        talabalar = Talaba.objects.all()
+        context = {
+            'admin' : admin,
+            'mudarrislar' : mudarrislar,
+            'talabalar' : talabalar,
+        }
+        return render(request, 'admin_templates/fan_mudarris_talaba_kiritish.html', context)
+    if request.method == 'POST':
+        ism = request.POST.get('ism')
+        mudarris_id = request.POST.get('mudarris')
+        talabalar = request.POST.getlist('talabalar')
+        tugash_vaqti = request.POST.get('tugash_vaqti')
+        try:
+            mudarris = Mudarris.objects.select_related('admin').get(admin=mudarris_id)
+            fan = FanMudarrisTalaba.objects.create(ism=ism, mudarris=mudarris, tugash_vaqti=tugash_vaqti)
+            for i in talabalar:
+                fan.talaba.add(Talaba.objects.get(id=i))
+            
+            messages.success(request, 'Fan kiritildi')
+            return redirect('fanlar_mudarris_talaba')
+        except:
+            messages.error(request, 'Fanni kiritishda qandaydur muommo yuz berdi')
+            return redirect('fanlar_mudarris_talaba')
+
+
+def fan_mudarris_talaba_profil(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    fan = FanMudarrisTalaba.objects.select_related('mudarris').prefetch_related('talaba').get(id=id)
+    talabalar_soni = fan.talaba.count()
+    context = {
+        'admin' : admin,
+        'fan' : fan,
+        'talabalar_soni' : talabalar_soni
+    }
+    return render(request, 'admin_templates/fan_mudarris_talaba_profil.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def fan_mudarris_talaba_profil_tahrirlash(request, id):
+     if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        fan = FanMudarrisTalaba.objects.select_related('mudarris').get(id=id)
+        mudarrislar = Mudarris.objects.all()
+        context = {
+            'admin' : admin,
+            'fan' : fan,
+            'mudarrislar' : mudarrislar,
+        }
+        return render(request, 'admin_templates/fan_mudarris_talaba_profil_tahrirlash.html', context)
+     if request.method == 'POST':
+        ism = request.POST.get('ism')
+        mudarris_id = request.POST.get('mudarris')
+        tugash_vaqti = request.POST.get('tugash_vaqti')
+        try:
+            fan = FanMudarrisTalaba.objects.get(id=id)
+            mudarris = Mudarris.objects.get(id=mudarris_id)
+            fan.ism = ism
+            fan.mudarris = mudarris
+            if tugash_vaqti != None and tugash_vaqti != '':
+                fan.tugash_vaqti = tugash_vaqti
+            fan.save()
+            messages.success(request, 'Fan yangilandi')
+            return HttpResponseRedirect(reverse('fan_mudarris_talaba_profil', kwargs={'id': id}))
+        except:
+            messages.error(request, 'Fanni yangilashda muommo yuz berdi')
+            return HttpResponseRedirect(reverse('fan_mudarris_talaba_profil', kwargs={'id': id}))
+
+
+def fan_mudarris_talaba_profil_talabalar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    fan = FanMudarrisTalaba.objects.select_related('mudarris').prefetch_related('talaba').get(id=id)
+    talabalar = fan.talaba.all()
+    context = {
+        'admin' : admin,
+        'fan' : fan,
+        'talabalar' : talabalar
+    }
+    return render(request, 'admin_templates/fan_mudarris_talaba_profil_talabalar.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def fan_mudarris_talaba_profil_talabalar_kiritish(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        fan = FanMudarrisTalaba.objects.prefetch_related('mudarris').get(id=id)
+        talabalar = []
+        for i in Talaba.objects.all():
+            if i not in fan.talaba.all():
+                talabalar.append(i)
+        context = {
+            'admin' : admin,
+            'fan' : fan,
+            'talabalar' : talabalar
+            
+        }
+        return render(request, 'admin_templates/fan_mudarris_talaba_profil_talabalar_kiritish.html', context)
+    if request.method == 'POST':
+        talabalar = request.POST.getlist('talabalar')
+        try:
+            fan = FanMudarrisTalaba.objects.prefetch_related('talaba').get(id=id)
+            for i in talabalar:
+                fan.talaba.add(Talaba.objects.get(id=i))
+            messages.success(request, 'Fanga talaba/lar kiritildi')
+            return HttpResponseRedirect(reverse('fan_mudarris_talaba_profil_talabalar', kwargs={'id': id}))
+        except:
+            messages.error(request, 'Fanga talaba kiritishda qandaydur muommo yuz berdi')
+            return HttpResponseRedirect(reverse('fan_mudarris_talaba_profil_talabalar', kwargs={'id': id}))
+
+
+def fan_mudarris_talaba_profil_talabalar_uchirish(request, fanId, talabaId):
+    fan = FanMudarrisTalaba.objects.prefetch_related('talaba').get(id=fanId)
+    talaba = Talaba.objects.get(id=talabaId)
+    try:
+        fan.talaba.remove(talaba)
+        messages.success(request, f'Fan "{fan.ism}"dan talaba "{talaba.ism}" o\'chirildi')
+        return HttpResponseRedirect(reverse('fan_mudarris_talaba_profil_talabalar', kwargs={'id': fanId}))
+    except:
+        messages.error(request, f'Fan "{fan.ism}"dan talaba "{talaba.ism}" o\'chirildi')
+        return HttpResponseRedirect(reverse('fan_mudarris_talaba_profil_talabalar', kwargs={'id': fanId}))
+
+
+def fan_mudarris_talaba_uchirish(request, id):
+    fan = FanMudarrisTalaba.objects.get(id=id)
+    try:
+        fan.delete()
+        messages.success(request, 'Fan o\'chirildi')
+        return redirect('fanlar_mudarris_talaba')
+    except:
+        messages.error(request, 'Fanni o\'chirishda qandaydir muommo ro\'y berdi')
+        return redirect('fanlar_mudarris_talaba')
+
 
 
 # Username ni tekshirish

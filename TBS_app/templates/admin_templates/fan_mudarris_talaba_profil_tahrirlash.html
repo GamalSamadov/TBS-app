@@ -7,7 +7,7 @@
 
 {% block main_content %}
 
-<form role="form" method="POST" action="{% url 'fan_ustoz_talaba_profil_tahrirlash' fan.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+<form role="form" method="POST" action="{% url 'fan_mudarris_talaba_profil_tahrirlash' fan.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
   {% csrf_token %}
   <div class="row">
     
@@ -33,14 +33,14 @@
                   
                   <div class="row">
                     <div class="col-sm-3">
-                      <h6 class="mb-0"><label for='ustoz'>Ustoz</label></h6>
+                      <h6 class="mb-0"><label for='mudarris'>Mudarris</label></h6>
                     </div>
                     <div class="col-sm-9 text-secondary">
-                      <select name="ustoz" id="ustoz" class='form-control'>
-                        <option value="{{ fan.ustoz.id }}">{{ fan.ustoz.admin.first_name }} {{ fan.ustoz.admin.last_name }} - Hozirgi ustoz</option>
-                        {% for ustoz in ustozlar %}
-                          {% if ustoz != fan.ustoz %}
-                            <option value="{{ ustoz.id }}">{{ ustoz.admin.first_name }} {{ ustoz.admin.first_name }}</option>{% endif %}
+                      <select name="mudarris" id="mudarris" class='form-control'>
+                        <option value="{{ fan.mudarris.id }}">{{ fan.mudarris.admin.first_name }} {{ fan.mudarris.admin.last_name }} - Hozirgi mudarris</option>
+                        {% for mudarris in mudarrislar %}
+                          {% if mudarris != fan.mudarris %}
+                            <option value="{{ mudarris.id }}">{{ mudarris.admin.first_name }} {{ mudarris.admin.last_name }}</option>{% endif %}
                         {% endfor %}
                       </select>
                     </div>
@@ -49,7 +49,7 @@
 
                   <div class="row">
                     <div class="col-sm-3">
-                      <h6 class="mb-0"><label for='ustoz'>Tugash vaqti</label></h6>
+                      <h6 class="mb-0"><label for='tugash_vaqti'>Tugash vaqti</label></h6>
                       
                     </div>
                     <div class="col-sm-9 text-secondary">
@@ -75,7 +75,7 @@
                 </span>
                 <span class='text'>Tahrirlash</span>
               </button>
-              <a class="btn btn-light btn-icon-split" href="{% url 'fan_ustoz_talaba_profil' fan.id %}">
+              <a class="btn btn-light btn-icon-split" href="{% url 'fan_mudarris_talaba_profil' fan.id %}">
                 <span class="icon text-white-50">
                   <i class="fa-solid fa-arrow-left"></i>
                 </span>
