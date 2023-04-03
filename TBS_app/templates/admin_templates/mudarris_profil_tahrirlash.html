@@ -135,6 +135,15 @@
                 <hr>
                 <div class="row">
                   <div class="col-sm-3">
+                    <h6 class="mb-0"><label for="telefon_raqam">Telefon raqami: </label></h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    <input type="tel" class="form-control" id="phone" name='telefon_raqam' value='{% if mudarris.telefon_raqami %}{{ mudarris.telefon_raqami }}{% endif %}'>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
                     <h6 class="mb-0"><label for="adres">Adres</label></h6>
                   </div>
                   <div class="col-sm-9 text-secondary">
@@ -315,10 +324,18 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+  <script src="{% static 'phone_number/js/intlTelInput.js' %}"></script>
+  
+  <script>
+    var phoneNumberInput = document.querySelector('#phone');
+    window.intlTelInput(phoneNumberInput, {});
+  </script>
 {% endblock custom_script %}
 
 {% block custom_css %}
   <link href="{% static 'css/admin-profile-tahrirlash.css' %}" rel="stylesheet">
+  
   <style>
     form #showPassword {
       cursor: pointer;
@@ -389,6 +406,9 @@
 
   </style>
   <link rel="stylesheet" href="{% static 'css/delete-alert.css' %}">
+
+  <link rel="stylesheet" href="{% static 'phone_number/css/demo.css' %}">
+  <link rel="stylesheet" href="{% static 'phone_number/css/intlTelInput.css' %}">
 {% endblock custom_css %}
 {% block sweet_alerts %}
   <!-- Sweet alerts -->

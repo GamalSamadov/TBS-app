@@ -80,6 +80,15 @@
             <hr>
             <div class="row">
               <div class="col-sm-3">
+                <h6 class="mb-0"><label for="telefon_raqam">Telefon raqami: </label></h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="tel" class="form-control" id="phone" name='telefon_raqam'>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
                 <h6 class="mb-0"><label for="adres">Adres</label></h6>
               </div>
               <div class="col-sm-9 text-secondary">
@@ -271,6 +280,12 @@
     });
 
   </script>
+  <script src="{% static 'phone_number/js/intlTelInput.js' %}"></script>
+  
+  <script>
+    var phoneNumberInput = document.querySelector('#phone');
+    window.intlTelInput(phoneNumberInput, {});
+  </script>
 {% endblock custom_script %}
 
 {% block sweet_alerts %}
@@ -304,5 +319,7 @@
       z-index: 2;
     }
   </style>
+  <link rel="stylesheet" href="{% static 'phone_number/css/demo.css' %}">
+  <link rel="stylesheet" href="{% static 'phone_number/css/intlTelInput.css' %}">
 {% endblock custom_css %}
 

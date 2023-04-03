@@ -41,9 +41,6 @@
                       <span class='text'>{% if ustoz.admin.username %}{{ ustoz.admin.username }}{% else %}nomsiz{% endif %}</span>
                     </div>
                     
-                    {% comment %} <p class="text-muted font-size-sm">Staff</p> {% endcomment %}
-                    {% comment %} <button class="btn btn-primary">Follow</button>
-                    <button class="btn btn-outline-primary">Message</button> {% endcomment %}
                   </div>
                 </div>
               </div>
@@ -137,6 +134,15 @@
           <hr>
           <div class="row">
             <div class="col-sm-3">
+              <h6 class="mb-0">Telefon raqami</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if ustoz.telefon_raqami %}{{ ustoz.telefon_raqami }}{% else %}Telefon raqam kiritilmagan{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
               <h6 class="mb-0">Jins</h6>
             </div>
             <div class="col-sm-9 text-secondary">
@@ -217,7 +223,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                 Hujralar soni</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">0 ta</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ hujralar_soni }} ta</div>
                         </div>
                         <div class="col-auto">
                             <div class="text-gray-300">Ko'rish uchun bosing...</div>

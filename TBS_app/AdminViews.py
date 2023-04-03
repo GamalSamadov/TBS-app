@@ -14,7 +14,7 @@ from .forms import *
 
 # Asosiy
 def admin_asosiy(request):
-    admin = CustomUser.objects.get(id=request.user.id)
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
     context = {
         'admin' : admin,
     }
@@ -23,7 +23,7 @@ def admin_asosiy(request):
 
 # Admin
 def admin_profil(request):
-    admin = CustomUser.objects.get(id=request.user.id)
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
     context = {
         'admin' : admin,
     }
@@ -33,7 +33,7 @@ def admin_profil(request):
 @require_http_methods(["GET", "POST"])
 def admin_profil_tahrirlash(request):
     if request.method == 'GET':
-        admin = CustomUser.objects.get(id=request.user.id)
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
         context = {
             'admin':admin,
         }
@@ -84,7 +84,7 @@ def admin_profil_tahrirlash(request):
 
 
 def admin_profil_suratni_uchirish(request):
-    admin = Admin.objects.get(admin=request.user.id)
+    admin = Admin.objects.select_related('admin').get(admin=request.user.id)
     try:
         fs = FileSystemStorage()
         if admin.profile_pic:
@@ -102,8 +102,8 @@ def admin_profil_suratni_uchirish(request):
 
 # Ustozlar
 def ustozlar(request):
-    admin = CustomUser.objects.get(id=request.user.id)
-    ustozlar = Ustoz.objects.all()
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    ustozlar = Ustoz.objects.select_related('admin').all()
     context = {
         'admin' : admin,
         'ustozlar' : ustozlar
@@ -114,7 +114,7 @@ def ustozlar(request):
 @require_http_methods(["GET", "POST"])
 def ustoz_kiritish(request):
     if request.method == 'GET':
-        admin = CustomUser.objects.get(id=request.user.id)
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
         form = UstozKiritishForm()
         context = {
             'admin' : admin,
@@ -128,6 +128,7 @@ def ustoz_kiritish(request):
         parolga_ishora = request.POST.get('parolga_ishora')
         ism = request.POST.get('ism')
         familya = request.POST.get('familya')
+        telefon_raqam = request.POST.get('telefon_raqam')
         adres = request.POST.get('adres')
         jins = request.POST.get('jins')
 
@@ -142,6 +143,7 @@ def ustoz_kiritish(request):
         try:
             user = CustomUser.objects.create_user(username=username, password=parol, email=email, first_name=ism, last_name=familya, user_type=2)
             user.ustoz.parolga_ishora = parolga_ishora
+            user.ustoz.telefon_raqami = telefon_raqam
             user.ustoz.adres = adres
             user.ustoz.jins = jins
             user.ustoz.profil_surati = profil_surati_url
@@ -156,11 +158,14 @@ def ustoz_kiritish(request):
 
 
 def ustoz_profil(request, id):
-    admin = CustomUser.objects.get(id=request.user.id)
-    ustoz = Ustoz.objects.get(admin=id)
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    ustoz = Ustoz.objects.select_related('admin').get(admin=id)
+    hujralar_soni = ustoz.hujra_set.count()
+    # mudarrislar = Mudarris.objects.select_related('admin', 'hujra').filter()
     context = {
         'admin' : admin,
         'ustoz' : ustoz,
+        'hujralar_soni' : hujralar_soni,
 
     }
     return render(request, 'admin_templates/ustoz_profil.html', context)
@@ -169,8 +174,8 @@ def ustoz_profil(request, id):
 @require_http_methods(["GET", "POST"])
 def ustoz_profil_tahrirlash(request, id):
     if request.method == 'GET':
-        admin = CustomUser.objects.get(id=request.user.id)
-        ustoz = Ustoz.objects.get(admin=id)
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        ustoz = Ustoz.objects.select_related('admin').get(admin=id)
         context = {
             'admin' : admin,
             'ustoz' : ustoz
@@ -183,6 +188,7 @@ def ustoz_profil_tahrirlash(request, id):
         familya = request.POST.get('familya')
         parol = request.POST.get('parol')
         parolga_ishora = request.POST.get('parolga_ishora')
+        telefon_raqam = request.POST.get('telefon_raqam')
         adres = request.POST.get('adres')
         jins = request.POST.get('jins')
         
@@ -213,6 +219,7 @@ def ustoz_profil_tahrirlash(request, id):
                 ustoz.profil_surati = profil_surati_url
 
             ustoz.parolga_ishora = parolga_ishora
+            ustoz.telefon_raqami = telefon_raqam
             ustoz.adres = adres
             ustoz.jins = jins
 
@@ -226,7 +233,7 @@ def ustoz_profil_tahrirlash(request, id):
 
         
 def ustoz_profil_suratni_uchirish(request, id):
-    ustoz = Ustoz.objects.get(admin=id)
+    ustoz = Ustoz.objects.select_related('admin').get(admin=id)
     try:
         if ustoz.profil_surati:
             fs = FileSystemStorage()
@@ -246,7 +253,7 @@ def ustoz_profil_suratni_uchirish(request, id):
 
 
 def ustozni_uchirish(request, id):
-    user = CustomUser.objects.get(id=id)
+    user = CustomUser.objects.select_related('admin').get(id=id)
     try:
         if user.ustoz.profil_surati:
             appDir = os.path.dirname(os.path.abspath(__file__))
@@ -262,8 +269,8 @@ def ustozni_uchirish(request, id):
 
 # Hujralar
 def hujralar(request):
-    admin = CustomUser.objects.get(id=request.user.id)
-    hujralar = Hujra.objects.all()
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    hujralar = Hujra.objects.select_related('ustoz').all()
     context = {
         'admin' : admin,
         'hujralar' : hujralar,
@@ -275,7 +282,7 @@ def hujralar(request):
 @require_http_methods(['GET', 'POST'])
 def hujra_kiritish(request):
     if request.method == 'GET':
-        admin = CustomUser.objects.get(id=request.user.id)
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
         form = HujraKiritishForm()
         context = {
             'admin' : admin,
@@ -300,8 +307,8 @@ def hujra_kiritish(request):
 
 
 def hujra_profil(request, id):
-    admin = CustomUser.objects.get(id=request.user.id)
-    hujra = Hujra.objects.get(id=id)
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    hujra = Hujra.objects.select_related('ustoz').get(id=id)
     context = {
         'admin' : admin,
         'hujra' : hujra,
@@ -313,8 +320,8 @@ def hujra_profil(request, id):
 @require_http_methods(['GET', 'POST'])
 def hujra_profil_tahrirlash(request, id):
     if request.method == 'GET':
-        admin = CustomUser.objects.get(id=request.user.id)
-        hujra = Hujra.objects.get(id=id)
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        hujra = Hujra.objects.select_related('admin').get(id=id)
         ustozlar = Ustoz.objects.all()
         context = {
             'admin' : admin,
@@ -342,7 +349,7 @@ def hujra_profil_tahrirlash(request, id):
 
 
 def hujra_uchirish(request, id):
-    hujra = Hujra.objects.get(id=id)
+    hujra = Hujra.objects.select_related('ustoz').get(id=id)
     try:
         hujra.delete()
         messages.success(request, "Hujra o'chirildi.")
@@ -355,8 +362,8 @@ def hujra_uchirish(request, id):
 
 # Mudarrislar
 def mudarrislar(request):
-    admin = CustomUser.objects.get(id=request.user.id)
-    mudarrislar = Mudarris.objects.all()
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    mudarrislar = Mudarris.objects.select_related('admin', 'hujra').all()
     context = {
         'admin' : admin,
         'mudarrislar' : mudarrislar
@@ -367,8 +374,8 @@ def mudarrislar(request):
 @require_http_methods(["GET", "POST"])
 def mudarris_kiritish(request):
     if request.method == 'GET':
-        admin = CustomUser.objects.get(id=request.user.id)
-        hujralar = Hujra.objects.all()
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        hujralar = Hujra.objects.select_related('ustoz', 'hujra').all()
         context = {
             'admin' : admin,
             'hujralar' : hujralar,
@@ -382,6 +389,7 @@ def mudarris_kiritish(request):
         ism = request.POST.get('ism')
         familya = request.POST.get('familya')
         adres = request.POST.get('adres')
+        telefon_raqam = request.POST.get('telefon_raqam')
         jins = request.POST.get('jins')
         hujra_id = request.POST.get('hujra')
 
@@ -396,30 +404,31 @@ def mudarris_kiritish(request):
         else:
             profil_surati_url = None
             pasport_surati_url = None
-        # try:
-        hujra = Hujra.objects.get(id=hujra_id)
-        user = CustomUser.objects.create_user(username=username, password=parol, email=email, first_name=ism, last_name=familya, user_type=3)
-        user.mudarris.parolga_ishora = parolga_ishora
-        user.mudarris.adres = adres
-        user.mudarris.jins = jins
-        if profil_surati_url != None:
-            user.mudarris.profil_surati = profil_surati_url
-        if pasport_surati_url != None:
-            user.mudarris.pasport_surati = pasport_surati_url
-        user.mudarris.hujra = hujra
-        user.save()
-        messages.success(
-            request, "Mudarris kiritish muvaffaqiyatli amalga oshirildi :)")
-        return redirect('mudarrislar')
-        # except:
-        #     messages.error(
-        #         request, "Mudarris kiritish ba'zi muommolar uchun amalga oshirilmadi :(")
-        #     return redirect('mudarrislar')
+        try:
+            hujra = Hujra.objects.get(id=hujra_id)
+            user = CustomUser.objects.create_user(username=username, password=parol, email=email, first_name=ism, last_name=familya, user_type=3)
+            user.mudarris.telefon_raqami = telefon_raqam
+            user.mudarris.parolga_ishora = parolga_ishora
+            user.mudarris.adres = adres
+            user.mudarris.jins = jins
+            if profil_surati_url != None:
+                user.mudarris.profil_surati = profil_surati_url
+            if pasport_surati_url != None:
+                user.mudarris.pasport_surati = pasport_surati_url
+            user.mudarris.hujra = hujra
+            user.save()
+            messages.success(
+                request, "Mudarris kiritish muvaffaqiyatli amalga oshirildi :)")
+            return redirect('mudarrislar')
+        except:
+            messages.error(
+                request, "Mudarris kiritish ba'zi muommolar uchun amalga oshirilmadi :(")
+            return redirect('mudarrislar')
 
 
 def mudarris_profil(request, id):
-    admin = CustomUser.objects.get(id=request.user.id)
-    mudarris = Mudarris.objects.get(admin=id)
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    mudarris = Mudarris.objects.select_related('admin', 'hujra').get(admin=id)
     context = {
         'admin' : admin,
         'mudarris' : mudarris,
@@ -431,9 +440,9 @@ def mudarris_profil(request, id):
 @require_http_methods(["GET", "POST"])
 def mudarris_profil_tahrirlash(request, id):
     if request.method == 'GET':
-        admin = CustomUser.objects.get(id=request.user.id)
-        mudarris = Mudarris.objects.get(admin=id)
-        hujralar = Hujra.objects.all()
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        mudarris = Mudarris.objects.select_related('admin', 'hujra').get(admin=id)
+        hujralar = Hujra.objects.select_related('ustoz').all()
         context = {
             'admin' : admin,
             'mudarris' : mudarris,
@@ -447,6 +456,7 @@ def mudarris_profil_tahrirlash(request, id):
         familya = request.POST.get('familya')
         parol = request.POST.get('parol')
         parolga_ishora = request.POST.get('parolga_ishora')
+        telefon_raqam = request.POST.get('telefon_raqam')
         adres = request.POST.get('adres')
         jins = request.POST.get('jins')
         hujra_id = request.POST.get('hujra')
@@ -481,6 +491,7 @@ def mudarris_profil_tahrirlash(request, id):
             mudarris.hujra = hujra
 
             mudarris.parolga_ishora = parolga_ishora
+            mudarris.telefon_raqami = telefon_raqam
             mudarris.adres = adres
 
             if jins != '':
@@ -496,7 +507,7 @@ def mudarris_profil_tahrirlash(request, id):
 
         
 def mudarris_profil_suratni_uchirish(request, id):
-    mudarris = Mudarris.objects.get(admin=id)
+    mudarris = Mudarris.objects.select_related('admin').get(admin=id)
     try:
         if mudarris.profil_surati:
             fs = FileSystemStorage()
@@ -518,8 +529,8 @@ def mudarris_profil_suratni_uchirish(request, id):
 @require_http_methods(["GET", "POST"])
 def mudarris_paspurt_tahrirlash(request, id):
     if request.method == 'GET':
-        admin = CustomUser.objects.get(id=request.user.id)
-        mudarris = Mudarris.objects.get(admin=id)
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        mudarris = Mudarris.objects.select_related('admin').get(admin=id)
         context = {
         'admin' : admin,
         'mudarris' : mudarris,
@@ -550,7 +561,7 @@ def mudarris_paspurt_tahrirlash(request, id):
 
 
 def mudarris_pasport_suratni_uchirish(request, id):
-    mudarris = Mudarris.objects.get(admin=id)
+    mudarris = Mudarris.objects.select_related('admin').get(admin=id)
     try:
         if mudarris.pasport_surati:
             fs = FileSystemStorage()
@@ -576,7 +587,7 @@ def mudarrisni_uchirish(request, id):
             appDir = os.path.dirname(os.path.abspath(__file__))
             directory = os.path.dirname(appDir)
             os.remove(directory + str(user.mudarris.profil_surati))
-        if user.mudarris.paspurt_surati:
+        if user.mudarris.pasport_surati:
             appDir = os.path.dirname(os.path.abspath(__file__))
             directory = os.path.dirname(appDir)
             os.remove(directory + str(user.mudarris.paspurt_surati))
@@ -590,8 +601,8 @@ def mudarrisni_uchirish(request, id):
 
 # talabalar
 def talabalar(request):
-    admin = CustomUser.objects.get(id=request.user.id)
-    talabalar = Talaba.objects.all()
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    talabalar = Talaba.objects.select_related('hujra').all()
     context = {
         'admin' : admin,
         'talabalar' : talabalar
@@ -602,8 +613,8 @@ def talabalar(request):
 @require_http_methods(["GET", "POST"])
 def talaba_kiritish(request):
     if request.method == 'GET':
-        admin = CustomUser.objects.get(id=request.user.id)
-        hujralar = Hujra.objects.all()
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        hujralar = Hujra.objects.select_related('ustoz').all()
         context = {
             'admin' : admin,
             'hujralar' : hujralar,
@@ -641,8 +652,8 @@ def talaba_kiritish(request):
 
 
 def talaba_profil(request, id):
-    admin = CustomUser.objects.get(id=request.user.id)
-    talaba = Talaba.objects.get(id=id)
+    admin = CustomUser.objects.select_related('ustoz').get(id=request.user.id)
+    talaba = Talaba.objects.select_related('hujra').get(id=id)
     context = {
         'admin' : admin,
         'talaba' : talaba,
@@ -654,9 +665,9 @@ def talaba_profil(request, id):
 @require_http_methods(["GET", "POST"])
 def talaba_profil_tahrirlash(request, id):
     if request.method == 'GET':
-        admin = CustomUser.objects.get(id=request.user.id)
-        talaba = Talaba.objects.get(id=id)
-        hujralar = Hujra.objects.all()
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        talaba = Talaba.objects.select_related('hujra').get(id=id)
+        hujralar = Hujra.objects.select_related('ustoz').all()
         context = {
             'admin' : admin,
             'talaba' : talaba,
@@ -707,7 +718,7 @@ def talaba_profil_tahrirlash(request, id):
 
         
 def talaba_profil_suratni_uchirish(request, id):
-    talaba = Talaba.objects.get(id=id)
+    talaba = Talaba.objects.select_related('hujra').get(id=id)
     try:
         if talaba.profil_surati:
             fs = FileSystemStorage()
@@ -729,8 +740,8 @@ def talaba_profil_suratni_uchirish(request, id):
 @require_http_methods(["GET", "POST"])
 def talaba_paspurt_tahrirlash(request, id):
     if request.method == 'GET':
-        admin = CustomUser.objects.get(id=request.user.id)
-        talaba = Talaba.objects.get(id=id)
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        talaba = Talaba.objects.select_related('hujra').get(id=id)
         context = {
         'admin' : admin,
         'talaba' : talaba,
@@ -761,7 +772,7 @@ def talaba_paspurt_tahrirlash(request, id):
 
 
 def talaba_pasport_suratni_uchirish(request, id):
-    talaba = Talaba.objects.get(id=id)
+    talaba = Talaba.objects.select_related('hujra').get(id=id)
     try:
         if talaba.pasport_surati:
             fs = FileSystemStorage()
@@ -781,7 +792,7 @@ def talaba_pasport_suratni_uchirish(request, id):
 
 
 def talabani_uchirish(request, id):
-    talaba = Talaba.objects.get(id=id)
+    talaba = Talaba.objects.select_related('hujra').get(id=id)
     try:
         if talaba.profil_surati:
             appDir = os.path.dirname(os.path.abspath(__file__))
@@ -801,7 +812,7 @@ def talabani_uchirish(request, id):
 
 # Fanlar Ustoz - talaba
 def fanlar_ustoz_talaba(request):
-    admin = CustomUser.objects.get(id=request.user.id)
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
     fanlar = FanUstozTalaba.objects.select_related('ustoz').all()
     context = {
         'admin' : admin,
@@ -1241,7 +1252,6 @@ def fan_mudarris_talaba_uchirish(request, id):
     except:
         messages.error(request, 'Fanni o\'chirishda qandaydir muommo ro\'y berdi')
         return redirect('fanlar_mudarris_talaba')
-
 
 
 # Username ni tekshirish
