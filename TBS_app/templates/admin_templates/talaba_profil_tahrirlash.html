@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block page_heading %}
-  Talaba "{{ talaba.ism }} {{ talaba.familya }}"" profilini tahrirlash
+  Talaba "{{ talaba.ism }} {{ talaba.familya }}" profilini tahrirlash
 {% endblock page_heading %}
 
 {% block main_content %}
@@ -116,7 +116,11 @@
                     </div>
                     <div class="col-sm-9 text-secondary">
                       <select id="hujra-select" class="form-control" name='hujra'>
-                        <option value="{{ talaba.hujra.id }}" selected>{{ talaba.hujra.ism }} - Hozirgi xujra</option>
+                        {% if talaba.hujra %}
+                          <option value="{{ talaba.hujra.id }}" selected>{{ talaba.hujra.ism }} - Hozirgi xujra</option>
+                          {% else %}
+                          <option value="" selected>Xujra kiritilmagan</option>
+                        {% endif %}
                         {% for hujra in hujralar %}
                           {% if hujra.id != talaba.hujra.id %}
                             <option value="{{ hujra.id }}">{{ hujra.ism }}</option>

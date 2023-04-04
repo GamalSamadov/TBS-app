@@ -1,0 +1,143 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+
+{% block custom_css %}
+  <!-- Custom styles for this page -->
+  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+
+  <style>
+    #profile-pic:hover{
+      transform: scale(1.2);
+    }
+
+   
+  </style>
+  <link rel="stylesheet" href="{% static 'css/delete-alert.css' %}">
+{% endblock custom_css %}
+
+{% block page_heading %}
+  "{{hujra.ism}}" xujrasi talabalari
+{% endblock page_heading %}
+
+{% block main_content %}
+
+<div class="row">
+  <div class="col-lg-6">
+    <div class="mb-4">
+      <a href="{% url 'hujra_profil_talabalar_kiritish' hujra.id %}" class="btn btn-primary btn-icon-split">
+        <span class="icon text-white-50">
+          <i class="fa-sharp fa-solid fa-user-plus"></i>
+        </span>
+        <span class="text">Talaba kiritish</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Barcha talabalar tablitsasi</h6>
+  </div>
+  <div class="card-body">
+      <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                  <tr>
+                      <th>Profil surati</th>
+                      <th>Ism</th>
+                      <th>Jins</th>
+                      <th>Amalyot</th>
+                  </tr>
+              </thead>
+              <tfoot>
+                  <tr>
+                    <th>Profil surati</th>
+                    <th>Ism</th>
+                    <th>Jins</th>
+                    <th>Amalyot</th>
+                  </tr>
+              </tfoot>
+              <tbody>
+                {% for talaba in talabalar %}
+                  <tr>
+                      <td>
+                        <a href="{% url 'talaba_profil' talaba.id %}">
+                          {% if talaba.profil_surati %}
+                              <img src="{{ talaba.profil_surati }}" alt="Admin" class="avatar-md rounded-circle img-thumbnail" width="50" id='profile-pic'>
+                            </a>
+                          {% else %}
+                              {% if talaba.jins == 'Erkak' %}
+                                <img src="{% static 'img/undraw_profile.svg' %}" alt="Admin" class="avatar-md rounded-circle img-thumbnail" width="50" id='profile-pic'>
+                              {% elif talaba.jins == 'Ayol' %}
+                                <img src="{% static 'img/undraw_profile_1.svg' %}" alt="Admin" class="avatar-md rounded-circle img-thumbnail" width="50" id='profile-pic'>
+                              {% endif %}
+                            
+                          {% endif %}
+                        </a>
+                      </td>
+                      <td> {{ talaba.ism }} {{ talaba.familya }} </td>
+                      <td> {{ talaba.jins }} </td> 
+                      <td>
+                        <a href="{% url 'talaba_profil' talaba.id %}" class="btn btn-info btn-circle">
+                          <i class="fa-solid fa-address-card"></i>
+                        </a>
+                        <a href="#myModal" class="btn btn-danger btn-circle delete" data-toggle="modal">
+                          <i class="fa-sharp fa-solid fa-trash-can"></i>
+                        </a>
+                      </td>
+                  </tr>
+
+                  <div id="myModal" class="modal fade">
+                    <div class="modal-dialog modal-confirm">
+                      <div class="modal-content">
+                        <div class="modal-header flex-column">
+                          <div class="icon-box">
+                            <i class="fa-solid fa-trash"></i>
+                          </div>						
+                          <h4 class="modal-title w-100">Chindan ham "{{talaba.ism}} {{talaba.familya}}" talabani "{{hujra.ism}}" xujrasidan o'chirmoqchimisiz?</h4>	
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Agar chindan ham o'chirmoqchi bo'lsangiz "O'chirish" tugmasini bosing.</p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
+                          <a href="{% url 'hujra_profil_talabalar_uchirish' hujra.id talaba.id %}">
+                            <button type="button" class="btn btn-danger">O'chirish</button>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                {% empty %}
+                <tr>
+                  <td><h3>Talabalar yo'q. <i class="fa-solid fa-face-frown"></i> Talaba kiriting. </h3></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+
+
+{% endblock main_content %}
+
+
+{% block custom_script %}
+
+  <!-- Page level plugins -->
+  <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+{% endblock custom_script %}
+

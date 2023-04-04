@@ -1,0 +1,111 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+{% block page_heading %}
+  "{{hujra.ism}}"ga talaba kiritish
+{% endblock page_heading %}
+
+{% block main_content %}
+
+<form role="form" method="POST" action="{% url 'hujra_profil_talabalar_kiritish' hujra.id %}" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+  {% csrf_token %}
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Talaba kiritish</h6>
+      </div>
+      <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0"><label for="ism">Ism</label></h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control" id="ism" name='ism' required>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0"><label for="familya">Familya</label></h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="text" class="form-control" id="familya" name='familya' required>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0"><label for="adres">Adres</label></h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <textarea rows="4" cols="50" name='adres' id='adres' class='form-control'>
+
+                </textarea>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0"><label for="email">Jins</label></h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <select name="jins" id="jins-select" class="form-control">
+                  <option value="Erkak">Erkak</option>
+                  <option value="Ayol">Ayol</option>
+                </select>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0"><label for="profil-surati">Profil surati</label></h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="file" class="form-control" id="profil-surati" name='profil_surati'>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0"><label for="profil-surati">Pasport surati</label></h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                <input type="file" class="form-control" id="pasport-surati" name='pasport_surati'>
+              </div>
+            </div>
+            <hr>
+          
+         
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-sm-12">
+      <button class="btn btn-success btn-icon-split" type="submit" id='save'>
+        <span class="icon text-white-50">
+          <i class="fa-sharp fa-solid fa-check"></i>
+        </span>
+        <span class='text'>Kiritish</span>
+      </button>
+      <a class="btn btn-light btn-icon-split" href="{% url 'talabalar' %}">
+        <span class="icon text-white-50">
+          <i class="fa-solid fa-arrow-left"></i>
+        </span>
+        <span class='text'>Ortga</span>
+      </a>
+    </div>
+  </div>
+</form>
+
+{% endblock main_content %}
+
+{% block sweet_alerts %}
+  <!-- Sweet alerts -->
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{% static 'sweet_alert/addForm.js' %}"></script>
+{% endblock sweet_alerts %}
+

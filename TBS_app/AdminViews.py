@@ -451,6 +451,71 @@ def hujra_profil(request, id):
     return render(request, 'admin_templates/hujra_profil.html', context)
 
 
+def hujra_profil_talabalar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    hujra = Hujra.objects.select_related('ustoz').get(id=id)
+    talabalar = Talaba.objects.select_related('hujra').filter(hujra=hujra)
+    context = {
+        'admin' : admin,
+        'hujra' : hujra,
+        'talabalar' : talabalar,
+
+    }
+    return render(request, 'admin_templates/hujra_profil_talabalar.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def hujra_profil_talabalar_kiritish(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        hujra = Hujra.objects.get(id=id)
+        context = {
+            'admin' : admin,
+            'hujra': hujra
+        }
+        return render(request, 'admin_templates/hujra_profil_talabalar_kiritish.html', context)
+    if request.method == 'POST':
+        ism = request.POST.get('ism')
+        familya = request.POST.get('familya')
+        adres = request.POST.get('adres')
+        jins = request.POST.get('jins')
+        try:
+            if len(request.FILES) != 0:
+                profil_surati = request.FILES['profil_surati']
+                pasport_surati = request.FILES['pasport_surati']
+                fs = FileSystemStorage()
+                profile_filename = fs.save(profil_surati.name, profil_surati)
+                profil_surati_url = fs.url(profile_filename)
+                pasport_filename = fs.save(pasport_surati.name, pasport_surati)
+                pasport_surati_url = fs.url(pasport_filename)
+            else:
+                profil_surati_url = None
+                pasport_surati_url = None
+        
+            hujra = Hujra.objects.get(id=id)
+            talaba = Talaba(ism=ism, familya=familya, adres=adres, jins=jins, profil_surati=profil_surati_url, pasport_surati=pasport_surati_url, hujra=hujra)
+            talaba.save()
+            messages.success(
+                request, "Talaba kiritish muvaffaqiyatli amalga oshirildi :)")
+            return HttpResponseRedirect(reverse('hujra_profil_talabalar', kwargs={'id': id}))
+        except:
+            messages.error(
+                request, "Talaba kiritish ba'zi muommolar uchun amalga oshirilmadi :(")
+            return HttpResponseRedirect(reverse('hujra_profil_talabalar', kwargs={'id': id}))
+
+
+def hujra_profil_talabalar_uchirish(request, hujraId, talabaId):
+    hujra = Hujra.objects.select_related('ustoz').get(id=hujraId)
+    talaba = Talaba.objects.select_related('hujra').get(id=talabaId)
+    try:
+        hujra.talaba_set.remove(talaba)
+        messages.success(request, 'Talaba o\'chirildi')
+        return HttpResponseRedirect(reverse('hujra_profil_talabalar', kwargs={'id': hujraId}))
+    except:
+        messages.error(request, 'Talaba o\'chirmadi')
+        return HttpResponseRedirect(reverse('hujra_profil_talabalar', kwargs={'id': hujraId}))
+
+
 @require_http_methods(['GET', 'POST'])
 def hujra_profil_tahrirlash(request, id):
     if request.method == 'GET':
@@ -835,8 +900,9 @@ def talaba_profil_tahrirlash(request, id):
             if profil_surati_url != None:
                 talaba.profil_surati = profil_surati_url
             
-            hujra = Hujra.objects.get(id=hujra_id)
-            talaba.hujra = hujra
+            if hujra_id != None and hujra_id != '':
+                hujra = Hujra.objects.get(id=hujra_id)
+                talaba.hujra = hujra
             talaba.adres = adres
 
             if jins != '':

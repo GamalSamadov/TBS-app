@@ -33,6 +33,9 @@ urlpatterns = [
     path('xujralar/', AdminViews.hujralar, name="hujralar"),
     path('xujralar/kiritish/', AdminViews.hujra_kiritish, name="hujra_kiritish"),
     path('xujralar/<int:id>/', AdminViews.hujra_profil, name="hujra_profil"),
+    path('xujralar/<int:id>/talabalar/', AdminViews.hujra_profil_talabalar, name="hujra_profil_talabalar"),
+    path('xujralar/<int:id>/talabalar/kiritish/', AdminViews.hujra_profil_talabalar_kiritish, name="hujra_profil_talabalar_kiritish"),
+    path('xujralar/<int:hujraId>/talabalar/<int:talabaId>/o\'chirish/', AdminViews.hujra_profil_talabalar_uchirish, name="hujra_profil_talabalar_uchirish"),
     path('xujralar/<int:id>/tahrirlash/', AdminViews.hujra_profil_tahrirlash, name="hujra_profil_tahrirlash"),
     path('xujralar/<int:id>/o\'chirish/', AdminViews.hujra_uchirish, name="hujra_uchirish"),
     #Mudarris
