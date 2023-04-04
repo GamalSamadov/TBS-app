@@ -439,9 +439,13 @@ def hujra_kiritish(request):
 def hujra_profil(request, id):
     admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
     hujra = Hujra.objects.select_related('ustoz').get(id=id)
+    mudarrislar = Mudarris.objects.select_related('hujra').filter(hujra=hujra)
+    talabalar = Talaba.objects.select_related('hujra').filter(hujra=hujra)
     context = {
         'admin' : admin,
         'hujra' : hujra,
+        'mudarrislar_soni' : mudarrislar.count(),
+        'talabalar_soni' : talabalar.count(),
 
     }
     return render(request, 'admin_templates/hujra_profil.html', context)
