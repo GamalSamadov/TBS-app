@@ -45,7 +45,11 @@
                     </div>
                     <div class="col-sm-9 text-secondary">
                       <select name="ustoz" id="ustoz" class='form-control'>
-                        <option value="">{{ hujra.ustoz.admin.first_name }} {{hujra.ustoz.admin.last_name}} - Hozirgi ustoz</option>
+                        {% if hujra.ustoz %}
+                          <option value="">{{ hujra.ustoz.admin.first_name }} {{hujra.ustoz.admin.last_name}} - Hozirgi ustoz</option>
+                        {% else %}
+                          <option value="">Ustoz tanlang...</option>
+                        {% endif %}
                         {% for ustoz in ustozlar %}
                           {% if ustoz != hujra.ustoz %}
                             <option value="{{ ustoz.id }}">{{ ustoz.admin.first_name }} {{ ustoz.admin.first_name }}</option>{% endif %}

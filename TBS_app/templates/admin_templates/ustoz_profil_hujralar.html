@@ -1,7 +1,7 @@
 {% extends 'admin_templates/elements/base.html' %}
 {% load static %}
 {% block page_heading %}
-  Xujralar
+  Ustoz "{{ ustoz.admin.first_name }} {{ustoz.admin.last_name}}" xujralari
 {% endblock page_heading %}
 
 {% block custom_css %}
@@ -25,7 +25,7 @@
   <div class="row">
     <div class="col-lg-6">
       <div class="mb-4">
-        <a href="{% url 'hujra_kiritish' %}" class="btn btn-primary btn-icon-split">
+        <a href="{% url 'ustoz_profil_hujralar_kiritish' ustoz.admin.id %}" class="btn btn-primary btn-icon-split">
           <span class="icon text-white-50">
             <i class="fa-solid fa-plus"></i>
           </span>
@@ -74,13 +74,9 @@
                         {{ hujra.adres }}
                       </td>
                       <td>
-                        {% if hujra.ustoz %}
-                          <a href="{% url 'ustoz_profil' hujra.ustoz.admin.id %}">
-                            {{ hujra.ustoz.admin.first_name }}{{ hujra.ustoz.admin.last_name }}
-                          </a>
-                        {% else %}
-                          Hujraning ustozi yo'q
-                        {% endif %}
+                        <a href="{% url 'ustoz_profil' hujra.ustoz.admin.id %}">
+                          {{ hujra.ustoz.admin.first_name }}{{ hujra.ustoz.admin.last_name }}
+                        </a>
                       </td>
                       <td>
                         0
@@ -113,7 +109,7 @@
                           </div>
                           <div class="modal-footer justify-content-center">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
-                            <a href="{% url 'hujra_uchirish' hujra.id %}">
+                            <a href="{% url 'ustoz_profil_hujralar_uchirish' ustoz.admin.id hujra.id %}">
                               <button type="button" class="btn btn-danger">O'chirish</button>
                             </a>
                           </div>

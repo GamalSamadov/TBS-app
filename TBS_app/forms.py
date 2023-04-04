@@ -57,4 +57,8 @@ class HujraKiritishForm(forms.Form):
     adres = forms.CharField(label='Hujra adresi', max_length=255, widget=forms.Textarea(attrs={"class": "form-control", "rows":'4', "cols":'50'}))
     ustoz = forms.ChoiceField(
         label='Hujra ustozi', required=True, widget=forms.Select(attrs={'class': 'form-control'}))
-    
+
+
+class UstozProfilHujraKiritishForm(forms.Form):
+    ism = forms.CharField(label='Hujra ismi', max_length=50, required=True, widget=forms.TextInput(attrs={"class": "form-control"}))
+    adres = forms.CharField(label='Hujra adresi', max_length=255, widget=forms.Textarea(attrs={"class": "form-control", "rows":'4', "cols":'50'}))

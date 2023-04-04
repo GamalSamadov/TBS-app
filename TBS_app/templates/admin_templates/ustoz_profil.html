@@ -176,12 +176,12 @@
           <div class="col-xl-12 col-md-6 mb-10 py-4">
             <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
-                    <a href="#">
+                    <a href="{% url 'ustoz_profil_mudarrislar' ustoz.admin.id %}">
                       <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                 Mudarrislar soni</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">0 ta</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{mudarrislar_soni}} ta</div>
                         </div>
                         <div class="col-auto">
                             <div class="text-gray-300">Ko'rish uchun bosing...</div>
@@ -197,12 +197,12 @@
           <div class="col-xl-12 col-md-6 mb-10 py-4">
             <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
-                    <a href="#">
+                    <a href="{% url 'ustoz_profil_talabalar' ustoz.admin.id %}">
                       <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                 Talabalar soni</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">0 ta</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{talabalar_soni}} ta</div>
                         </div>
                         <div class="col-auto">
                             <div class="text-gray-300">Ko'rish uchun bosing...</div>
@@ -218,7 +218,7 @@
           <div class="col-xl-12 col-md-6 mb-10 py-4">
             <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
-                    <a href="#">
+                    <a href="{% url 'ustoz_profil_hujralar' ustoz.admin.id %}">
                       <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
@@ -239,12 +239,12 @@
           <div class="col-xl-12 col-md-6 mb-10 py-4">
             <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
-                    <a href="#">
+                    <a href="{% url 'ustoz_profil_fanlar' ustoz.admin.id %}">
                       <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Fanlar soni</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">0 ta</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{fanlar_soni}} ta</div>
                         </div>
                         <div class="col-auto">
                             <div class="text-gray-300">Ko'rish uchun bosing...</div>

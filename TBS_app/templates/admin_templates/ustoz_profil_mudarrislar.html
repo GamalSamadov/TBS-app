@@ -16,23 +16,11 @@
 {% endblock custom_css %}
 
 {% block page_heading %}
-  Mudarrislar
+  Ustoz "{{ ustoz.admin.first_name }} {{ ustoz.admin.last_name }}" mudarrislari
 {% endblock page_heading %}
 
 {% block main_content %}
 
-<div class="row">
-  <div class="col-lg-6">
-    <div class="mb-4">
-      <a href="{% url 'mudarris_kiritish' %}" class="btn btn-primary btn-icon-split">
-        <span class="icon text-white-50">
-          <i class="fa-sharp fa-solid fa-user-plus"></i>
-        </span>
-        <span class="text">Mudarris kiritish</span>
-      </a>
-    </div>
-  </div>
-</div>
 
 <div class="card shadow mb-4">
   <div class="card-header py-3">
@@ -107,17 +95,14 @@
                           <div class="icon-box">
                             <i class="fa-solid fa-trash"></i>
                           </div>						
-                          <h4 class="modal-title w-100">Chindan ham "{{mudarris.admin.first_name}} {{mudarris.admin.last_name}}" mudarrisni o'chirmoqchimisiz?</h4>	
+                          <h4 class="modal-title w-100">"{{ustoz.admin.first_name}} {{ustoz.admin.last_name}}" ustozdan mudarrisni o'chirish uchun ushbu mudarrisni <a href='{% url 'mudarrislar' %}'>mudarrirlar</a> qatorida izlang va o'sha yerdan o'chirib tashlang. Izlash yerida ustozning ismini yozsangiz ham mudarris chiqib kelaveradi ;)</h4>	
                                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">
-                          <p>Agar chindan ham o'chirmoqchi bo'lsangiz "O'chirish" tugmasini bosing.</p>
+                          <p>Faqat shu yo'l bilan ustozga tegishli mudarrisni o'chirish mumkin.</p>
                         </div>
                         <div class="modal-footer justify-content-center">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
-                          <a href="{% url 'mudarrisni_uchirish' mudarris.admin.id %}">
-                            <button type="button" class="btn btn-danger">O'chirish</button>
-                          </a>
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tushundim</button>
                         </div>
                       </div>
                     </div>
@@ -125,7 +110,7 @@
 
                 {% empty %}
                 <tr>
-                  <td><h3>Mudarrislar yo'q. <i class="fa-solid fa-face-frown"></i> Mudarris kiriting. </h3></td>
+                  <td><h3>Mudarrislar yo'q. <i class="fa-solid fa-face-frown"></i> Ustozga tegishli hujralarga mudarris kiriting. </h3></td>
                   <td></td>
                   <td></td>
                   <td></td>

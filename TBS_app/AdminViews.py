@@ -160,15 +160,144 @@ def ustoz_kiritish(request):
 def ustoz_profil(request, id):
     admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
     ustoz = Ustoz.objects.select_related('admin').get(admin=id)
-    hujralar_soni = ustoz.hujra_set.count()
-    # mudarrislar = Mudarris.objects.select_related('admin', 'hujra').filter()
+    hujralar = ustoz.hujra_set.all()
+    mudarrislar = []
+    talabalar = []
+    for hujra in hujralar:
+        for mudarris in Mudarris.objects.select_related('hujra').filter(hujra=hujra):
+            if mudarris not in mudarrislar:
+                mudarrislar.append(mudarris)
+        for talaba in Talaba.objects.select_related('hujra').filter(hujra=hujra):
+            if talaba not in talabalar:
+                talabalar.append(talaba)
+    fanlarTalaba = FanUstozTalaba.objects.select_related('ustoz').filter(ustoz=ustoz)
+    fanlarMudarris = FanUstozMudarris.objects.select_related('ustoz').filter(ustoz=ustoz)
+    fanlar = []
+    for fan in fanlarTalaba:
+        fanlar.append(fan)
+    for fan in fanlarMudarris:
+        fanlar.append(fan)
     context = {
         'admin' : admin,
         'ustoz' : ustoz,
-        'hujralar_soni' : hujralar_soni,
+        'hujralar_soni' : hujralar.count(),
+        'mudarrislar_soni' : len(mudarrislar),
+        'talabalar_soni' : len(talabalar),
+        'fanlar_soni' : len(fanlar),
 
     }
     return render(request, 'admin_templates/ustoz_profil.html', context)
+
+
+def ustoz_profil_mudarrislar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    ustoz = Ustoz.objects.select_related('admin').get(admin=id)
+    hujralar = ustoz.hujra_set.all()
+    mudarrislar = []
+    for hujra in hujralar:
+        for mudarris in Mudarris.objects.select_related('hujra').filter(hujra=hujra):
+            if mudarris not in mudarrislar:
+                mudarrislar.append(mudarris)
+    context = {
+        'admin' : admin,
+        'ustoz' : ustoz,
+        'mudarrislar' : mudarrislar,
+
+    }
+    return render(request, 'admin_templates/ustoz_profil_mudarrislar.html', context)
+
+
+def ustoz_profil_talabalar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    ustoz = Ustoz.objects.select_related('admin').get(admin=id)
+    hujralar = ustoz.hujra_set.all()
+    talabalar = []
+    for hujra in hujralar:
+        for talaba in Talaba.objects.select_related('hujra').filter(hujra=hujra):
+            if talaba not in talabalar:
+                talabalar.append(talaba)
+    context = {
+        'admin' : admin,
+        'ustoz' : ustoz,
+        'talabalar' : talabalar,
+
+    }
+    return render(request, 'admin_templates/ustoz_profil_talabalar.html', context)
+
+
+def ustoz_profil_fanlar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    ustoz = Ustoz.objects.select_related('admin').get(admin=id)
+    fanlarTalaba = FanUstozTalaba.objects.select_related('ustoz').filter(ustoz=ustoz)
+    fanlarMudarris = FanUstozMudarris.objects.select_related('ustoz').filter(ustoz=ustoz)
+    fanlar = []
+    for fan in fanlarTalaba:
+        fanlar.append(fan)
+    for fan in fanlarMudarris:
+        fanlar.append(fan)
+    context = {
+        'admin' : admin,
+        'ustoz' : ustoz,
+        'fanlar' : fanlar,
+        'fanlarTalaba' : fanlarTalaba,
+        'fanlarMudarris' : fanlarMudarris,
+    }
+    return render(request, 'admin_templates/ustoz_profil_fanlar.html', context)
+
+
+def ustoz_profil_hujralar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    ustoz = Ustoz.objects.select_related('admin').get(admin=id)
+    hujralar = ustoz.hujra_set.all()
+    context = {
+        'admin' : admin,
+        'ustoz' : ustoz,
+        'hujralar' : hujralar,
+
+    }
+    return render(request, 'admin_templates/ustoz_profil_hujralar.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def ustoz_profil_hujralar_kiritish(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        form = UstozProfilHujraKiritishForm()
+        ustoz = Ustoz.objects.select_related('admin').get(admin=id)
+        context = {
+            'admin' : admin,
+            'form' : form,
+            'ustoz' : ustoz
+        }
+        return render(request, 'admin_templates/ustoz_profil_hujralar_kiritish.html', context)
+    if request.method == 'POST':
+        form = UstozProfilHujraKiritishForm(request.POST or None)
+        if form.is_valid():
+            ism =  form.cleaned_data['ism']
+            adres =  form.cleaned_data['adres']
+            try:
+                ustoz = Ustoz.objects.select_related('admin').get(admin=id)
+                hujra = Hujra(ism=ism, adres=adres, ustoz=ustoz)
+                hujra.save()
+                messages.success(request, "Hujra muvaffaqiyatli tahrirlandi")
+                return HttpResponseRedirect(reverse('ustoz_profil_hujralar', kwargs={'id': id}))
+            except:
+                messages.error(request, "Afsuski hujra tahrirlanmadi")
+                return HttpResponseRedirect(reverse('ustoz_profil_hujralar', kwargs={'id': id}))
+        else:
+            return HttpResponseRedirect(reverse('ustoz_profil_hujralar', kwargs={'id': id}))
+            
+
+def ustoz_profil_hujralar_uchirish(request, ustozId, hujraId):
+    ustoz = Ustoz.objects.select_related('admin').get(admin=ustozId)
+    hujra = ustoz.hujra_set.get(id=hujraId)
+    try:
+        ustoz.hujra_set.remove(hujra)
+        messages.success(request, 'Hujra o\'chirildi')
+        return HttpResponseRedirect(reverse('ustoz_profil_hujralar', kwargs={'id': ustozId}))
+    except:
+        messages.error(request, 'Hujrani o\'chirib bo\'lmadi!')
+        return HttpResponseRedirect(reverse('ustoz_profil_hujralar', kwargs={'id': ustozId}))
 
 
 @require_http_methods(["GET", "POST"])
@@ -194,14 +323,14 @@ def ustoz_profil_tahrirlash(request, id):
         
         try:
             ustoz = Ustoz.objects.get(admin=id)
-
-            ustoz.admin.first_name = ism
-            ustoz.admin.last_name = familya
-            ustoz.admin.email = email
-            ustoz.admin.username = username
+            user = CustomUser.objects.get(id=id)
+            user.first_name = ism
+            user.last_name = familya
+            user.email = email
+            user.username = username
 
             if parol != None and parol != "":
-                ustoz.admin.password = parol
+                user.password = parol
 
             if len(request.FILES) != 0:
                 profil_surati = request.FILES['profil_surati']
@@ -224,6 +353,7 @@ def ustoz_profil_tahrirlash(request, id):
             ustoz.jins = jins
 
             ustoz.save()
+            user.save()
 
             messages.success(request, "Ustoz profil muvaffaqiyatli yangilandi")
             return HttpResponseRedirect(reverse('ustoz_profil', kwargs={'id': id}))
@@ -321,7 +451,7 @@ def hujra_profil(request, id):
 def hujra_profil_tahrirlash(request, id):
     if request.method == 'GET':
         admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
-        hujra = Hujra.objects.select_related('admin').get(id=id)
+        hujra = Hujra.objects.select_related('ustoz').get(id=id)
         ustozlar = Ustoz.objects.all()
         context = {
             'admin' : admin,
@@ -375,7 +505,7 @@ def mudarrislar(request):
 def mudarris_kiritish(request):
     if request.method == 'GET':
         admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
-        hujralar = Hujra.objects.select_related('ustoz', 'hujra').all()
+        hujralar = Hujra.objects.select_related('ustoz').all()
         context = {
             'admin' : admin,
             'hujralar' : hujralar,
