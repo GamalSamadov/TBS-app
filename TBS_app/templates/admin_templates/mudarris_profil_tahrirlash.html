@@ -170,7 +170,11 @@
                   </div>
                   <div class="col-sm-9 text-secondary">
                     <select id="hujra-select" class="form-control" name='hujra'>
-                      <option value="{{ mudarris.hujra.id }}" selected>{{ mudarris.hujra.ism }} - Hozirgi xujra</option>
+                      {% if mudarris.hujra %}
+                        <option value="{{ mudarris.hujra.id }}" selected>{{ mudarris.hujra.ism }} - Hozirgi xujra</option>
+                        {% else %}
+                        <option value="" selected>Xujra tanlang</option>
+                      {% endif %}
                       {% for hujra in hujralar %}
                         {% if hujra.id != mudarris.hujra.id %}
                           <option value="{{ hujra.id }}">{{ hujra.ism }}</option>

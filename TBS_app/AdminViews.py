@@ -516,6 +516,85 @@ def hujra_profil_talabalar_uchirish(request, hujraId, talabaId):
         return HttpResponseRedirect(reverse('hujra_profil_talabalar', kwargs={'id': hujraId}))
 
 
+def hujra_profil_mudarrislar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    hujra = Hujra.objects.select_related('ustoz').get(id=id)
+    mudarrislar = Mudarris.objects.select_related('hujra').filter(hujra=hujra)
+    context = {
+        'admin' : admin,
+        'hujra' : hujra,
+        'mudarrislar' : mudarrislar,
+
+    }
+    return render(request, 'admin_templates/hujra_profil_mudarrislar.html', context)
+
+
+@require_http_methods(["GET", "POST"])
+def hujra_profil_mudarrislar_kiritish(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        hujra = Hujra.objects.get(id=id)
+        context = {
+            'admin' : admin,
+            'hujra' : hujra,
+        }
+        return render(request, 'admin_templates/hujra_profil_mudarrislar_kiritish.html', context)
+    if request.method == 'POST':
+        email =  request.POST.get('email')
+        username = request.POST.get('username')
+        parol = request.POST.get('parol')
+        parolga_ishora = request.POST.get('parolga_ishora')
+        ism = request.POST.get('ism')
+        familya = request.POST.get('familya')
+        adres = request.POST.get('adres')
+        telefon_raqam = request.POST.get('telefon_raqam')
+        jins = request.POST.get('jins')
+
+        if len(request.FILES) != 0:
+            profil_surati = request.FILES['profil_surati']
+            pasport_surati = request.FILES['pasport_surati']
+            fs = FileSystemStorage()
+            profile_filename = fs.save(profil_surati.name, profil_surati)
+            profil_surati_url = fs.url(profile_filename)
+            pasport_filename = fs.save(pasport_surati.name, pasport_surati)
+            pasport_surati_url = fs.url(pasport_filename)
+        else:
+            profil_surati_url = None
+            pasport_surati_url = None
+        try:
+            hujra = Hujra.objects.get(id=id)
+            user = CustomUser.objects.create_user(username=username, password=parol, email=email, first_name=ism, last_name=familya, user_type=3)
+            user.mudarris.telefon_raqami = telefon_raqam
+            user.mudarris.parolga_ishora = parolga_ishora
+            user.mudarris.adres = adres
+            user.mudarris.jins = jins
+            if profil_surati_url != None:
+                user.mudarris.profil_surati = profil_surati_url
+            if pasport_surati_url != None:
+                user.mudarris.pasport_surati = pasport_surati_url
+            user.mudarris.hujra = hujra
+            user.save()
+            messages.success(
+                request, "Mudarris kiritish muvaffaqiyatli amalga oshirildi :)")
+            return HttpResponseRedirect(reverse('hujra_profil_mudarrislar', kwargs={'id': id}))
+        except:
+            messages.error(
+                request, "Mudarris kiritish ba'zi muommolar uchun amalga oshirilmadi :(")
+            return HttpResponseRedirect(reverse('hujra_profil_mudarrislar', kwargs={'id': id}))
+
+
+def hujra_profil_mudarrislar_uchirish(request, hujraId, mudarrisId):
+    hujra = Hujra.objects.select_related('ustoz').get(id=hujraId)
+    mudarris = Mudarris.objects.select_related('hujra').get(id=mudarrisId)
+    try:
+        hujra.mudarris_set.remove(mudarris)
+        messages.success(request, 'Mudarris o\'chirildi')
+        return HttpResponseRedirect(reverse('hujra_profil_mudarrislar', kwargs={'id': hujraId}))
+    except:
+        messages.error(request, 'Mudarris o\'chirmadi')
+        return HttpResponseRedirect(reverse('hujra_profil_mudarrislar', kwargs={'id': hujraId}))
+
+
 @require_http_methods(['GET', 'POST'])
 def hujra_profil_tahrirlash(request, id):
     if request.method == 'GET':
@@ -686,8 +765,9 @@ def mudarris_profil_tahrirlash(request, id):
             if profil_surati_url != None:
                 mudarris.profil_surati = profil_surati_url
             
-            hujra = Hujra.objects.get(id=hujra_id)
-            mudarris.hujra = hujra
+            if hujra_id != None and hujra_id != '':
+                hujra = Hujra.objects.get(id=hujra_id)
+                mudarris.hujra = hujra
 
             mudarris.parolga_ishora = parolga_ishora
             mudarris.telefon_raqami = telefon_raqam
