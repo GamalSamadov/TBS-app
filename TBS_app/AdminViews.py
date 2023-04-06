@@ -707,12 +707,58 @@ def mudarris_kiritish(request):
 def mudarris_profil(request, id):
     admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
     mudarris = Mudarris.objects.select_related('admin', 'hujra').get(admin=id)
+    dars_beradigan_fanlar = FanMudarrisTalaba.objects.select_related('mudarris').prefetch_related('talaba').filter(mudarris=mudarris.id)
+    uz_fanlar = mudarris.fanustozmudarris_set.all()
+    talabalar = []
+    for fan in dars_beradigan_fanlar:
+        for talaba in fan.talaba.all():
+            if talaba not in talabalar:
+                talabalar.append(talaba)
+    
+    # for talaba in talabalar:
+    #     print(talaba.ism, '==> talaba')
+    #     for fan in talaba.fanmudarristalaba_set.filter(mudarris=mudarris.id):
+    #         print(fan.ism, '==> fan', fan.mudarris.admin.first_name, '==> mudarris')
+    
     context = {
         'admin' : admin,
         'mudarris' : mudarris,
+        'dars_beradigan_fanlar_soni' : dars_beradigan_fanlar.count(),
+        'uz_fanlar_soni' : uz_fanlar.count(),
+        'talabalar_soni' : len(talabalar),
 
     }
     return render(request, 'admin_templates/mudarris_profil.html', context)
+
+
+def mudarris_profil_uz_fanlar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    mudarris = Mudarris.objects.select_related('admin').get(admin=id)
+    fanlar = mudarris.fanustozmudarris_set.all()
+    context = {
+        'admin' : admin,
+        'mudarris' : mudarris,
+        'fanlar' : fanlar
+    }
+    return render(request, 'admin_templates/mudarris_profil_uz_fanlar.html', context)
+
+
+def mudarris_profil_uz_fanlar_kiritish(request, id):
+    if request.method == 'GET':
+        admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+        mudarris = Mudarris.objects.select_related('admin').get(admin=id)
+        context = {
+            'admin' : admin, 
+            'mudarris' : mudarris,
+
+        }
+        return render(request, 'admin_templates/mudarris_profil_uz_fanlar_kiritish.html', context)
+    if request.method == 'POST':
+        pass
+
+
+def mudarris_profil_talabalar(request, id):
+    pass
 
 
 @require_http_methods(["GET", "POST"])

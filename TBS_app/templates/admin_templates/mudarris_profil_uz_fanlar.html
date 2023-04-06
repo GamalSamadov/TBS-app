@@ -1,0 +1,108 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+
+{% block custom_css %}
+  <!-- Custom styles for this page -->
+  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/delete-alert.css' %}">
+{% endblock custom_css %}
+
+{% block page_heading %}
+  "{{mudarris.admin.first_name}} {{mudarris.admin.last_name}}" mudarrisining o'zi o'qiydigan fanlari
+{% endblock page_heading %}
+
+{% block main_content %}
+
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Barcha fanlar tablitsasi</h6>
+  </div>
+  <div class="card-body">
+      <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                  <tr>
+                      <th>Ism</th>
+                      <th>Ustoz</th>
+                      <th>Tugash vaqti</th>
+                      <th>Amalyot</th>
+                  </tr>
+              </thead>
+              <tfoot>
+                  <tr>
+                    <th>Ism</th>
+                    <th>Ustoz</th>
+                    <th>Tugash vaqti</th>
+                    <th>Amalyot</th>
+                  </tr>
+              </tfoot>
+              <tbody>
+                {% for fan in fanlar %}
+                  <tr>
+                      <td> <a href="{% url 'fan_ustoz_mudarris_profil' fan.id %}">{{ fan.ism }}</a> </td>
+                      <td> 
+                        <a href="{% url 'ustoz_profil' fan.ustoz.admin.id %}">
+                          {{fan.ustoz.admin.first_name}} {{fan.ustoz.admin.last_name}}
+                        </a>
+                      </td>
+                      <td> {{ fan.tugash_vaqti }} </td> 
+                      <td>
+                        <a href="{% url 'fan_ustoz_mudarris_profil' fan.id %}" class="btn btn-info btn-circle">
+                          <i class="fa-solid fa-address-card"></i>
+                      </a>
+                        <a href="#myModal" class="btn btn-danger btn-circle delete" data-toggle="modal">
+                          <i class="fa-sharp fa-solid fa-trash-can"></i>
+                        </a>
+                      </td>
+                  </tr>
+
+                  <div id="myModal" class="modal fade">
+                    <div class="modal-dialog modal-confirm">
+                      <div class="modal-content">
+                        <div class="modal-header flex-column">
+                          <div class="icon-box">
+                            <i class="fa-solid fa-trash"></i>
+                          </div>						
+                          <h4 class="modal-title w-100">"{{ fan.ism }}" fanidan ushbu "{{mudarris.admin.first_name}} {{mudarris.admin.last_name}}" mudarrisini o'chirish uchun <a href="{% url 'fanlar_ustoz_mudarris' %}">Fanlar Ustoz Mudarris</a>ga boring va o'sha fanlar orasidan mudarris o'qadigan fanini toping va o'sha yerdan mudarrisni o'chiring</h4>	
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Faqat shu yo'l bilan fanda o'qadigan mudarrisni o'chirish mumkin</p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tushundim</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                {% empty %}
+                <tr>
+                  <td><h3>Fanlar yo'q. <i class="fa-solid fa-face-frown"></i> Fan kiriting. </h3></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+
+
+{% endblock main_content %}
+
+
+{% block custom_script %}
+
+  <!-- Page level plugins -->
+  <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+{% endblock custom_script %}
+
