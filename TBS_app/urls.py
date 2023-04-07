@@ -58,6 +58,7 @@ urlpatterns = [
     path('talabalar/', AdminViews.talabalar, name="talabalar"),
     path('talabalar/kiritish/', AdminViews.talaba_kiritish, name="talaba_kiritish"),
     path('talabalar/<int:id>/', AdminViews.talaba_profil, name="talaba_profil"),
+    path('talabalar/<int:id>/fanlar/', AdminViews.talaba_profil_fanlar, name="talaba_profil_fanlar"),
     path('talabalar/<int:id>/tahrirlash/', AdminViews.talaba_profil_tahrirlash, name="talaba_profil_tahrirlash"),
     path('talabalar/<int:id>/tahrirlash/paspurt/', AdminViews.talaba_paspurt_tahrirlash, name="talaba_paspurt_tahrirlash"),
     path('talabalar/<int:id>/o\'chirish/', AdminViews.talabani_uchirish, name="talabani_uchirish"),

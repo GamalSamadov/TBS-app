@@ -1019,12 +1019,39 @@ def talaba_kiritish(request):
 def talaba_profil(request, id):
     admin = CustomUser.objects.select_related('ustoz').get(id=request.user.id)
     talaba = Talaba.objects.select_related('hujra').get(id=id)
+    ustoz_fan = talaba.fanustoztalaba_set.all()
+    mudarris_fan = talaba.fanmudarristalaba_set.all()
+    hamma_fanlar = []
+    for fan in ustoz_fan:
+        hamma_fanlar.append(fan)
+    for fan in mudarris_fan:
+        hamma_fanlar.append(fan)    
     context = {
         'admin' : admin,
         'talaba' : talaba,
-
+        'fanlar_soni' : len(hamma_fanlar),
     }
     return render(request, 'admin_templates/talaba_profil.html', context)
+
+
+def talaba_profil_fanlar(request, id):
+    admin = CustomUser.objects.select_related('ustoz').get(id=request.user.id)
+    talaba = Talaba.objects.select_related('hujra').get(id=id)
+    ustoz_fan = talaba.fanustoztalaba_set.all()
+    mudarris_fan = talaba.fanmudarristalaba_set.all()
+    hamma_fanlar = []
+    for fan in ustoz_fan:
+        hamma_fanlar.append(fan)
+    for fan in mudarris_fan:
+        hamma_fanlar.append(fan)    
+    context = {
+        'admin' : admin,
+        'talaba' : talaba,
+        'fanlar' : hamma_fanlar,
+        'ustoz_fan' : ustoz_fan,
+        'mudarris_fan' : mudarris_fan,
+    }
+    return render(request, 'admin_templates/talaba_profil_fanlar.html', context)
 
 
 @require_http_methods(["GET", "POST"])

@@ -1,0 +1,118 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+
+{% block custom_css %}
+  <!-- Custom styles for this page -->
+  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/delete-alert.css' %}">
+{% endblock custom_css %}
+
+{% block page_heading %}
+  Talaba "{{talaba.ism}} {{talaba.familya}}"ning barcha fanlari
+{% endblock page_heading %}
+
+{% block main_content %}
+
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Barcha fanlar tablitsasi</h6>
+  </div>
+  <div class="card-body">
+      <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                  <tr>
+                      <th>Ism</th>
+                      <th>Ustoz/Mudarris</th>
+                      <th>Tugash vaqti</th>
+                      <th>Amalyot</th>
+                  </tr>
+              </thead>
+              <tfoot>
+                  <tr>
+                    <th>Ism</th>
+                    <th>Ustoz/Mudarris</th>
+                    <th>Tugash vaqti</th>
+                    <th>Amalyot</th>
+                  </tr>
+              </tfoot>
+              <tbody>
+                {% for fan in fanlar %}
+                  <tr>
+                      <td>
+                        {% if fan in ustoz_fan %}
+                          <a href="{% url 'fan_ustoz_talaba_profil' fan.id %}">{{ fan.ism }}</a> 
+                          {% elif fan in mudarris_fan %}
+                            <a href="{% url 'fan_mudarris_talaba_profil' fan.id %}">{{ fan.ism }}</a> 
+                        {% endif %}
+
+                      </td>
+                      <td> 
+                        {% if fan in ustoz_fan %}
+                          <a href="{% url 'ustoz_profil' fan.ustoz.admin.id %}">{{fan.ustoz.admin.first_name}} {{fan.ustoz.admin.last_name}}</a>
+                        {% elif fan in mudarris_fan %}
+                          <a href="{% url 'mudarris_profil' fan.mudarris.admin.id %}">{{fan.mudarris.admin.first_name}} {{fan.mudarris.admin.last_name}}</a>
+                        {% endif %}
+
+                      </td>
+                      <td> {{ fan.tugash_vaqti }} </td> 
+                      <td>
+                        <a href="{% url 'fan_ustoz_talaba_profil' fan.id %}" class="btn btn-info btn-circle">
+                          <i class="fa-solid fa-address-card"></i>
+                      </a>
+                        <a href="#myModal" class="btn btn-danger btn-circle delete" data-toggle="modal">
+                          <i class="fa-sharp fa-solid fa-trash-can"></i>
+                        </a>
+                      </td>
+                  </tr>
+
+                  <div id="myModal" class="modal fade">
+                    <div class="modal-dialog modal-confirm">
+                      <div class="modal-content">
+                        <div class="modal-header flex-column">
+                          <div class="icon-box">
+                            <i class="fa-solid fa-trash"></i>
+                          </div>						
+                          <h4 class="modal-title w-100">Talabani biror bir fandan o'chirish uchun avval o'sha fanga borib, talabani o'sha fan orasida topib oling va o'sha yerdan uni o'chiring</h4>	
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Faqat shu yo'l bilan fanni talabadan yoki talabani fandan o'shirish mumkin</p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tushundim</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                {% empty %}
+                <tr>
+                  <td><h3>Fanlar yo'q. <i class="fa-solid fa-face-frown"></i> Fan kiriting. </h3></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+
+
+{% endblock main_content %}
+
+
+{% block custom_script %}
+
+  <!-- Page level plugins -->
+  <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+{% endblock custom_script %}
+
