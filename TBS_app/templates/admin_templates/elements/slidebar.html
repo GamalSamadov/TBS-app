@@ -17,6 +17,8 @@
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Boshqaruv</span></a>
   </li>
+
+  <hr class="sidebar-divider my-0">
   
   {% url 'ustozlar' as ustozlar %}
   <li class="nav-item {% if request.path == ustozlar %} active {% endif %}">
@@ -45,6 +47,8 @@
         <span>Talabalar</span></a>
   </li>
 
+  <hr class="sidebar-divider my-0">
+
     {% url 'fanlar_ustoz_talaba' as fanlar_ustoz_talaba %}  
     {% url 'fanlar_ustoz_mudarris' as fanlar_ustoz_mudarris %}  
     {% url 'fanlar_mudarris_talaba' as fanlar_mudarris_talaba %}  
@@ -64,34 +68,42 @@
       </div>
     </li>
 
-  <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKbaho"
+  {% url 'kundalik_baholar_ustoz_talaba' as kundalik_baholar_ustoz_talaba %}
+  {% url 'kundalik_baholar_ustoz_mudarris' as kundalik_baholar_ustoz_mudarris %}
+  {% url 'kundalik_baholar_mudarris_talaba' as kundalik_baholar_mudarris_talaba %}
+
+  <li class="nav-item {% if request.path == kundalik_baholar_ustoz_talaba or request.path == kundalik_baholar_ustoz_mudarris or request.path == kundalik_baholar_mudarris_talaba %} active {% endif %}">
+      <a class="nav-link {% if request.path != kundalik_baholar_ustoz_talaba and request.path != kundalik_baholar_ustoz_mudarris and request.path != kundalik_baholar_mudarris_talaba %} collapsed {% endif %}" href="#" data-toggle="collapse"   data-target="#collapseKbaho"
           aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fa-solid fa-pen-to-square"></i>
           <span>Kundalik baholar</span>
       </a>
-      <div id="collapseKbaho" class="collapse" aria-labelledby="headingUtilities"
+      <div id="collapseKbaho" class="collapse {% if request.path == kundalik_baholar_ustoz_talaba or request.path == kundalik_baholar_ustoz_mudarris or request.path == kundalik_baholar_mudarris_talaba %} show {% endif %}" aria-labelledby="headingUtilities"
           data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-              <a class="collapse-item" href="">Ustoz talaba</a>
-              <a class="collapse-item" href="">Ustoz mudarris</a>
-              <a class="collapse-item" href="">Mudarris talaba</a>
+              <a class="collapse-item {% if request.path == kundalik_baholar_ustoz_talaba %} active {% endif %}" href="{% url 'kundalik_baholar_ustoz_talaba' %}">Ustoz talaba</a>
+              <a class="collapse-item {% if request.path == kundalik_baholar_ustoz_mudarris %} active {% endif %}" href="{% url 'kundalik_baholar_ustoz_mudarris' %}">Ustoz mudarris</a>
+              <a class="collapse-item {% if request.path == kundalik_baholar_mudarris_talaba %} active {% endif %}" href="{% url 'kundalik_baholar_mudarris_talaba' %}">Mudarris talaba</a>
           </div>
       </div>
   </li>
 
-  <li class="nav-item">
-      <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseIbaho"
+  {% url 'imtihon_baholar_ustoz_talaba' as imtihon_baholar_ustoz_talaba %}
+  {% url 'imtihon_baholar_ustoz_mudarris' as imtihon_baholar_ustoz_mudarris %}
+  {% url 'imtihon_baholar_mudarris_talaba' as imtihon_baholar_mudarris_talaba %}
+
+  <li class="nav-item {% if request.path == imtihon_baholar_ustoz_talaba or request.path == imtihon_baholar_ustoz_mudarris or request.path == imtihon_baholar_mudarris_talaba %} active {% endif %}">
+      <a class="nav-link {% if request.path != imtihon_baholar_ustoz_talaba and request.path != imtihon_baholar_ustoz_mudarris and request.path != imtihon_baholar_mudarris_talaba %} collapsed {% endif %}" href="#" data-toggle="collapse" data-target="#collapseIbaho"
           aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fa-solid fa-book-open"></i>
           <span>Imtihon baholar</span>
       </a>
-      <div id="collapseIbaho" class="collapse" aria-labelledby="headingUtilities"
+      <div id="collapseIbaho" class="collapse {% if request.path == imtihon_baholar_ustoz_talaba or request.path == imtihon_baholar_ustoz_mudarris or request.path == imtihon_baholar_mudarris_talaba %} show {% endif %}" aria-labelledby="headingUtilities"
           data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="">Ustoz talaba</a>
-            <a class="collapse-item" href="">Ustoz mudarris</a>
-            <a class="collapse-item" href="">Mudarris talaba</a>
+            <a class="collapse-item {% if request.path == imtihon_baholar_ustoz_talaba %} active {% endif %}" href="{% url 'imtihon_baholar_ustoz_talaba' %}">Ustoz talaba</a>
+            <a class="collapse-item {% if request.path == imtihon_baholar_ustoz_mudarris %} active {% endif %}" href="{% url 'imtihon_baholar_ustoz_mudarris' %}">Ustoz mudarris</a>
+            <a class="collapse-item {% if request.path == imtihon_baholar_mudarris_talaba %} active {% endif %}" href="{% url 'imtihon_baholar_mudarris_talaba' %}">Mudarris talaba</a>
           </div>
       </div>
   </li>

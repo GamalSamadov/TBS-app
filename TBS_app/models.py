@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
 from phone_field import PhoneField
+from datetime import datetime
 
 # Overriding the Default Django Auth User and adding One More Field (user_type)
 class CustomUser(AbstractUser):
@@ -119,6 +120,7 @@ class KundalikBahoUstozTalaba(models.Model):
     id = models.AutoField(primary_key=True)
     fan = models.ForeignKey(FanUstozTalaba, on_delete=models.CASCADE, null=True)
     baho = models.FloatField(default=0)
+    sana = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -128,6 +130,7 @@ class KundalikBahoUstozMudarris(models.Model):
     id = models.AutoField(primary_key=True)
     fan = models.ForeignKey(FanUstozMudarris, on_delete=models.CASCADE, null=True)
     baho = models.FloatField(default=0)
+    sana = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -137,6 +140,7 @@ class KundalikBahoMudarrisTalaba(models.Model):
     id = models.AutoField(primary_key=True)
     fan = models.ForeignKey(FanMudarrisTalaba, on_delete=models.CASCADE, null=True)
     baho = models.FloatField(default=0)
+    sana = models.DateTimeField(default=datetime.now())
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -148,6 +152,7 @@ class ImtihonBahoUstozTalaba(models.Model):
     ustozga_baho = models.FloatField(default=0)
     umuniy_baho = models.FloatField(default=0)
     izoh = models.TextField(max_length=255)
+    sana = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -159,6 +164,7 @@ class ImtihonBahoUstozMudarris(models.Model):
     ustozga_baho = models.FloatField(default=0)
     umuniy_baho = models.FloatField(default=0)
     izoh = models.TextField(max_length=255)
+    sana = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
@@ -170,6 +176,7 @@ class ImtihonBahoMudarrisTalaba(models.Model):
     ustozga_baho = models.FloatField(default=0)
     umuniy_baho = models.FloatField(default=0)
     izoh = models.TextField(max_length=255)
+    sana = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()

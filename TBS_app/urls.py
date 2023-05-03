@@ -64,7 +64,7 @@ urlpatterns = [
     path('talabalar/<int:id>/o\'chirish/', AdminViews.talabani_uchirish, name="talabani_uchirish"),
     path('talabalar/<int:id>/tahrirlash/profil_so\'ratni_o\'chirish/', AdminViews.talaba_profil_suratni_uchirish, name="talaba_profil_suratni_uchirish"),
     path('talabalar/<int:id>/tahrirlash/paspurt_so\'ratni_o\'chirish/', AdminViews.talaba_pasport_suratni_uchirish, name="talaba_pasport_suratni_uchirish"),
-    # Fan Ustoz - talaba
+    # Fan Ustoz - Talaba
     path('fanlar/ustoz_talaba/', AdminViews.fanlar_ustoz_talaba, name="fanlar_ustoz_talaba"),
     path('fanlar/ustoz_talaba/<int:id>/', AdminViews.fan_ustoz_talaba_profil, name="fan_ustoz_talaba_profil"),
     path('fanlar/ustoz_talaba/<int:id>/tahrirlash/', AdminViews.fan_ustoz_talaba_profil_tahrirlash, name="fan_ustoz_talaba_profil_tahrirlash"),
@@ -73,7 +73,7 @@ urlpatterns = [
     path('fanlar/ustoz_talaba/<int:fanId>/talabalar/<int:talabaId>/o\'chirish/', AdminViews.fan_ustoz_talaba_profil_talabalar_uchirish, name="fan_ustoz_talaba_profil_talabalar_uchirish"),
     path('fanlar/ustoz_talaba/kiritish/', AdminViews.fan_ustoz_talaba_kiritish, name='fan_ustoz_talaba_kiritish'),
     path('fanlar/ustoz_talaba/<int:id>/o\'chirish/', AdminViews.fan_ustoz_talaba_uchirish, name="fan_ustoz_talaba_uchirish"),
-    # Fan Ustoz - talaba
+    # Fan Ustoz - Mudarris
     path('fanlar/ustoz_mudarris/', AdminViews.fanlar_ustoz_mudarris, name="fanlar_ustoz_mudarris"),
     path('fanlar/ustoz_mudarris/<int:id>/', AdminViews.fan_ustoz_mudarris_profil, name="fan_ustoz_mudarris_profil"),
     path('fanlar/ustoz_mudarris/<int:id>/tahrirlash/', AdminViews.fan_ustoz_mudarris_profil_tahrirlash, name="fan_ustoz_mudarris_profil_tahrirlash"),
@@ -82,7 +82,7 @@ urlpatterns = [
     path('fanlar/ustoz_mudarris/<int:fanId>/mudarrislar/<int:mudarrisId>/o\'chirish/', AdminViews.fan_ustoz_mudarris_profil_mudarrislar_uchirish, name="fan_ustoz_mudarris_profil_mudarrislar_uchirish"),
     path('fanlar/ustoz_mudarris/kiritish/', AdminViews.fan_ustoz_mudarris_kiritish, name='fan_ustoz_mudarris_kiritish'),
     path('fanlar/ustoz_mudarris/<int:id>/o\'chirish/', AdminViews.fan_ustoz_mudarris_uchirish, name="fan_ustoz_mudarris_uchirish"),
-    # Fan Ustoz - talaba
+    # Fan Mudarris - talaba
     path('fanlar/mudarris_talaba/', AdminViews.fanlar_mudarris_talaba, name="fanlar_mudarris_talaba"),
     path('fanlar/mudarris_talaba/<int:id>/', AdminViews.fan_mudarris_talaba_profil, name="fan_mudarris_talaba_profil"),
     path('fanlar/mudarris_talaba/<int:id>/tahrirlash/', AdminViews.fan_mudarris_talaba_profil_tahrirlash, name="fan_mudarris_talaba_profil_tahrirlash"),
@@ -91,7 +91,24 @@ urlpatterns = [
     path('fanlar/mudarris_talaba/<int:fanId>/talabalar/<int:talabaId>/o\'chirish/', AdminViews.fan_mudarris_talaba_profil_talabalar_uchirish, name="fan_mudarris_talaba_profil_talabalar_uchirish"),
     path('fanlar/mudarris_talaba/kiritish/', AdminViews.fan_mudarris_talaba_kiritish, name='fan_mudarris_talaba_kiritish'),
     path('fanlar/mudarris_talaba/<int:id>/o\'chirish/', AdminViews.fan_mudarris_talaba_uchirish, name="fan_mudarris_talaba_uchirish"),
+    # Kundalik baholar Ustoz - Talaba
+    path('kundalik_baholar/ustoz_talaba/', AdminViews.kundalik_baholar_ustoz_talaba, name="kundalik_baholar_ustoz_talaba"),
+    path('kundalik_baholar/ustoz_talaba/fan/<int:id>/', AdminViews.kundalik_baholar_ustoz_talaba_talaba_tanlash, name="kundalik_baholar_ustoz_talaba_talaba_tanlash"),
+    path('kundalik_baholar/ustoz_talaba/fan/<int:fanId>/talaba/<int:talabaId>/', AdminViews.kundalik_baholar_ustoz_talaba_baholar, name="kundalik_baholar_ustoz_talaba_baholar"),
+    path('kundalik_baholar/ustoz_talaba/fan/<int:fanId>/talaba/<int:talabaId>/api/', AdminViews.kundalik_baholar_ustoz_talaba_baholar_api, name="kundalik_baholar_ustoz_talaba_baholar_api"),
+    path('kundalik_baholar/ustoz_talaba/fan/<int:fanId>/talaba/<int:talabaId>/kiritish/', AdminViews.kundalik_baholar_ustoz_talaba_baholar_kiritish, name="kundalik_baholar_ustoz_talaba_baholar_kiritish"),
+    path('kundalik_baholar/ustoz_talaba/fan/<int:fanId>/talaba/<int:talabaId>/tahrirlash/', AdminViews.kundalik_baholar_ustoz_talaba_baholar_tahrirlash, name="kundalik_baholar_ustoz_talaba_baholar_tahrirlash"),
 
+    # Kundalik baholar Ustoz - Mudarris
+    path('kundalik_baholar/ustoz_mudarris/', AdminViews.kundalik_baholar_ustoz_mudarris, name="kundalik_baholar_ustoz_mudarris"),
+    # Kundalik baholar Mudarris - Talaba
+    path('kundalik_baholar/mudarris_ustoz/', AdminViews.kundalik_baholar_mudarris_talaba, name="kundalik_baholar_mudarris_talaba"),
+    # Imtihon baholar Ustoz - Talaba
+    path('imtihon_baholar/ustoz_talaba/', AdminViews.imtihon_baholar_ustoz_talaba, name="imtihon_baholar_ustoz_talaba"),
+    # Imtihon baholar Ustoz - Mudarris
+    path('imtihon_baholar/ustoz_mudarris/', AdminViews.imtihon_baholar_ustoz_mudarris, name="imtihon_baholar_ustoz_mudarris"),
+    # Imtihon baholar Mudarris - Talaba
+    path('imtihon_baholar/mudarris_talaba/', AdminViews.imtihon_baholar_mudarris_talaba, name="imtihon_baholar_mudarris_talaba"),
     # -------------------------
     # Ustoz Urls
     path('ustoz_asosiy/', UstozViews.ustoz_asosiy, name="ustoz_asosiy"),

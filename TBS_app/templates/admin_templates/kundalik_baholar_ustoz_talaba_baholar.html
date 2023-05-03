@@ -1,0 +1,93 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+{% block page_heading %}
+  Kundalik baholar "Ustoz - Talaba"
+{% endblock page_heading %}
+
+{% block main_content %}
+
+  <div id='calendar'></div>
+
+{% endblock main_content %}
+
+{% block custom_script %}
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.6/index.global.min.js'></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+  <script src="{% static 'moment/moment.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        dateClick: function() {
+        //  console.log('a day has been clicked!');
+        },
+        timeZone: 'UTC',
+        themeSystem: 'standard',
+        headerToolbar: { left: 'prev,next today', center: 'title', right: '' }, // buttons for switching between views
+        events: "{% url 'kundalik_baholar_ustoz_talaba_baholar_api' fan.id talaba.id %}",
+        selectable: true,
+        selectHelper: true,
+        editable: true,
+        droppable: true,
+        eventLimit: true,
+        select: function(start, allDay) {
+          var title = prompt('Enter event title: ')
+          if (title) {
+            var start = moment(start.startStr).format('YYYY-MM-DD HH:mm:ss')
+            // var start = FullCalendar.formatDate(start, 'Y-MM-DD HH:mm:ss');
+            // console.dir(start, 'start')
+            // console.dir(start.startStr, 'start')
+            $.ajax({
+              type: 'GET',
+              url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_kiritish' fan.id talaba.id %}",
+              data: {'title' : title, 'start' : start},
+              dataType: "json",
+              success: function(data){
+                calendar.refetchEvents();
+                alert('Added successfully!')
+              },
+              error: function(data) {
+                alert('There is a problem!')
+
+              }
+            })
+          };
+        },
+        eventDrop: function(info) {
+          var start = moment(info.event.start.startStr).format('YYYY-MM-DD HH:mm:ss');
+          var title = info.event.title;
+          var id = info.event.resourceId;
+          console.dir(start);
+          console.log(title);
+          // console.log(info.event.id);
+          console.dir(info)
+          $.ajax({
+            type: 'GET',
+            url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_tahrirlash' fan.id talaba.id %}",
+            data: {'title' : title, 'start' : start},
+            dataType: "json",
+            success: function(data){
+              calendar.refetchEvents();
+              alert('Updated successfully!')
+            },
+            error: function(data) {
+              alert('There is a problem!')
+
+            }
+          })
+        }
+      });
+      calendar.render();
+    });
+  </script>
+{% endblock custom_script %}
+{% block custom_css %}
+
+  <style>
+    #calendar {
+      max-width: 900px;
+      margin: 40px auto;
+    }
+  </style>
+
+{% endblock custom_css %}
