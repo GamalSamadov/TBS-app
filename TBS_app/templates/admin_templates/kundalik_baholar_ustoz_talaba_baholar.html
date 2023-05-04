@@ -72,15 +72,14 @@
         eventClick: function(info) {
           if(confirm("Are you sure you want ro remove?")) {
             var id = info.event.id;
-            console.log(id)
             $.ajax({
-              type: 'GET',
+              type: "GET",
               url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_uchirish' fan.id talaba.id %}",
-              data: {'id':id},
+              data: {'id' : id},
               dataType: "json",
               success: function(data){
                 calendar.refetchEvents();
-                alert('Updated successfully!')
+                alert('Removed successfully!')
               },
               error: function(data) {
                 alert('There is a problem!')

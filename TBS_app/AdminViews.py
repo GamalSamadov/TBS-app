@@ -1719,7 +1719,6 @@ def kundalik_baholar_ustoz_talaba_baholar_tahrirlash(request, fanId, talabaId):
 def kundalik_baholar_ustoz_talaba_baholar_uchirish(request, fanId, talabaId):
     id = request.GET.get('id', None)
     baho = KundalikBahoUstozTalaba.objects.get(id=id)
-    print(baho.baho, ' ===== > Baho')
     baho.delete()
     data = {}
     return JsonResponse(data)
