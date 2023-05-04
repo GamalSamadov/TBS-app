@@ -98,6 +98,7 @@ urlpatterns = [
     path('kundalik_baholar/ustoz_talaba/fan/<int:fanId>/talaba/<int:talabaId>/api/', AdminViews.kundalik_baholar_ustoz_talaba_baholar_api, name="kundalik_baholar_ustoz_talaba_baholar_api"),
     path('kundalik_baholar/ustoz_talaba/fan/<int:fanId>/talaba/<int:talabaId>/kiritish/', AdminViews.kundalik_baholar_ustoz_talaba_baholar_kiritish, name="kundalik_baholar_ustoz_talaba_baholar_kiritish"),
     path('kundalik_baholar/ustoz_talaba/fan/<int:fanId>/talaba/<int:talabaId>/tahrirlash/', AdminViews.kundalik_baholar_ustoz_talaba_baholar_tahrirlash, name="kundalik_baholar_ustoz_talaba_baholar_tahrirlash"),
+    path('kundalik_baholar/ustoz_talaba/fan/<int:fanId>/talaba/<int:talabaId>/o\'chirish/', AdminViews.kundalik_baholar_ustoz_talaba_baholar_uchirish, name="kundalik_baholar_ustoz_talaba_baholar_uchirish"),
 
     # Kundalik baholar Ustoz - Mudarris
     path('kundalik_baholar/ustoz_mudarris/', AdminViews.kundalik_baholar_ustoz_mudarris, name="kundalik_baholar_ustoz_mudarris"),

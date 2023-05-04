@@ -1684,16 +1684,15 @@ def kundalik_baholar_ustoz_talaba_baholar(request, fanId, talabaId):
 
 def kundalik_baholar_ustoz_talaba_baholar_api(request, fanId, talabaId):
     baholar = KundalikBahoUstozTalaba.objects.filter(fan__id=fanId).filter(fan__talaba__id=talabaId)
-    # fan = FanUstozTalaba.objects.select_related('ustoz').prefetch_related('talaba').filter(id=fanId).get(talaba=talabaId)
-    # baho = KundalikBahoUstozTalaba(fan=fan, sana='2023-05-04', baho=90)
-    # baho.save()
     out = []
     for baho in baholar:
         out.append({
             'title' : baho.baho,
+            'id' : baho.id,
             'start' : baho.sana.strftime("%Y-%m-%d"),
         })
     return JsonResponse(out, safe=False)
+
 
 def kundalik_baholar_ustoz_talaba_baholar_kiritish(request, fanId, talabaId):
     start = request.GET.get('start', None)
@@ -1701,9 +1700,9 @@ def kundalik_baholar_ustoz_talaba_baholar_kiritish(request, fanId, talabaId):
     fan = FanUstozTalaba.objects.filter(id=fanId).get(talaba__id=talabaId)
     baho = KundalikBahoUstozTalaba(baho=int(title), fan=fan, sana=start)
     baho.save()
-    # print('==========', start, " == > Start, ", title, " ==> title, ", '=========')
     data = {}
     return JsonResponse(data)
+
 
 def kundalik_baholar_ustoz_talaba_baholar_tahrirlash(request, fanId, talabaId):
     start = request.GET.get('start', None)
@@ -1715,6 +1714,16 @@ def kundalik_baholar_ustoz_talaba_baholar_tahrirlash(request, fanId, talabaId):
     baho.save()
     data = {}
     return JsonResponse(data)
+
+
+def kundalik_baholar_ustoz_talaba_baholar_uchirish(request, fanId, talabaId):
+    id = request.GET.get('id', None)
+    baho = KundalikBahoUstozTalaba.objects.get(id=id)
+    print(baho.baho, ' ===== > Baho')
+    baho.delete()
+    data = {}
+    return JsonResponse(data)
+
 
 # Kundalik baholar Ustoz - Mudarris
 def kundalik_baholar_ustoz_mudarris(request):

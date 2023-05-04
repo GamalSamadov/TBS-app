@@ -34,9 +34,6 @@
           var title = prompt('Enter event title: ')
           if (title) {
             var start = moment(start.startStr).format('YYYY-MM-DD HH:mm:ss')
-            // var start = FullCalendar.formatDate(start, 'Y-MM-DD HH:mm:ss');
-            // console.dir(start, 'start')
-            // console.dir(start.startStr, 'start')
             $.ajax({
               type: 'GET',
               url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_kiritish' fan.id talaba.id %}",
@@ -54,17 +51,13 @@
           };
         },
         eventDrop: function(info) {
-          var start = moment(info.event.start.startStr).format('YYYY-MM-DD HH:mm:ss');
+          var start = moment(info.event.start).format('YYYY-MM-DD HH:mm:ss');
           var title = info.event.title;
-          var id = info.event.resourceId;
-          console.dir(start);
-          console.log(title);
-          // console.log(info.event.id);
-          console.dir(info)
+          var id = info.event.id;
           $.ajax({
             type: 'GET',
             url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_tahrirlash' fan.id talaba.id %}",
-            data: {'title' : title, 'start' : start},
+            data: {'title' : title, 'start' : start, 'id' : id},
             dataType: "json",
             success: function(data){
               calendar.refetchEvents();
@@ -75,8 +68,29 @@
 
             }
           })
-        }
-      });
+        },
+        eventClick: function(info) {
+          if(confirm("Are you sure you want ro remove?")) {
+            var id = info.event.id;
+            console.log(id)
+            $.ajax({
+              type: 'GET',
+              url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_uchirish' fan.id talaba.id %}",
+              data: {'id':id},
+              dataType: "json",
+              success: function(data){
+                calendar.refetchEvents();
+                alert('Updated successfully!')
+              },
+              error: function(data) {
+                alert('There is a problem!')
+
+              }
+            })
+          }
+        },
+      })
+        
       calendar.render();
     });
   </script>
