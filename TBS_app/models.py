@@ -119,6 +119,7 @@ class FanMudarrisTalaba(models.Model):
 class KundalikBahoUstozTalaba(models.Model):
     id = models.AutoField(primary_key=True)
     fan = models.ForeignKey(FanUstozTalaba, on_delete=models.CASCADE, null=True)
+    talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE, null=True)
     baho = models.FloatField(default=0)
     sana = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -129,6 +130,7 @@ class KundalikBahoUstozTalaba(models.Model):
 class KundalikBahoUstozMudarris(models.Model):
     id = models.AutoField(primary_key=True)
     fan = models.ForeignKey(FanUstozMudarris, on_delete=models.CASCADE, null=True)
+    mudarris = models.ForeignKey(Mudarris, on_delete=models.CASCADE, null=True)
     baho = models.FloatField(default=0)
     sana = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -139,6 +141,7 @@ class KundalikBahoUstozMudarris(models.Model):
 class KundalikBahoMudarrisTalaba(models.Model):
     id = models.AutoField(primary_key=True)
     fan = models.ForeignKey(FanMudarrisTalaba, on_delete=models.CASCADE, null=True)
+    talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE, null=True)
     baho = models.FloatField(default=0)
     sana = models.DateTimeField(default=datetime.now())
     created_at = models.DateTimeField(auto_now_add=True, null=True)
@@ -149,6 +152,7 @@ class KundalikBahoMudarrisTalaba(models.Model):
 class ImtihonBahoUstozTalaba(models.Model):
     id = models.AutoField(primary_key=True)
     fan = models.ForeignKey(FanUstozTalaba, on_delete=models.CASCADE, null=True)
+    talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE, null=True)
     ustozga_baho = models.FloatField(default=0)
     umuniy_baho = models.FloatField(default=0)
     izoh = models.TextField(max_length=255)
@@ -161,6 +165,7 @@ class ImtihonBahoUstozTalaba(models.Model):
 class ImtihonBahoUstozMudarris(models.Model):
     id = models.AutoField(primary_key=True)
     fan = models.ForeignKey(FanUstozMudarris, on_delete=models.CASCADE, null=True)
+    mudarris = models.ForeignKey(Mudarris, on_delete=models.CASCADE, null=True)
     ustozga_baho = models.FloatField(default=0)
     umuniy_baho = models.FloatField(default=0)
     izoh = models.TextField(max_length=255)
@@ -173,6 +178,7 @@ class ImtihonBahoUstozMudarris(models.Model):
 class ImtihonBahoMudarrisTalaba(models.Model):
     id = models.AutoField(primary_key=True)
     fan = models.ForeignKey(FanMudarrisTalaba, on_delete=models.CASCADE, null=True)
+    talaba = models.ForeignKey(Talaba, on_delete=models.CASCADE, null=True)
     ustozga_baho = models.FloatField(default=0)
     umuniy_baho = models.FloatField(default=0)
     izoh = models.TextField(max_length=255)

@@ -1,7 +1,7 @@
 {% extends 'admin_templates/elements/base.html' %}
 {% load static %}
 {% block page_heading %}
-  Kundalik baholar (Ustoz: "{{fan.ustoz.admin.first_name}} {{fan.ustoz.admin.last_name}}" - Talaba: "{{talaba.ism}} {{talaba.familya}}")
+  Kundalik baholar (Ustoz: "{{fan.ustoz.admin.first_name}} {{fan.ustoz.admin.last_name}}" - Mudarris: "{{mudarris.admin.first_name}} {{mudarris.admin.last_name}}")
 {% endblock page_heading %}
 
 {% block main_content %}
@@ -71,7 +71,7 @@
         themeSystem: 'standard',
         themeSystem: 'bootstrap',
         headerToolbar: { left: 'prev,next today', center: 'title', right: 'multiMonthYear,dayGridMonth' }, // buttons for switching between views
-        events: "{% url 'kundalik_baholar_ustoz_talaba_baholar_api' fan.id talaba.id %}",
+        events: "{% url 'kundalik_baholar_ustoz_mudarris_baholar_api' fan.id mudarris.id %}",
         selectable: true,
         selectHelper: true,
         editable: true,
@@ -85,7 +85,7 @@
             if (title) {
             $.ajax({
               type: 'GET',
-              url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_kiritish' fan.id talaba.id %}",
+              url: "{% url 'kundalik_baholar_ustoz_mudarris_baholar_kiritish' fan.id mudarris.id %}",
               data: {'title' : title, 'start' : start},
               dataType: "json",
               success: function(response){
@@ -130,7 +130,7 @@
           var id = info.event.id;
           $.ajax({
             type: 'GET',
-            url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_tahrirlash' fan.id talaba.id %}",
+            url: "{% url 'kundalik_baholar_ustoz_mudarris_baholar_tahrirlash' fan.id mudarris.id %}",
             data: {'title' : title, 'start' : start, 'id' : id},
             dataType: "json",
             success: function(data){
@@ -161,7 +161,7 @@
             var id = info.event.id;
             $.ajax({
               type: "GET",
-              url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_uchirish' fan.id talaba.id %}",
+              url: "{% url 'kundalik_baholar_ustoz_mudarris_baholar_uchirish' fan.id mudarris.id %}",
               data: {'id' : id},
               dataType: "json",
               success: function(data){

@@ -35,11 +35,11 @@
                   </tr>
               </tfoot>
               <tbody>
-                {% for talaba in talabalar %}
+                {% for mudarris in mudarrislar %}
                   <tr>
-                      <td> <a href="{% url 'kundalik_baholar_ustoz_talaba_baholar' fan.id talaba.id %}">{{ talaba.ism }} {{talaba.familya}}</a> </td>
+                      <td> <a href="{% url 'kundalik_baholar_ustoz_mudarris_baholar' fan.id mudarris.id %}">{{ mudarris.admin.first_name }} {{mudarris.admin.last_name}}</a> </td>
                       <td>
-                        <a href="{% url 'kundalik_baholar_ustoz_talaba_baholar' fan.id talaba.id %}" class="btn btn-info btn-circle">
+                        <a href="" class="btn btn-info btn-circle">
                           <i class="fa-solid fa-address-card"></i>
                       </a>
                         
@@ -50,7 +50,7 @@
 
                 {% empty %}
                 <tr>
-                  <td><h3>Fanda talaba yo'q. <i class="fa-solid fa-face-frown"></i> Fanga avvalanbor talaba kiriting. </h3></td>
+                  <td><h3>Fanda mudarris yo'q. <i class="fa-solid fa-face-frown"></i> Fanga avvalanbor talaba kiriting. </h3></td>
                   <td></td>
                   <td></td>
                 </tr>
