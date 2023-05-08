@@ -15,9 +15,10 @@
     {% endblock sweet_alerts %}
 
     <!-- Toast alert CSS -->
-    <link rel="stylesheet" href="{% static 'toast_alert/css/jquery.toast.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'toast_alert/css/jquery.toast.css' %}">
     <script src="{% static 'toast_alert/js/jquery.toast.js' %}"></script>
+    
 
     <!-- Custom fonts for this template-->
     <link
@@ -66,23 +67,23 @@
                             {% for message in messages %}
                             {% if message.tags == "error" %}
                                 <script>
-                                var myToast = $.toast({
-                                    heading: 'Muommo',
-                                    text: '{{ message }}',
-                                    showHideTransition: 'slide',
-                                    icon: 'error',
-                                    position: 'top-right',
-                                })
+                                    var myToast = $.toast({
+                                        heading: 'Muommo',
+                                        text: '{{ message }}',
+                                        showHideTransition: 'slide',
+                                        icon: 'error',
+                                        position: 'top-right',
+                                    })
                                 </script>
                             {% elif message.tags == "success" %}
                                 <script>
-                                var myToast = $.toast({
-                                    heading: 'Juda soz',
-                                    text: '{{ message }}',
-                                    showHideTransition: 'slide',
-                                    icon: 'success',
-                                    position: 'top-right',
-                                })
+                                    var myToast = $.toast({
+                                        heading: 'Juda soz',
+                                        text: '{{ message }}',
+                                        showHideTransition: 'slide',
+                                        icon: 'success',
+                                        position: 'top-right',
+                                    })
                                 </script>
                             {% endif %}
                             {% endfor %}
@@ -115,6 +116,7 @@
     </a>
 
     {% include 'admin_templates/alert/chiqish.html' %}
+    
 
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
