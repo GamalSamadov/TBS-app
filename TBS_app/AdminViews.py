@@ -1809,12 +1809,79 @@ def kundalik_baholar_ustoz_mudarris_baholar_uchirish(request, fanId, mudarrisId)
 # Kundalik baholar Mudarris - Talaba
 def kundalik_baholar_mudarris_talaba(request):
     admin = CustomUser.objects.get(id=request.user.id)
-    baholar = KundalikBahoMudarrisTalaba.objects.all()
+    fanlar = FanMudarrisTalaba.objects.select_related('mudarris').prefetch_related('talaba').all()
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar,
+    }
+    return render(request, 'admin_templates/kundalik_baholar_mudarris_talaba.html', context)
+
+
+def kundalik_baholar_mudarris_talaba_talaba_tanlash(request, id):
+    fan = FanMudarrisTalaba.objects.select_related('mudarris').prefetch_related('talaba').get(id=id)
+    talabalar = fan.talaba.all()
+    context = {
+        'talabalar' : talabalar,
+        'fan' : fan
+    }
+    return render(request, 'admin_templates/kundalik_baholar_mudarris_talaba_talaba_tanlash.html', context)
+
+
+def kundalik_baholar_mudarris_talaba_baholar(request, fanId, talabaId):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fan = FanMudarrisTalaba.objects.get(id=fanId)
+    talaba = Talaba.objects.get(id=talabaId)
+    baholar = KundalikBahoMudarrisTalaba.objects.filter(fan__id=fanId).filter(talaba__id=talabaId)
     context = {
         'admin' : admin,
         'baholar' : baholar,
+        'fan' : fan,
+        'talaba' : talaba
     }
-    return render(request, 'admin_templates/kundalik_baholar_mudarris_talaba.html', context)
+    return render(request, 'admin_templates/kundalik_baholar_mudarris_talaba_baholar.html', context)
+
+
+def kundalik_baholar_mudarris_talaba_baholar_api(request, fanId, talabaId):
+    baholar = KundalikBahoMudarrisTalaba.objects.filter(fan__id=fanId).filter(talaba__id=talabaId)
+    out = []
+    for baho in baholar:
+        out.append({
+            'title' : baho.baho,
+            'id' : baho.id,
+            'start' : baho.sana.strftime("%Y-%m-%d"),
+        })
+    return JsonResponse(out, safe=False)
+
+
+def kundalik_baholar_mudarris_talaba_baholar_kiritish(request, fanId, talabaId):
+    start = request.GET.get('start', None)
+    title = request.GET.get('title', None)
+    fan = FanMudarrisTalaba.objects.filter(id=fanId).get(talaba__id=talabaId)
+    talaba = Talaba.objects.get(id=talabaId)
+    baho = KundalikBahoMudarrisTalaba(baho=int(title), fan=fan, talaba=talaba, sana=start)
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def kundalik_baholar_mudarris_talaba_baholar_tahrirlash(request, fanId, talabaId):
+    start = request.GET.get('start', None)
+    title = request.GET.get('title', None)
+    id = request.GET.get('id', None)
+    baho = KundalikBahoMudarrisTalaba.objects.get(id=id)
+    baho.sana = start
+    baho.baho = title
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def kundalik_baholar_mudarris_talaba_baholar_uchirish(request, fanId, talabaId):
+    id = request.GET.get('id', None)
+    baho = KundalikBahoMudarrisTalaba.objects.get(id=id)
+    baho.delete()
+    data = {}
+    return JsonResponse(data)
 
 
 # Imtihon baholar Ustoz - Talaba

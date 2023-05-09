@@ -1,0 +1,208 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+{% block page_heading %}
+  Kundalik baholar (Mudarris: "{{fan.mudarris.admin.first_name}} {{fan.mudarris.admin.last_name}}" - Talaba: "{{talaba.ism}} {{talaba.familya}}")
+{% endblock page_heading %}
+
+{% block main_content %}
+    <!-- Modal add baho -->
+  <div class="modal fade" id="addBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Baho kiriting</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control" id="title" label="Baho kiriting">
+          <span class="text-danger" id="titleError"></span>
+          <p class="text-info">Har bir martta baho kiritgandan keyin sahifani yangilang. Bo'lmasa baholar qaytadan kiritilib qolaveradi.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa-solid fa-x"></i></button>
+          <button type="button" class="btn btn-success" id="saveBtn"><i class="fa-solid fa-check"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+  <!-- Modal delete baho -->
+  <div class="modal fade" id="deleteBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Bahoni o'chirish</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h3 class="">Chindan ham bahoni o'chirishga aminmisiz</h3>
+          <p class="text-danger">O'chirgandan keyin qaytarishni iloji yo'q!</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa-solid fa-x"></i> Ortga</button>
+          <button type="button" class="btn btn-danger" id="deleteBtn"><i class="fa-solid fa-trash"></i> O'chirish</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id='calendar'></div>
+
+{% endblock main_content %}
+
+{% block custom_script %}
+  <script src="{% static 'fullcalendar/dist/index.global.min.js' %}"></script>
+  <script src="{% static 'moment/moment.js' %}"></script>
+   <!-- Toast alert CSS -->
+   <link rel="stylesheet" href="{% static 'toast_alert/css/jquery.toast.css' %}">
+   <script src="{% static 'toast_alert/js/jquery.toast.js' %}"></script>
+   
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'ar',
+        timeZone: 'UTC',
+        themeSystem: 'standard',
+        themeSystem: 'bootstrap',
+        headerToolbar: { left: 'prev,next today', center: 'title', right: 'multiMonthYear,dayGridMonth' }, // buttons for switching between views
+        events: "{% url 'kundalik_baholar_mudarris_talaba_baholar_api' fan.id talaba.id %}",
+        selectable: true,
+        selectHelper: true,
+        editable: true,
+        droppable: true,
+        eventLimit: true,
+        select: function(start, allDay) {
+          var start = moment(start.startStr).format('YYYY-MM-DD HH:mm:ss');
+          $('#addBaho').modal('toggle');
+          $('#saveBtn').click(function() {
+            var title = document.getElementById('title').value;
+            if (title) {
+            $.ajax({
+              type: 'GET',
+              url: "{% url 'kundalik_baholar_mudarris_talaba_baholar_kiritish' fan.id talaba.id %}",
+              data: {'title' : title, 'start' : start},
+              dataType: "json",
+              success: function(response){
+                calendar.refetchEvents();
+                $('#addBaho').modal('hide');
+                var myToast = $.toast({
+                                        heading: 'Juda soz',
+                                        text: 'Baho kiritildi!',
+                                        showHideTransition: 'slide',
+                                        icon: 'success',
+                                        position: 'top-right',
+                                    })
+                $('#saveBtn').off("click")
+                
+              },
+              
+              
+              error: function(error) {
+                if(error.responseJSON.errors) {
+                  $('#titleError').html("Kiritib bo'lmadi!")
+                  var myToast = $.toast({
+                                    heading: 'Muommo',
+                                    text: 'Baho kiritishda muommo yuz berdi!',
+                                    showHideTransition: 'slide',
+                                    icon: 'error',
+                                    position: 'top-right',
+                                })
+
+                }
+              $('#saveBtn').off("click")
+              }
+            })
+            
+          };
+          })
+
+          
+        },
+        eventDrop: function(info) {
+          var start = moment(info.event.start).format('YYYY-MM-DD HH:mm:ss');
+          var title = info.event.title;
+          var id = info.event.id;
+          $.ajax({
+            type: 'GET',
+            url: "{% url 'kundalik_baholar_mudarris_talaba_baholar_tahrirlash' fan.id talaba.id %}",
+            data: {'title' : title, 'start' : start, 'id' : id},
+            dataType: "json",
+            success: function(data){
+              calendar.refetchEvents();
+              var myToast = $.toast({
+                                        heading: 'Juda soz',
+                                        text: 'Baho tahrirlandi!',
+                                        showHideTransition: 'slide',
+                                        icon: 'success',
+                                        position: 'top-right',
+                                    })
+            },
+            error: function(data) {
+              var myToast = $.toast({
+                                        heading: 'Muommo',
+                                        text: 'Bahoni tahrirlashda xatolik yuz berdi',
+                                        showHideTransition: 'slide',
+                                        icon: 'error',
+                                        position: 'top-right',
+                                    })
+
+            }
+          })
+        },
+        eventClick: function(info) {
+          $('#deleteBaho').modal('toggle');
+          $('#deleteBtn').click(function() {
+            var id = info.event.id;
+            $.ajax({
+              type: "GET",
+              url: "{% url 'kundalik_baholar_mudarris_talaba_baholar_uchirish' fan.id talaba.id %}",
+              data: {'id' : id},
+              dataType: "json",
+              success: function(data){
+                calendar.refetchEvents();
+                $('#deleteBaho').modal('hide');
+                var myToast = $.toast({
+                                        heading: 'Juda soz',
+                                        text: 'Baho o\'chirildi!',
+                                        showHideTransition: 'slide',
+                                        icon: 'success',
+                                        position: 'top-right',
+                                    })
+                $('#deleteBtn').off("click")
+              },
+              error: function(data) {
+                var myToast = $.toast({
+                                        heading: 'Muommo',
+                                        text: 'Bahoni o\'chirishda xatolik yuz berdi',
+                                        showHideTransition: 'slide',
+                                        icon: 'error',
+                                        position: 'top-right',
+                                    })
+                $('#deleteBtn').off("click")
+
+              }
+            })
+          })
+        },
+      })
+        
+      calendar.render();
+    });
+  </script>
+{% endblock custom_script %}
+{% block custom_css %}
+
+  <style>
+    #calendar {
+      max-width: 900px;
+      margin: 40px auto;
+    }
+  </style>
+
+{% endblock custom_css %}

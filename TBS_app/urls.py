@@ -108,7 +108,13 @@ urlpatterns = [
     path('kundalik_baholar/ustoz_mudarris/fan/<int:fanId>/mudarris/<int:mudarrisId>/tahrirlash/', AdminViews.kundalik_baholar_ustoz_mudarris_baholar_tahrirlash, name="kundalik_baholar_ustoz_mudarris_baholar_tahrirlash"),
     path('kundalik_baholar/ustoz_mudarris/fan/<int:fanId>/mudarris/<int:mudarrisId>/uchirish/', AdminViews.kundalik_baholar_ustoz_mudarris_baholar_uchirish, name="kundalik_baholar_ustoz_mudarris_baholar_uchirish"),
     # Kundalik baholar Mudarris - Talaba
-    path('kundalik_baholar/mudarris_ustoz/', AdminViews.kundalik_baholar_mudarris_talaba, name="kundalik_baholar_mudarris_talaba"),
+    path('kundalik_baholar/mudarris_talaba/', AdminViews.kundalik_baholar_mudarris_talaba, name="kundalik_baholar_mudarris_talaba"),
+    path('kundalik_baholar/mudarris_talaba/fan/<int:id>/', AdminViews.kundalik_baholar_mudarris_talaba_talaba_tanlash, name="kundalik_baholar_mudarris_talaba_talaba_tanlash"),
+    path('kundalik_baholar/mudarris_talaba/fan/<int:fanId>/talaba/<int:talabaId>/', AdminViews.kundalik_baholar_mudarris_talaba_baholar, name="kundalik_baholar_mudarris_talaba_baholar"),
+    path('kundalik_baholar/mudarris_talaba/fan/<int:fanId>/talaba/<int:talabaId>/api/', AdminViews.kundalik_baholar_mudarris_talaba_baholar_api, name="kundalik_baholar_mudarris_talaba_baholar_api"),
+    path('kundalik_baholar/mudarris_talaba/fan/<int:fanId>/talaba/<int:talabaId>/kiritish/', AdminViews.kundalik_baholar_mudarris_talaba_baholar_kiritish, name="kundalik_baholar_mudarris_talaba_baholar_kiritish"),
+    path('kundalik_baholar/mudarris_talaba/fan/<int:fanId>/talaba/<int:talabaId>/tahrirlash/', AdminViews.kundalik_baholar_mudarris_talaba_baholar_tahrirlash, name="kundalik_baholar_mudarris_talaba_baholar_tahrirlash"),
+    path('kundalik_baholar/mudarris_talaba/fan/<int:fanId>/talaba/<int:talabaId>/uchirish/', AdminViews.kundalik_baholar_mudarris_talaba_baholar_uchirish, name="kundalik_baholar_mudarris_talaba_baholar_uchirish"),
     # Imtihon baholar Ustoz - Talaba
     path('imtihon_baholar/ustoz_talaba/', AdminViews.imtihon_baholar_ustoz_talaba, name="imtihon_baholar_ustoz_talaba"),
     # Imtihon baholar Ustoz - Mudarris
