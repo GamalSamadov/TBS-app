@@ -1,0 +1,341 @@
+{% extends 'admin_templates/elements/base.html' %}
+{% load static %}
+{% block page_heading %}
+  Imtihon baholar (Ustoz: "{{fan.ustoz.admin.first_name}} {{fan.ustoz.admin.last_name}}" - Talaba: "{{talaba.ism}} {{talaba.familya}}")
+{% endblock page_heading %}
+
+{% block main_content %}
+    <!-- Modal add baho -->
+  <div class="modal fade" id="addBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Baho kiriting</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">Umumiy baho:</p>
+          {% comment %} <input type="range" class="multi-range" id="title"> {% endcomment %}
+          
+          {% comment %} Umumiy Baho {% endcomment %}
+          <div class="slidecontainer mt-2 mb-1">
+            <input type="range" min="50" max="100" value="50" class="slider" id="umumiyBahoSlider">
+            <div>Baho: <span id="umumiyBaho" class="text-info"></span></div>
+          </div>
+     
+          {% comment %} Ustozga baho {% endcomment %}
+          <p class="mb-0 mt-3">Ustozga baho</p>
+          {% comment %} <input type="text" class="form-control" id="ustozgaTitle"> {% endcomment %}
+          <div class="slidecontainer mt-2 mb-1">
+            <input type="range" min="50" max="100" value="50" class="slider" id="ustozgaBahoSlider">
+            <div>Baho: <span id="ustozgaBaho" class="text-info"></span></div>
+          </div>
+
+
+          <p class="mb-0 mt-3">Mulohaza</p>
+          <textarea class="form-control mb-3" id="izoh" name="izoh" rows="4" cols="50"></textarea>
+
+
+          <span class="text-danger" id="titleError"></span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa-solid fa-x"></i></button>
+          <button type="button" class="btn btn-success" id="saveBtn"><i class="fa-solid fa-check"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+   
+  <!-- Modal info baho -->
+  <div class="modal fade" id="infoBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Bahoning tafsilotlari</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h3 class="">Umumiy baho: <span id="umumiyBahoInfo"></span></h3>
+          <h3 class="">Ustozning bahosi: <span id="ustozgaBahoInfo"></span></h3>
+          <h3 class="">Izoh: <span id="izohInfo"></span></h3>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="infoDeleteBtn"><i class="fa-solid fa-trash"></i> O'chirish</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal delete baho -->
+  <div class="modal fade" id="deleteBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Bahoni o'chirish</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h3 class="">Chindan ham bahoni o'chirishga aminmisiz</h3>
+          <p class="text-danger">O'chirgandan keyin qaytarishni iloji yo'q!</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa-solid fa-x"></i> Ortga</button>
+          <button type="button" class="btn btn-danger" id="deleteBtn"><i class="fa-solid fa-trash"></i> O'chirish</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id='calendar'></div>
+
+{% endblock main_content %}
+
+{% block custom_script %}
+  <script src="{% static 'fullcalendar/dist/index.global.min.js' %}"></script>
+  <script src="{% static 'moment/moment.js' %}"></script>
+   <!-- Toast alert CSS -->
+   <link rel="stylesheet" href="{% static 'toast_alert/css/jquery.toast.css' %}">
+   <script src="{% static 'toast_alert/js/jquery.toast.js' %}"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'ar',
+        timeZone: 'UTC',
+        themeSystem: 'standard',
+        themeSystem: 'bootstrap',
+        headerToolbar: { left: 'prev,next today', center: 'title', right: 'multiMonthYear,dayGridMonth' }, // buttons for switching between views
+        events: "{% url 'imtihon_baholar_ustoz_talaba_baholar_api' fan.id talaba.id %}",
+        selectable: true,
+        selectHelper: true,
+        editable: true,
+        droppable: true,
+        eventLimit: true,
+        select: function(start, allDay) {
+          var start = moment(start.startStr).format('YYYY-MM-DD HH:mm:ss');
+          $('#addBaho').modal('toggle');
+          $('#saveBtn').unbind( "click" ).click(function() {
+            var title = document.getElementById('umumiyBaho').textContent;
+            var ustozga_baho = document.getElementById('ustozgaBaho').textContent;
+            var izoh = document.getElementById('izoh').value;
+            if (title) {
+            $.ajax({
+              type: 'GET',
+              url: "{% url 'imtihon_baholar_ustoz_talaba_baholar_kiritish' fan.id talaba.id %}",
+              data: {'title' : title, 'start' : start, 'ustozga_baho' : ustozga_baho, 'izoh' : izoh},
+              dataType: "json",
+              success: function(response){
+                calendar.refetchEvents();
+                $('#addBaho').modal('hide');
+                var myToast = $.toast({
+                                        heading: 'Juda soz',
+                                        text: 'Baho kiritildi!',
+                                        showHideTransition: 'slide',
+                                        icon: 'success',
+                                        position: 'top-right',
+                                    })
+                $('#saveBtn').off("click")
+                
+              },
+              error: function(error) {
+                if(error.responseJSON.errors) {
+                  $('#titleError').html("Kiritib bo'lmadi!")
+                  var myToast = $.toast({
+                                    heading: 'Muommo',
+                                    text: 'Baho kiritishda muommo yuz berdi!',
+                                    showHideTransition: 'slide',
+                                    icon: 'error',
+                                    position: 'top-right',
+                                })
+
+                }
+              $('#saveBtn').off("click")
+              }
+            })
+            
+          };
+          })  
+        },
+        eventDrop: function(info) {
+          var start = moment(info.event.start).format('YYYY-MM-DD HH:mm:ss');
+          var id = info.event.id;
+          $.ajax({
+            type: 'GET',
+            url: "{% url 'imtihon_baholar_ustoz_talaba_baholar_tahrirlash' fan.id talaba.id %}",
+            data: {'start' : start, 'id' : id},
+            dataType: "json",
+            success: function(data){
+              calendar.refetchEvents();
+              var myToast = $.toast({
+                                        heading: 'Juda soz',
+                                        text: 'Baho tahrirlandi!',
+                                        showHideTransition: 'slide',
+                                        icon: 'success',
+                                        position: 'top-right',
+                                    })
+            },
+            error: function(data) {
+              var myToast = $.toast({
+                                        heading: 'Muommo',
+                                        text: 'Bahoni tahrirlashda xatolik yuz berdi',
+                                        showHideTransition: 'slide',
+                                        icon: 'error',
+                                        position: 'top-right',
+                                    })
+
+            }
+          })
+        },
+        eventClick: function(info) {
+          $('#infoBaho').modal('toggle');
+          var id = info.event.id;
+          $.ajax({
+            type: 'GET',
+            url: "{% url 'imtihon_baholar_ustoz_talaba_baholar_api' fan.id talaba.id %}",
+            data: {'id' : id},
+            dataType: "json",
+            success: function(response){
+              calendar.refetchEvents();
+              data = response
+              for (i=0; i < data.length; i++) {
+                if(response[i].id == id) {
+                  var umumiyBahoInfo = document.getElementById('umumiyBahoInfo');
+                  var ustozgaBahoInfo = document.getElementById('ustozgaBahoInfo');
+                  var izohInfo = document.getElementById('izohInfo');
+                  ustozgaBahoInfo.innerHTML = response[i].ustozga_baho
+                  umumiyBahoInfo.innerHTML = response[i].title
+                  izohInfo.innerHTML = response[i].izoh
+                }
+              }
+            },
+            
+          })
+          
+
+          $('#infoDeleteBtn').unbind( "click" ).click(function(){
+            $('#infoBaho').modal('hide');
+            
+            $('#deleteBaho').modal('toggle');
+            $('#deleteBtn').unbind( "click" ).click(function() {
+              var id = info.event.id;
+              $.ajax({
+                type: "GET",
+                url: "{% url 'imtihon_baholar_ustoz_talaba_baholar_uchirish' fan.id talaba.id %}",
+                data: {'id' : id},
+                dataType: "json",
+                success: function(data){
+                  calendar.refetchEvents();
+                  $('#deleteBaho').modal('hide');
+                  var myToast = $.toast({
+                                          heading: 'Juda soz',
+                                          text: 'Baho o\'chirildi!',
+                                          showHideTransition: 'slide',
+                                          icon: 'success',
+                                          position: 'top-right',
+                                      })
+                  $('#deleteBtn').off("click")
+                },
+                error: function(data) {
+                  var myToast = $.toast({
+                                          heading: 'Muommo',
+                                          text: 'Bahoni o\'chirishda xatolik yuz berdi',
+                                          showHideTransition: 'slide',
+                                          icon: 'error',
+                                          position: 'top-right',
+                                      })
+                  $('#deleteBtn').off("click")
+  
+                }
+              })
+            })
+          })
+        
+        },
+      })
+        
+      calendar.render();
+    });
+
+  </script>
+
+  <script>
+    var umumiyBahoSlider = document.getElementById("umumiyBahoSlider");
+    var umumiyBahoOutput = document.getElementById("umumiyBaho");
+    umumiyBahoOutput.innerHTML = umumiyBahoSlider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    umumiyBahoSlider.oninput = function() {
+      umumiyBahoOutput.innerHTML = this.value;
+    }
+
+    var ustozgaBahoSlider = document.getElementById("ustozgaBahoSlider");
+    var ustozgaBahoOutPut = document.getElementById("ustozgaBaho");
+    ustozgaBahoOutPut.innerHTML = ustozgaBahoSlider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    ustozgaBahoSlider.oninput = function() {
+      ustozgaBahoOutPut.innerHTML = this.value;
+    }
+     
+  </script>
+{% endblock custom_script %}
+{% block custom_css %}
+
+
+  <style>
+    
+    #calendar {
+      max-width: 900px;
+      margin: 40px auto;
+    }
+
+    .slidecontainer {
+      width: 100%; /* Width of the outside container */
+    }
+    
+   
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 15px;
+      border-radius: 5px;  
+      background: #F1F2F3;
+      outline: none;
+      opacity: 0.7;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+    
+    .slider:hover {
+      opacity: 1; /* Fully shown on mouse-over */
+    }
+
+    
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%; 
+      background: 	#189ad3;
+      cursor: pointer;
+    }
+    
+    .slider::-moz-range-thumb {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: 	#189ad3;
+      cursor: pointer;
+    }
+  </style>
+
+{% endblock custom_css %}

@@ -1887,12 +1887,83 @@ def kundalik_baholar_mudarris_talaba_baholar_uchirish(request, fanId, talabaId):
 # Imtihon baholar Ustoz - Talaba
 def imtihon_baholar_ustoz_talaba(request):
     admin = CustomUser.objects.get(id=request.user.id)
-    baholar = ImtihonBahoUstozTalaba.objects.all()
+    fanlar = FanUstozTalaba.objects.all()
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar,
+    }
+    return render(request, 'admin_templates/imtihon_baholar_ustoz_talaba.html', context)
+
+
+def imtihon_baholar_ustoz_talaba_talaba_tanlash(request, id):
+    fan = FanUstozTalaba.objects.select_related('ustoz').prefetch_related('talaba').get(id=id)
+    talabalar = fan.talaba.all()
+    context = {
+        'talabalar' : talabalar,
+        'fan' : fan
+    }
+    return render(request, 'admin_templates/imtihon_baholar_ustoz_talaba_talaba_tanlash.html', context)
+
+
+def imtihon_baholar_ustoz_talaba_baholar(request, fanId, talabaId):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fan = FanUstozTalaba.objects.get(id=fanId)
+    talaba = Talaba.objects.get(id=talabaId)
+    baholar = ImtihonBahoUstozTalaba.objects.filter(fan__id=fanId).filter(talaba__id=talabaId)
     context = {
         'admin' : admin,
         'baholar' : baholar,
+        'fan' : fan,
+        'talaba' : talaba
     }
-    return render(request, 'admin_templates/imtihon_baholar_ustoz_talaba.html', context)
+    return render(request, 'admin_templates/imtihon_baholar_ustoz_talaba_baholar.html', context)
+
+
+def imtihon_baholar_ustoz_talaba_baholar_api(request, fanId, talabaId):
+    baholar = ImtihonBahoUstozTalaba.objects.filter(fan__id=fanId).filter(talaba__id=talabaId)
+    out = []
+    for baho in baholar:
+        out.append({
+            'title' : baho.umumiy_baho,
+            'id' : baho.id,
+            'ustozga_baho' : baho.ustozga_baho,
+            'izoh' : baho.izoh,
+            'start' : baho.sana.strftime("%Y-%m-%d"),
+            
+            
+        })
+    return JsonResponse(out, safe=False)
+
+
+def imtihon_baholar_ustoz_talaba_baholar_kiritish(request, fanId, talabaId):
+    start = request.GET.get('start', None)
+    title = request.GET.get('title', None)
+    ustozga_baho = request.GET.get('ustozga_baho', None)
+    izoh = request.GET.get('izoh', None)
+    fan = FanUstozTalaba.objects.get(id=fanId)
+    talaba = Talaba.objects.get(id=talabaId)
+    baho = ImtihonBahoUstozTalaba(umumiy_baho=int(title), fan=fan, talaba=talaba, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def imtihon_baholar_ustoz_talaba_baholar_tahrirlash(request, fanId, talabaId):
+    start = request.GET.get('start', None)
+    id = request.GET.get('id', None)
+    baho = ImtihonBahoUstozTalaba.objects.get(id=id)
+    baho.sana = start
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def imtihon_baholar_ustoz_talaba_baholar_uchirish(request, fanId, talabaId):
+    id = request.GET.get('id', None)
+    baho = ImtihonBahoUstozTalaba.objects.get(id=id)
+    baho.delete()
+    data = {}
+    return JsonResponse(data)
 
 
 # Imtohon baholar Ustoz - Mudarris
