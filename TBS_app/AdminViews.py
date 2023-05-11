@@ -1690,6 +1690,7 @@ def kundalik_baholar_ustoz_talaba_baholar_api(request, fanId, talabaId):
             'title' : baho.baho,
             'id' : baho.id,
             'start' : baho.sana.strftime("%Y-%m-%d"),
+            'izoh' : baho.izoh,
             
             
         })
@@ -1699,10 +1700,11 @@ def kundalik_baholar_ustoz_talaba_baholar_api(request, fanId, talabaId):
 def kundalik_baholar_ustoz_talaba_baholar_kiritish(request, fanId, talabaId):
     start = request.GET.get('start', None)
     title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
     fan = FanUstozTalaba.objects.get(id=fanId)
     talaba = Talaba.objects.get(id=talabaId)
  
-    baho = KundalikBahoUstozTalaba(baho=int(title), fan=fan, talaba=talaba, sana=start)
+    baho = KundalikBahoUstozTalaba(baho=int(title), fan=fan, talaba=talaba, sana=start, izoh=izoh)
     baho.save()
     data = {}
     return JsonResponse(data)

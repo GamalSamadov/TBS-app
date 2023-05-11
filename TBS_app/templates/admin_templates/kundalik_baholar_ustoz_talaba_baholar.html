@@ -16,9 +16,15 @@
           </button>
         </div>
         <div class="modal-body">
-          <input type="text" class="form-control" id="title" label="Baho kiriting">
-          <span class="text-danger" id="titleError"></span>
-          <p class="text-info">Har bir martta baho kiritgandan keyin sahifani yangilang. Bo'lmasa baholar qaytadan kiritilib qolaveradi.</p>
+          <p class="mb-0">Umumiy baho:</p>
+          <div class="slidecontainer mt-2 mb-1">
+            <input type="range" min="50" max="100" value="50" class="slider" id="umumiyBahoSlider">
+            <div>Baho: <span id="umumiyBaho" class="text-info"></span></div>
+          </div>
+
+          <p class="mb-0 mt-3">Mulohaza</p>
+          <textarea class="form-control mb-3" id="izoh" name="izoh" rows="4" cols="50"></textarea>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa-solid fa-x"></i></button>
@@ -28,6 +34,30 @@
     </div>
   </div>
    
+
+    <!-- Modal info baho -->
+    <div class="modal fade" id="infoBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Bahoning tafsilotlari</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <h3 class="">Baho: <span id="umumiyBahoInfo"></span></h3>
+            <h3 class="">Izoh: <span id="izohInfo"></span></h3>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" id="infoDeleteBtn"><i class="fa-solid fa-trash"></i> O'chirish</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+
+
   <!-- Modal delete baho -->
   <div class="modal fade" id="deleteBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -70,7 +100,7 @@
         timeZone: 'UTC',
         themeSystem: 'standard',
         themeSystem: 'bootstrap',
-        headerToolbar: { left: 'prev,next today', center: 'title', right: 'multiMonthYear,dayGridMonth' }, // buttons for switching between views
+        headerToolbar: { left: 'prev,next today', center: 'title', right: 'multiMonthYear,dayGridMonth' },
         events: "{% url 'kundalik_baholar_ustoz_talaba_baholar_api' fan.id talaba.id %}",
         selectable: true,
         selectHelper: true,
@@ -80,13 +110,14 @@
         select: function(start, allDay) {
           var start = moment(start.startStr).format('YYYY-MM-DD HH:mm:ss');
           $('#addBaho').modal('toggle');
-          $('#saveBtn').click(function() {
-            var title = document.getElementById('title').value;
+          $('#saveBtn').unbind( "click" ).click(function() {
+            var title = document.getElementById('umumiyBaho').textContent;
+            var izoh = document.getElementById('izoh').value;
             if (title) {
             $.ajax({
               type: 'GET',
               url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_kiritish' fan.id talaba.id %}",
-              data: {'title' : title, 'start' : start},
+              data: {'title' : title, 'start' : start, 'izoh' : izoh},
               dataType: "json",
               success: function(response){
                 calendar.refetchEvents();
@@ -123,7 +154,7 @@
           })
 
           
-        },
+          },
         eventDrop: function(info) {
           var start = moment(info.event.start).format('YYYY-MM-DD HH:mm:ss');
           var title = info.event.title;
@@ -154,46 +185,86 @@
 
             }
           })
-        },
+          },
         eventClick: function(info) {
-          $('#deleteBaho').modal('toggle');
-          $('#deleteBtn').click(function() {
-            var id = info.event.id;
-            $.ajax({
-              type: "GET",
-              url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_uchirish' fan.id talaba.id %}",
-              data: {'id' : id},
-              dataType: "json",
-              success: function(data){
-                calendar.refetchEvents();
-                $('#deleteBaho').modal('hide');
-                var myToast = $.toast({
-                                        heading: 'Juda soz',
-                                        text: 'Baho o\'chirildi!',
-                                        showHideTransition: 'slide',
-                                        icon: 'success',
-                                        position: 'top-right',
-                                    })
-                $('#deleteBtn').off("click")
-              },
-              error: function(data) {
-                var myToast = $.toast({
-                                        heading: 'Muommo',
-                                        text: 'Bahoni o\'chirishda xatolik yuz berdi',
-                                        showHideTransition: 'slide',
-                                        icon: 'error',
-                                        position: 'top-right',
-                                    })
-                $('#deleteBtn').off("click")
-
+          $('#infoBaho').modal('toggle');
+          var id = info.event.id;
+          $.ajax({
+            type: 'GET',
+            url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_api' fan.id talaba.id %}",
+            data: {'id' : id},
+            dataType: "json",
+            success: function(response){
+              calendar.refetchEvents();
+              data = response
+              for (i=0; i < data.length; i++) {
+                if(response[i].id == id) {
+                  var umumiyBahoInfo = document.getElementById('umumiyBahoInfo');
+                  var izohInfo = document.getElementById('izohInfo');
+                  umumiyBahoInfo.innerHTML = response[i].title
+                  izohInfo.innerHTML = response[i].izoh
+                }
               }
+            },
+            
+          })
+          
+
+          $('#infoDeleteBtn').unbind( "click" ).click(function(){
+            $('#infoBaho').modal('hide');
+            
+            $('#deleteBaho').modal('toggle');
+            $('#deleteBtn').unbind( "click" ).click(function() {
+              var id = info.event.id;
+              $.ajax({
+                type: "GET",
+                url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_uchirish' fan.id talaba.id %}",
+                data: {'id' : id},
+                dataType: "json",
+                success: function(data){
+                  calendar.refetchEvents();
+                  $('#deleteBaho').modal('hide');
+                  var myToast = $.toast({
+                                          heading: 'Juda soz',
+                                          text: 'Baho o\'chirildi!',
+                                          showHideTransition: 'slide',
+                                          icon: 'success',
+                                          position: 'top-right',
+                                      })
+                  $('#deleteBtn').off("click")
+                },
+                error: function(data) {
+                  var myToast = $.toast({
+                                          heading: 'Muommo',
+                                          text: 'Bahoni o\'chirishda xatolik yuz berdi',
+                                          showHideTransition: 'slide',
+                                          icon: 'error',
+                                          position: 'top-right',
+                                      })
+                  $('#deleteBtn').off("click")
+  
+                }
+              })
             })
           })
-        },
-      })
+        
+          },
+      });
         
       calendar.render();
     });
+  </script>
+
+  <script>
+    var umumiyBahoSlider = document.getElementById("umumiyBahoSlider");
+    var umumiyBahoOutput = document.getElementById("umumiyBaho");
+    umumiyBahoOutput.innerHTML = umumiyBahoSlider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    umumiyBahoSlider.oninput = function() {
+      umumiyBahoOutput.innerHTML = this.value;
+    }
+
   </script>
 {% endblock custom_script %}
 {% block custom_css %}
@@ -202,6 +273,46 @@
     #calendar {
       max-width: 900px;
       margin: 40px auto;
+    }
+
+    .slidecontainer {
+      width: 100%; /* Width of the outside container */
+    }
+    
+   
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 15px;
+      border-radius: 5px;  
+      background: #F1F2F3;
+      outline: none;
+      opacity: 0.7;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+    
+    .slider:hover {
+      opacity: 1; /* Fully shown on mouse-over */
+    }
+
+    
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%; 
+      background: 	#189ad3;
+      cursor: pointer;
+    }
+    
+    .slider::-moz-range-thumb {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: 	#189ad3;
+      cursor: pointer;
     }
   </style>
 
