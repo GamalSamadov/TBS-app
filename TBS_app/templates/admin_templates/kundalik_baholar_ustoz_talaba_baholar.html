@@ -16,7 +16,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <p class="mb-0">Umumiy baho:</p>
+          <p class="mb-0">Baho kiriting...</p>
           <div class="slidecontainer mt-2 mb-1">
             <input type="range" min="50" max="100" value="50" class="slider" id="umumiyBahoSlider">
             <div>Baho: <span id="umumiyBaho" class="text-info"></span></div>
@@ -46,18 +46,78 @@
             </button>
           </div>
           <div class="modal-body">
-            <h3 class="">Baho: <span id="umumiyBahoInfo"></span></h3>
-            <h3 class="">Izoh: <span id="izohInfo"></span></h3>
+
+            <div class="md-6 mb-4">
+              <div class="card border-left-info shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Baho:</div>
+                    <div class="row no-gutters align-items-center">
+                      <div class="col-auto">
+                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="umumiyBahoInfo"></div>
+                      </div>
+                      <div class="col">
+                        <div class="progress progress-sm mr-2">
+                          <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" id="bahoProgressBar"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fa-solid fa-graduation-cap fa-2x text-info"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="card shadow mb-4">
+              <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Izoh</h6>
+              </div>
+              <div class="card-body">
+                <p id="izohInfo"></p>
+              </div>
+            </div>
           </div>
           <div class="modal-footer">
+            <button type="button" class="btn btn-success" id="infoEditBtn"><i class="fa-solid fa-pen"></i> Tahrirlash</button>
             <button type="button" class="btn btn-danger" id="infoDeleteBtn"><i class="fa-solid fa-trash"></i> O'chirish</button>
           </div>
         </div>
       </div>
     </div>
+
+
+  <!-- Modal Edit baho -->
+  <div class="modal fade" id="editBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Bahoni tahrirlash</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">Baho kiriting...</p>
+          <div class="slidecontainer mt-2 mb-1">
+            <input type="range" min="50" max="100" value="50" class="slider" id="umumiyBahoEditSlider">
+            <div>Baho: <span id="umumiyBahoEdit" class="text-info"></span></div>
+          </div>
+
+          <p class="mb-0 mt-3">Mulohaza</p>
+          <textarea class="form-control mb-3" id="izohEdit" name="izoh" rows="4" cols="50"></textarea>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa-solid fa-x"></i></button>
+          <button type="button" class="btn btn-success" id="saveEditBtn"><i class="fa-solid fa-check"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
   
-
-
   <!-- Modal delete baho -->
   <div class="modal fade" id="deleteBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -157,12 +217,11 @@
           },
         eventDrop: function(info) {
           var start = moment(info.event.start).format('YYYY-MM-DD HH:mm:ss');
-          var title = info.event.title;
           var id = info.event.id;
           $.ajax({
             type: 'GET',
-            url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_tahrirlash' fan.id talaba.id %}",
-            data: {'title' : title, 'start' : start, 'id' : id},
+            url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_sana_tahrirlash' fan.id talaba.id %}",
+            data: {'start' : start, 'id' : id},
             dataType: "json",
             success: function(data){
               calendar.refetchEvents();
@@ -187,8 +246,8 @@
           })
           },
         eventClick: function(info) {
-          $('#infoBaho').modal('toggle');
           var id = info.event.id;
+          $('#infoBaho').modal('toggle');
           $.ajax({
             type: 'GET',
             url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_api' fan.id talaba.id %}",
@@ -201,14 +260,78 @@
                 if(response[i].id == id) {
                   var umumiyBahoInfo = document.getElementById('umumiyBahoInfo');
                   var izohInfo = document.getElementById('izohInfo');
-                  umumiyBahoInfo.innerHTML = response[i].title
+                  var bahoProgressBar = document.getElementById('bahoProgressBar');
+                  umumiyBahoInfo.innerHTML = response[i].title                 
                   izohInfo.innerHTML = response[i].izoh
+                  var styleValue = new String(response[i].title) + '%'
+                  bahoProgressBar.style.width = styleValue
+                  
                 }
               }
             },
             
           })
           
+          $('#infoEditBtn').unbind("click").click(function(){
+            $('#infoBaho').modal('hide');
+            $('#editBaho').modal('toggle');
+
+            $.ajax({
+            type: 'GET',
+            url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_api' fan.id talaba.id %}",
+            data: {'id' : id},
+            dataType: "json",
+            success: function(response){
+              calendar.refetchEvents();
+              data = response
+              for (i=0; i < data.length; i++) {
+                if(response[i].id == id) {
+                  var umumiyBahoEditSlider = document.getElementById('umumiyBahoEditSlider');
+                  var umumiyBahoEdit = document.getElementById('umumiyBahoEdit')
+                  var izohInfo = document.getElementById('izohEdit');
+                  umumiyBahoEditSlider.value = response[i].title;
+                  umumiyBahoEdit.innerHTML = response[i].title
+                  izohInfo.innerHTML = response[i].izoh
+            
+                  
+                }
+              }
+            },
+            
+          })
+          })
+
+          $('#saveEditBtn').unbind('click').click(function(){
+            $('#editBaho').modal('hide');
+            var title = document.getElementById('umumiyBahoEdit').textContent;
+            var izoh = document.getElementById('izohEdit').value;
+            $.ajax({
+              type: "GET",
+              url: "{% url 'kundalik_baholar_ustoz_talaba_baholar_tahrirlash' fan.id talaba.id %}",
+              data: {'id' : id, 'title' : title, 'izoh' : izoh},
+              dataType: "json",
+              success: function(response){
+                calendar.refetchEvents();
+                var myToast = $.toast({
+                                          heading: 'Juda soz',
+                                          text: 'Baho yangilandi!',
+                                          showHideTransition: 'slide',
+                                          icon: 'success',
+                                          position: 'top-right',
+                                      })
+              },
+              error: function(response){
+                calendar.refetchEvents();
+                var myToast = $.toast({
+                                          heading: 'Muommo',
+                                          text: 'Bahoni oyangilashda xatolik yuz berdi',
+                                          showHideTransition: 'slide',
+                                          icon: 'error',
+                                          position: 'top-right',
+                                      })
+              }
+            })
+          })
 
           $('#infoDeleteBtn').unbind( "click" ).click(function(){
             $('#infoBaho').modal('hide');
@@ -258,11 +381,17 @@
   <script>
     var umumiyBahoSlider = document.getElementById("umumiyBahoSlider");
     var umumiyBahoOutput = document.getElementById("umumiyBaho");
-    umumiyBahoOutput.innerHTML = umumiyBahoSlider.value; // Display the default slider value
-
-    // Update the current slider value (each time you drag the slider handle)
+    umumiyBahoOutput.innerHTML = umumiyBahoSlider.value; 
+    
     umumiyBahoSlider.oninput = function() {
       umumiyBahoOutput.innerHTML = this.value;
+    }
+    var umumiyBahoEditSlider = document.getElementById("umumiyBahoEditSlider");
+    var umumiyBahoEditOutput = document.getElementById("umumiyBahoEdit");
+    umumiyBahoEditOutput.innerHTML = umumiyBahoEditSlider.value; 
+    
+    umumiyBahoEditSlider.oninput = function() {
+      umumiyBahoEditOutput.innerHTML = this.value;
     }
 
   </script>

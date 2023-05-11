@@ -1710,13 +1710,23 @@ def kundalik_baholar_ustoz_talaba_baholar_kiritish(request, fanId, talabaId):
     return JsonResponse(data)
 
 
-def kundalik_baholar_ustoz_talaba_baholar_tahrirlash(request, fanId, talabaId):
+def kundalik_baholar_ustoz_talaba_baholar_sana_tahrirlash(request, fanId, talabaId):
     start = request.GET.get('start', None)
-    title = request.GET.get('title', None)
     id = request.GET.get('id', None)
     baho = KundalikBahoUstozTalaba.objects.get(id=id)
     baho.sana = start
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def kundalik_baholar_ustoz_talaba_baholar_tahrirlash(request, fanId, talabaId):
+    title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
+    id = request.GET.get('id', None)
+    baho = KundalikBahoUstozTalaba.objects.get(id=id)
     baho.baho = title
+    baho.izoh = izoh
     baho.save()
     data = {}
     return JsonResponse(data)
@@ -1773,6 +1783,7 @@ def kundalik_baholar_ustoz_mudarris_baholar_api(request, fanId, mudarrisId):
             'title' : baho.baho,
             'id' : baho.id,
             'start' : baho.sana.strftime("%Y-%m-%d"),
+            'izoh':baho.izoh,
         })
     return JsonResponse(out, safe=False)
 
@@ -1788,13 +1799,23 @@ def kundalik_baholar_ustoz_mudarris_baholar_kiritish(request, fanId, mudarrisId)
     return JsonResponse(data)
 
 
-def kundalik_baholar_ustoz_mudarris_baholar_tahrirlash(request, fanId, mudarrisId):
+def kundalik_baholar_ustoz_mudarris_baholar_sana_tahrirlash(request, fanId, mudarrisId):
     start = request.GET.get('start', None)
-    title = request.GET.get('title', None)
     id = request.GET.get('id', None)
     baho = KundalikBahoUstozMudarris.objects.get(id=id)
     baho.sana = start
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def kundalik_baholar_ustoz_mudarris_baholar_tahrirlash(request, fanId, mudarrisId):
+    title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
+    id = request.GET.get('id', None)
+    baho = KundalikBahoUstozMudarris.objects.get(id=id)
     baho.baho = title
+    baho.izoh = izoh
     baho.save()
     data = {}
     return JsonResponse(data)
@@ -1851,6 +1872,7 @@ def kundalik_baholar_mudarris_talaba_baholar_api(request, fanId, talabaId):
             'title' : baho.baho,
             'id' : baho.id,
             'start' : baho.sana.strftime("%Y-%m-%d"),
+            'izoh':baho.izoh,
         })
     return JsonResponse(out, safe=False)
 
@@ -1858,21 +1880,32 @@ def kundalik_baholar_mudarris_talaba_baholar_api(request, fanId, talabaId):
 def kundalik_baholar_mudarris_talaba_baholar_kiritish(request, fanId, talabaId):
     start = request.GET.get('start', None)
     title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
     fan = FanMudarrisTalaba.objects.filter(id=fanId).get(talaba__id=talabaId)
     talaba = Talaba.objects.get(id=talabaId)
-    baho = KundalikBahoMudarrisTalaba(baho=int(title), fan=fan, talaba=talaba, sana=start)
+    baho = KundalikBahoMudarrisTalaba(baho=int(title), fan=fan, talaba=talaba, sana=start, izoh=izoh)
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def kundalik_baholar_mudarris_talaba_baholar_sana_tahrirlash(request, fanId, talabaId):
+    start = request.GET.get('start', None)
+    id = request.GET.get('id', None)
+    baho = KundalikBahoMudarrisTalaba.objects.get(id=id)
+    baho.sana = start
     baho.save()
     data = {}
     return JsonResponse(data)
 
 
 def kundalik_baholar_mudarris_talaba_baholar_tahrirlash(request, fanId, talabaId):
-    start = request.GET.get('start', None)
     title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
     id = request.GET.get('id', None)
     baho = KundalikBahoMudarrisTalaba.objects.get(id=id)
-    baho.sana = start
     baho.baho = title
+    baho.izoh = izoh
     baho.save()
     data = {}
     return JsonResponse(data)
