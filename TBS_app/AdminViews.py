@@ -10,6 +10,7 @@ import json
 import os
 from .models import *
 from .forms import *
+import datetime
 
 
 # Asosiy
@@ -1983,11 +1984,25 @@ def imtihon_baholar_ustoz_talaba_baholar_kiritish(request, fanId, talabaId):
     return JsonResponse(data)
 
 
-def imtihon_baholar_ustoz_talaba_baholar_tahrirlash(request, fanId, talabaId):
+def imtihon_baholar_ustoz_talaba_baholar_sana_tahrirlash(request, fanId, talabaId):
     start = request.GET.get('start', None)
     id = request.GET.get('id', None)
     baho = ImtihonBahoUstozTalaba.objects.get(id=id)
     baho.sana = start
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def imtihon_baholar_ustoz_talaba_baholar_tahrirlash(request, fanId, talabaId):
+    title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
+    ustozga_baho = request.GET.get('ustozga_baho', None)
+    id = request.GET.get('id', None)
+    baho = ImtihonBahoUstozTalaba.objects.get(id=id)
+    baho.umumiy_baho = title
+    baho.izoh = izoh
+    baho.ustozga_baho = ustozga_baho
     baho.save()
     data = {}
     return JsonResponse(data)

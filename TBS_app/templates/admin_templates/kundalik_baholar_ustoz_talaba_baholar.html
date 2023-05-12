@@ -286,11 +286,11 @@
               data = response
               for (i=0; i < data.length; i++) {
                 if(response[i].id == id) {
-                  var umumiyBahoEditSlider = document.getElementById('umumiyBahoEditSlider');
                   var umumiyBahoEdit = document.getElementById('umumiyBahoEdit')
+                  var umumiyBahoEditSlider = document.getElementById('umumiyBahoEditSlider');
                   var izohInfo = document.getElementById('izohEdit');
-                  umumiyBahoEditSlider.value = response[i].title;
                   umumiyBahoEdit.innerHTML = response[i].title
+                  umumiyBahoEditSlider.value = response[i].title;
                   izohInfo.innerHTML = response[i].izoh
             
                   
