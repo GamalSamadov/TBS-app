@@ -8,7 +8,7 @@
 {% endblock custom_css %}
 
 {% block page_heading %}
-  Fan tanlang (Ustoz - Mudarris)
+  Fan ichidagi mudarrislardan birini tanlang
 {% endblock page_heading %}
 
 {% block main_content %}
@@ -17,32 +17,29 @@
 
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Barcha fanlar tablitsasi</h6>
+      <h6 class="m-0 font-weight-bold text-primary">Fandagi mudarrislar</h6>
   </div>
   <div class="card-body">
       <div class="table-responsive">
           <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
               <thead>
                   <tr>
-                      <th>Ism</th>
-                      <th>Ustoz</th>
+                      <th>Ism familya</th>
                       <th>Amalyot</th>
                   </tr>
               </thead>
               <tfoot>
                   <tr>
-                    <th>Ism</th>
-                    <th>Ustoz</th>
+                    <th>Ism familya</th>
                     <th>Amalyot</th>
                   </tr>
               </tfoot>
               <tbody>
-                {% for fan in fanlar %}
+                {% for mudarris in mudarrislar %}
                   <tr>
-                      <td> <a href="{% url 'imtihon_baholar_ustoz_mudarris_mudarris_tanlash' fan.id %}">{{ fan.ism }}</a> </td>
-                      <td> {{ fan.ustoz.admin.username }} </td>
+                      <td> <a href="{% url 'imtihon_baholar_ustoz_mudarris_baholar' fan.id mudarris.id %}">{{ mudarris.admin.first_name }} {{mudarris.admin.last_name}}</a> </td>
                       <td>
-                        <a href="{% url 'imtihon_baholar_ustoz_mudarris_mudarris_tanlash' fan.id %}" class="btn btn-info btn-circle">
+                        <a href="{% url 'imtihon_baholar_ustoz_mudarris_baholar' fan.id mudarris.id %}" class="btn btn-info btn-circle">
                           <i class="fa-solid fa-address-card"></i>
                       </a>
                         
@@ -53,7 +50,7 @@
 
                 {% empty %}
                 <tr>
-                  <td><h3>Fanlar yo'q. <i class="fa-solid fa-face-frown"></i> Fan kiriting. </h3></td>
+                  <td><h3>Fanda mudarris yo'q. <i class="fa-solid fa-face-frown"></i> Fanga avvalanbor mudarris kiriting. </h3></td>
                   <td></td>
                   <td></td>
                 </tr>

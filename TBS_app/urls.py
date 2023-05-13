@@ -129,8 +129,22 @@ urlpatterns = [
     path('imtihon_baholar/ustoz_talaba/fan/<int:fanId>/talaba/<int:talabaId>/uchirish/', AdminViews.imtihon_baholar_ustoz_talaba_baholar_uchirish, name="imtihon_baholar_ustoz_talaba_baholar_uchirish"),
     # Imtihon baholar Ustoz - Mudarris
     path('imtihon_baholar/ustoz_mudarris/', AdminViews.imtihon_baholar_ustoz_mudarris, name="imtihon_baholar_ustoz_mudarris"),
+    path('imtihon_baholar/ustoz_mudarris/fan/<int:id>/', AdminViews.imtihon_baholar_ustoz_mudarris_mudarris_tanlash, name="imtihon_baholar_ustoz_mudarris_mudarris_tanlash"),
+    path('imtihon_baholar/ustoz_mudarris/fan/<int:fanId>/mudarris/<int:mudarrisId>/', AdminViews.imtihon_baholar_ustoz_mudarris_baholar, name="imtihon_baholar_ustoz_mudarris_baholar"),
+    path('imtihon_baholar/ustoz_mudarris/fan/<int:fanId>/mudarris/<int:mudarrisId>/api/', AdminViews.imtihon_baholar_ustoz_mudarris_baholar_api, name="imtihon_baholar_ustoz_mudarris_baholar_api"),
+    path('imtihon_baholar/ustoz_mudarris/fan/<int:fanId>/mudarris/<int:mudarrisId>/kiritish/', AdminViews.imtihon_baholar_ustoz_mudarris_baholar_kiritish, name="imtihon_baholar_ustoz_mudarris_baholar_kiritish"),
+    path('imtihon_baholar/ustoz_mudarris/fan/<int:fanId>/mudarris/<int:mudarrisId>/tahrirlash/sana/', AdminViews.imtihon_baholar_ustoz_mudarris_baholar_sana_tahrirlash, name="imtihon_baholar_ustoz_mudarris_baholar_sana_tahrirlash"),
+    path('imtihon_baholar/ustoz_mudarris/fan/<int:fanId>/mudarris/<int:mudarrisId>/tahrirlash/', AdminViews.imtihon_baholar_ustoz_mudarris_baholar_tahrirlash, name="imtihon_baholar_ustoz_mudarris_baholar_tahrirlash"),
+    path('imtihon_baholar/ustoz_mudarris/fan/<int:fanId>/mudarris/<int:mudarrisId>/uchirish/', AdminViews.imtihon_baholar_ustoz_mudarris_baholar_uchirish, name="imtihon_baholar_ustoz_mudarris_baholar_uchirish"),
     # Imtihon baholar Mudarris - Talaba
     path('imtihon_baholar/mudarris_talaba/', AdminViews.imtihon_baholar_mudarris_talaba, name="imtihon_baholar_mudarris_talaba"),
+    path('imtihon_baholar/mudarris_talaba/fan/<int:id>/', AdminViews.imtihon_baholar_mudarris_talaba_talaba_tanlash, name="imtihon_baholar_mudarris_talaba_talaba_tanlash"),
+    path('imtihon_baholar/mudarris_talaba/fan/<int:fanId>/talaba/<int:talabaId>/', AdminViews.imtihon_baholar_mudarris_talaba_baholar, name="imtihon_baholar_mudarris_talaba_baholar"),
+    path('imtihon_baholar/mudarris_talaba/fan/<int:fanId>/talaba/<int:talabaId>/api/', AdminViews.imtihon_baholar_mudarris_talaba_baholar_api, name="imtihon_baholar_mudarris_talaba_baholar_api"),
+    path('imtihon_baholar/mudarris_talaba/fan/<int:fanId>/talaba/<int:talabaId>/kiritish/', AdminViews.imtihon_baholar_mudarris_talaba_baholar_kiritish, name="imtihon_baholar_mudarris_talaba_baholar_kiritish"),
+    path('imtihon_baholar/mudarris_talaba/fan/<int:fanId>/talaba/<int:talabaId>/tahrirlash/sana/', AdminViews.imtihon_baholar_mudarris_talaba_baholar_sana_tahrirlash, name="imtihon_baholar_mudarris_talaba_baholar_sana_tahrirlash"),
+    path('imtihon_baholar/mudarris_talaba/fan/<int:fanId>/talaba/<int:talabaId>/tahrirlash/', AdminViews.imtihon_baholar_mudarris_talaba_baholar_tahrirlash, name="imtihon_baholar_mudarris_talaba_baholar_tahrirlash"),
+    path('imtihon_baholar/mudarris_talaba/fan/<int:fanId>/talaba/<int:talabaId>/uchirish/', AdminViews.imtihon_baholar_mudarris_talaba_baholar_uchirish, name="imtihon_baholar_mudarris_talaba_baholar_uchirish"),
     # -------------------------
     # Ustoz Urls
     path('ustoz_asosiy/', UstozViews.ustoz_asosiy, name="ustoz_asosiy"),

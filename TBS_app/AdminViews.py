@@ -5,19 +5,29 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.core.files.storage import FileSystemStorage 
 from django.urls import reverse
-from validate_email import validate_email # To upload Profile Picture
-import json
-import os
 from .models import *
 from .forms import *
-import datetime
+from validate_email import validate_email 
+from datetime import date, datetime
+from datetime import timedelta
+import pandas as pd
+import json, os
+
 
 
 # Asosiy
 def admin_asosiy(request):
     admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    ustozlar_soni = Ustoz.objects.all().count()
+    mudarrislar_soni = Mudarris.objects.all().count()
+    talabalar_soni = Talaba.objects.all().count()
+    hujralar_soni = Hujra.objects.all().count()
     context = {
         'admin' : admin,
+        'ustozlar_soni' : ustozlar_soni,
+        'mudarrislar_soni' : mudarrislar_soni,
+        'talabalar_soni' : talabalar_soni,
+        'hujralar_soni' : hujralar_soni
     }
     return render(request, 'admin_templates/asosiy.html', context)
 
@@ -716,17 +726,31 @@ def mudarris_profil(request, id):
             if talaba not in talabalar:
                 talabalar.append(talaba)
     
-    # for talaba in talabalar:
-    #     print(talaba.ism, '==> talaba')
-    #     for fan in talaba.fanmudarristalaba_set.filter(mudarris=mudarris.id):
-    #         print(fan.ism, '==> fan', fan.mudarris.admin.first_name, '==> mudarris')
-    
+    # Oxirgi 30 kun
+    last = datetime.now() - timedelta(30)
+    now = datetime.now()
+    deffrance = timedelta(days=1)
+    sungi_oydagi_kunlar = []
+    while last <= now:
+        sungi_oydagi_kunlar.append(last.strftime("%Y-%m-%d"))
+        last+=deffrance
+
+    kundalik_baholar = KundalikBahoUstozMudarris.objects.filter(mudarris=mudarris.id)
+
+    # Oxirgi 30 kundagi baholar
+    sungi_oydagi_kunlik_kundalik_baholar = []
+    for baho in kundalik_baholar:
+        if baho.sana.strftime("%Y-%m-%d") in sungi_oydagi_kunlar:
+            sungi_oydagi_kunlik_kundalik_baholar.append(baho)
+
     context = {
         'admin' : admin,
         'mudarris' : mudarris,
         'dars_beradigan_fanlar_soni' : dars_beradigan_fanlar.count(),
         'uz_fanlar_soni' : uz_fanlar.count(),
         'talabalar_soni' : len(talabalar),
+        'sungi_oydagi_kunlik_kundalik_baholar' : sungi_oydagi_kunlik_kundalik_baholar,
+        'sungi_oydagi_kunlar' : sungi_oydagi_kunlar,
 
     }
     return render(request, 'admin_templates/mudarris_profil.html', context)
@@ -2019,23 +2043,193 @@ def imtihon_baholar_ustoz_talaba_baholar_uchirish(request, fanId, talabaId):
 # Imtohon baholar Ustoz - Mudarris
 def imtihon_baholar_ustoz_mudarris(request):
     admin = CustomUser.objects.get(id=request.user.id)
-    baholar = ImtihonBahoUstozMudarris.objects.all()
+    fanlar = FanUstozMudarris.objects.all()
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar,
+    }
+    return render(request, 'admin_templates/imtihon_baholar_ustoz_mudarris.html', context)
+
+
+def imtihon_baholar_ustoz_mudarris_mudarris_tanlash(request, id):
+    fan = FanUstozMudarris.objects.select_related('ustoz').prefetch_related('mudarris').get(id=id)
+    mudarrislar = fan.mudarris.all()
+    context = {
+        'mudarrislar' : mudarrislar,
+        'fan' : fan
+    }
+    return render(request, 'admin_templates/imtihon_baholar_ustoz_mudarris_mudarris_tanlash.html', context)
+
+
+def imtihon_baholar_ustoz_mudarris_baholar(request, fanId, mudarrisId):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fan = FanUstozMudarris.objects.get(id=fanId)
+    mudarris = Mudarris.objects.get(id=mudarrisId)
+    baholar = ImtihonBahoUstozMudarris.objects.filter(fan__id=fanId).filter(mudarris__id=mudarrisId)
     context = {
         'admin' : admin,
         'baholar' : baholar,
+        'fan' : fan,
+        'mudarris' : mudarris
     }
-    return render(request, 'admin_templates/imtihon_baholar_ustoz_mudarris.html', context)
+    return render(request, 'admin_templates/imtihon_baholar_ustoz_mudarris_baholar.html', context)
+
+
+def imtihon_baholar_ustoz_mudarris_baholar_api(request, fanId, mudarrisId):
+    baholar = ImtihonBahoUstozMudarris.objects.filter(fan__id=fanId).filter(mudarris__id=mudarrisId)
+    out = []
+    for baho in baholar:
+        out.append({
+            'title' : baho.umumiy_baho,
+            'id' : baho.id,
+            'ustozga_baho' : baho.ustozga_baho,
+            'izoh' : baho.izoh,
+            'start' : baho.sana.strftime("%Y-%m-%d"),
+            
+            
+        })
+    return JsonResponse(out, safe=False)
+
+
+def imtihon_baholar_ustoz_mudarris_baholar_kiritish(request, fanId, mudarrisId):
+    start = request.GET.get('start', None)
+    title = request.GET.get('title', None)
+    ustozga_baho = request.GET.get('ustozga_baho', None)
+    izoh = request.GET.get('izoh', None)
+    fan = FanUstozMudarris.objects.get(id=fanId)
+    mudarris = Mudarris.objects.get(id=mudarrisId)
+    baho = ImtihonBahoUstozMudarris(umumiy_baho=int(title), fan=fan, mudarris=mudarris, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def imtihon_baholar_ustoz_mudarris_baholar_sana_tahrirlash(request, fanId, mudarrisId):
+    start = request.GET.get('start', None)
+    id = request.GET.get('id', None)
+    baho = ImtihonBahoUstozMudarris.objects.get(id=id)
+    baho.sana = start
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def imtihon_baholar_ustoz_mudarris_baholar_tahrirlash(request, fanId, mudarrisId):
+    title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
+    ustozga_baho = request.GET.get('ustozga_baho', None)
+    id = request.GET.get('id', None)
+    baho = ImtihonBahoUstozMudarris.objects.get(id=id)
+    baho.umumiy_baho = title
+    baho.izoh = izoh
+    baho.ustozga_baho = ustozga_baho
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def imtihon_baholar_ustoz_mudarris_baholar_uchirish(request, fanId, mudarrisId):
+    id = request.GET.get('id', None)
+    baho = ImtihonBahoUstozMudarris.objects.get(id=id)
+    baho.delete()
+    data = {}
+    return JsonResponse(data)
 
 
 # Imtihon baholar Mudarris - Talaba
 def imtihon_baholar_mudarris_talaba(request):
     admin = CustomUser.objects.get(id=request.user.id)
-    baholar = ImtihonBahoMudarrisTalaba.objects.all()
+    fanlar = FanMudarrisTalaba.objects.all()
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar,
+    }
+    return render(request, 'admin_templates/imtihon_baholar_mudarris_talaba.html', context)
+
+
+def imtihon_baholar_mudarris_talaba_talaba_tanlash(request, id):
+    fan = FanMudarrisTalaba.objects.select_related('mudarris').prefetch_related('talaba').get(id=id)
+    talabalar = fan.talaba.all()
+    context = {
+        'talabalar' : talabalar,
+        'fan' : fan
+    }
+    return render(request, 'admin_templates/imtihon_baholar_mudarris_talaba_talaba_tanlash.html', context)
+
+
+def imtihon_baholar_mudarris_talaba_baholar(request, fanId, talabaId):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fan = FanMudarrisTalaba.objects.get(id=fanId)
+    talaba = Talaba.objects.get(id=talabaId)
+    baholar = ImtihonBahoMudarrisTalaba.objects.filter(fan__id=fanId).filter(talaba__id=talabaId)
     context = {
         'admin' : admin,
         'baholar' : baholar,
+        'fan' : fan,
+        'talaba' : talaba
     }
-    return render(request, 'admin_templates/imtihon_baholar_mudarris_talaba.html', context)
+    return render(request, 'admin_templates/imtihon_baholar_mudarris_talaba_baholar.html', context)
+
+
+def imtihon_baholar_mudarris_talaba_baholar_api(request, fanId, talabaId):
+    baholar = ImtihonBahoMudarrisTalaba.objects.filter(fan__id=fanId).filter(talaba__id=talabaId)
+    out = []
+    for baho in baholar:
+        out.append({
+            'title' : baho.umumiy_baho,
+            'id' : baho.id,
+            'ustozga_baho' : baho.ustozga_baho,
+            'izoh' : baho.izoh,
+            'start' : baho.sana.strftime("%Y-%m-%d"),
+            
+            
+        })
+    return JsonResponse(out, safe=False)
+
+
+def imtihon_baholar_mudarris_talaba_baholar_kiritish(request, fanId, talabaId):
+    start = request.GET.get('start', None)
+    title = request.GET.get('title', None)
+    ustozga_baho = request.GET.get('ustozga_baho', None)
+    izoh = request.GET.get('izoh', None)
+    fan = FanMudarrisTalaba.objects.get(id=fanId)
+    talaba = Talaba.objects.get(id=talabaId)
+    baho = ImtihonBahoMudarrisTalaba(umumiy_baho=int(title), fan=fan, talaba=talaba, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def imtihon_baholar_mudarris_talaba_baholar_sana_tahrirlash(request, fanId, talabaId):
+    start = request.GET.get('start', None)
+    id = request.GET.get('id', None)
+    baho = ImtihonBahoMudarrisTalaba.objects.get(id=id)
+    baho.sana = start
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def imtihon_baholar_mudarris_talaba_baholar_tahrirlash(request, fanId, talabaId):
+    title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
+    ustozga_baho = request.GET.get('ustozga_baho', None)
+    id = request.GET.get('id', None)
+    baho = ImtihonBahoMudarrisTalaba.objects.get(id=id)
+    baho.umumiy_baho = title
+    baho.izoh = izoh
+    baho.ustozga_baho = ustozga_baho
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def imtihon_baholar_mudarris_talaba_baholar_uchirish(request, fanId, talabaId):
+    id = request.GET.get('id', None)
+    baho = ImtihonBahoMudarrisTalaba.objects.get(id=id)
+    baho.delete()
+    data = {}
+    return JsonResponse(data)
 
 
 # Username ni tekshirish
