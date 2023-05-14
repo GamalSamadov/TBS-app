@@ -1980,14 +1980,13 @@ def imtihon_baholar_ustoz_talaba_baholar_kiritish(request, fanId, talabaId):
     ustozga_baho = request.GET.get('ustozga_baho', None)
     izoh = request.GET.get('izoh', None)
     fan = FanUstozTalaba.objects.get(id=fanId)
-    if not fan.bitirilgan:
-        fan.bitirilgan = True
-        talaba = Talaba.objects.get(id=talabaId)
-        baho = ImtihonBahoUstozTalaba(umumiy_baho=int(title), fan=fan, talaba=talaba, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
-        baho.save()
-        fan.save()
-        data = {}
-        return JsonResponse(data)
+    fan.bitirilgan = True
+    talaba = Talaba.objects.get(id=talabaId)
+    baho = ImtihonBahoUstozTalaba(umumiy_baho=int(title), fan=fan, talaba=talaba, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
+    baho.save()
+    fan.save()
+    data = {}
+    return JsonResponse(data)
 
 
 def imtihon_baholar_ustoz_talaba_baholar_sana_tahrirlash(request, fanId, talabaId):
@@ -2019,8 +2018,9 @@ def imtihon_baholar_ustoz_talaba_baholar_uchirish(request, fanId, talabaId):
     baho = ImtihonBahoUstozTalaba.objects.get(id=id)
     baho.delete()
     fan = FanUstozTalaba.objects.get(id=fanId)
-    fan.bitirilgan = False
-    fan.save()
+    if fan.imtihonbahoustoztalaba_set.all().count() == 0:
+        fan.bitirilgan = False
+        fan.save()
     data = {}
     return JsonResponse(data)
 
@@ -2081,14 +2081,13 @@ def imtihon_baholar_ustoz_mudarris_baholar_kiritish(request, fanId, mudarrisId):
     ustozga_baho = request.GET.get('ustozga_baho', None)
     izoh = request.GET.get('izoh', None)
     fan = FanUstozMudarris.objects.get(id=fanId)
-    if not fan.bitirilgan:
-        fan.bitirilgan = True
-        mudarris = Mudarris.objects.get(id=mudarrisId)
-        baho = ImtihonBahoUstozMudarris(umumiy_baho=int(title), fan=fan, mudarris=mudarris, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
-        baho.save()
-        fan.save()
-        data = {}
-        return JsonResponse(data)
+    fan.bitirilgan = True
+    mudarris = Mudarris.objects.get(id=mudarrisId)
+    baho = ImtihonBahoUstozMudarris(umumiy_baho=int(title), fan=fan, mudarris=mudarris, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
+    baho.save()
+    fan.save()
+    data = {}
+    return JsonResponse(data)
 
 
 def imtihon_baholar_ustoz_mudarris_baholar_sana_tahrirlash(request, fanId, mudarrisId):
@@ -2120,8 +2119,9 @@ def imtihon_baholar_ustoz_mudarris_baholar_uchirish(request, fanId, mudarrisId):
     baho = ImtihonBahoUstozMudarris.objects.get(id=id)
     baho.delete()
     fan = FanUstozMudarris.objects.get(id=fanId)
-    fan.bitirilgan = False
-    fan.save()
+    if fan.imtihonbahoustozmudarris_set.all().count() == 0:
+        fan.bitirilgan = False
+        fan.save()
     data = {}
     return JsonResponse(data)
 
@@ -2184,14 +2184,13 @@ def imtihon_baholar_mudarris_talaba_baholar_kiritish(request, fanId, talabaId):
     ustozga_baho = request.GET.get('ustozga_baho', None)
     izoh = request.GET.get('izoh', None)
     fan = FanMudarrisTalaba.objects.get(id=fanId)
-    if not fan.bitirilgan:
-        fan.bitirilgan = True
-        talaba = Talaba.objects.get(id=talabaId)
-        baho = ImtihonBahoMudarrisTalaba(umumiy_baho=int(title), fan=fan, talaba=talaba, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
-        baho.save()
-        fan.save()
-        data = {}
-        return JsonResponse(data)
+    fan.bitirilgan = True
+    talaba = Talaba.objects.get(id=talabaId)
+    baho = ImtihonBahoMudarrisTalaba(umumiy_baho=int(title), fan=fan, talaba=talaba, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
+    baho.save()
+    fan.save()
+    data = {}
+    return JsonResponse(data)
 
 
 def imtihon_baholar_mudarris_talaba_baholar_sana_tahrirlash(request, fanId, talabaId):
@@ -2223,8 +2222,9 @@ def imtihon_baholar_mudarris_talaba_baholar_uchirish(request, fanId, talabaId):
     baho = ImtihonBahoMudarrisTalaba.objects.get(id=id)
     baho.delete()
     fan = FanMudarrisTalaba.objects.get(id=fanId)
-    fan.bitirilgan = False
-    fan.save()
+    if fan.imtihonbahomudarristalaba_set.all().count() == 0:
+        fan.bitirilgan = False
+        fan.save()
     data = {}
     return JsonResponse(data)
 

@@ -26,6 +26,7 @@
                   <tr>
                       <th>Ism</th>
                       <th>Ustoz</th>
+                      <th>Holat</th>
                       <th>Amalyot</th>
                   </tr>
               </thead>
@@ -33,6 +34,7 @@
                   <tr>
                     <th>Ism</th>
                     <th>Ustoz</th>
+                    <th>Holat</th>
                     <th>Amalyot</th>
                   </tr>
               </tfoot>
@@ -41,9 +43,26 @@
                   <tr>
                       <td> <a href="{% url 'imtihon_baholar_ustoz_talaba_talaba_tanlash' fan.id %}">{{ fan.ism }}</a> </td>
                       <td> {{ fan.ustoz.admin.username }} </td>
+                      <td> 
+                        {% if fan.bitirilgan %}
+                        <div class="btn btn-success btn-icon-split">
+                          <span class="icon text-white-50">
+                            <i class="fas fa-check"></i>
+                          </span>
+                          <span class="text">Bitirilgan</span>
+                        </div>
+                        {% else %}
+                        <div class="btn btn-warning btn-icon-split">
+                          <span class="icon text-white-50">
+                            <i class="fa-solid fa-spinner"></i>
+                          </span>
+                          <span class="text">O'qilmoqda</span>
+                        </div>
+                        {% endif %}
+                      </td> 
                       <td>
-                        <a href="{% url 'imtihon_baholar_ustoz_talaba_talaba_tanlash' fan.id %}" class="btn btn-info btn-circle">
-                          <i class="fa-solid fa-address-card"></i>
+                        <a href="{% url 'imtihon_baholar_ustoz_talaba_talaba_tanlash' fan.id %}" class="btn btn-info">
+                          <i class="fas fa-check"></i>  Tanlash
                       </a>
                         
                       </td>

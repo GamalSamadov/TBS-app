@@ -26,6 +26,7 @@
                   <tr>
                       <th>Ism</th>
                       <th>Mudarris</th>
+                      <th>Holat</th>
                       <th>Amalyot</th>
                   </tr>
               </thead>
@@ -33,18 +34,48 @@
                   <tr>
                     <th>Ism</th>
                     <th>Mudarris</th>
+                    <th>Holat</th>
                     <th>Amalyot</th>
                   </tr>
               </tfoot>
               <tbody>
                 {% for fan in fanlar %}
                   <tr>
-                      <td> <a href="{% url 'kundalik_baholar_mudarris_talaba_talaba_tanlash' fan.id %}">{{ fan.ism }}</a> </td>
+                      <td> 
+                        {% if fan.bitirilgan %}
+                        <div>{{ fan.ism }}</div>
+                        {% else %}
+                        <a href="{% url 'kundalik_baholar_mudarris_talaba_talaba_tanlash' fan.id %}">{{ fan.ism }}</a> 
+                        {% endif %}
+                      </td>
                       <td> {{ fan.mudarris.admin.username }} </td>
+                      <td> 
+                        {% if fan.bitirilgan %}
+                        <div class="btn btn-success btn-icon-split">
+                          <span class="icon text-white-50">
+                            <i class="fas fa-check"></i>
+                          </span>
+                          <span class="text">Bitirilgan</span>
+                        </div>
+                        {% else %}
+                        <div class="btn btn-warning btn-icon-split">
+                          <span class="icon text-white-50">
+                            <i class="fa-solid fa-spinner"></i>
+                          </span>
+                          <span class="text">O'qilmoqda</span>
+                        </div>
+                        {% endif %}
+                      </td> 
                       <td>
-                        <a href="{% url 'kundalik_baholar_mudarris_talaba_talaba_tanlash' fan.id %}" class="btn btn-info btn-circle">
-                          <i class="fa-solid fa-address-card"></i>
-                      </a>
+                        {% if fan.bitirilgan %}
+                        <div class="btn btn-danger">
+                          <i class="fa-solid fa-x"></i> Tanlab bo'lmaydi
+                        </div>
+                        {% else %}
+                          <a href="{% url 'kundalik_baholar_mudarris_talaba_talaba_tanlash' fan.id %}" class="btn btn-info">
+                            <i class="fas fa-check"></i>  Tanlash
+                          </a>
+                        {% endif %}
                         
                       </td>
                   </tr>

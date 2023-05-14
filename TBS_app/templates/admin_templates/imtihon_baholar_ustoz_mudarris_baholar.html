@@ -229,7 +229,6 @@
         editable: true,
         droppable: true,
         eventLimit: true,
-        {% if not fan.bitirilgan %}
         select: function(start, allDay) {
           var start = moment(start.startStr).format('YYYY-MM-DD HH:mm:ss');
           $('#addBaho').modal('toggle');
@@ -276,7 +275,6 @@
           };
           })  
           },
-        {% endif %}
         eventDrop: function(info) {
           var start = moment(info.event.start).format('YYYY-MM-DD HH:mm:ss');
           var id = info.event.id;

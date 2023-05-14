@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'tbs',
         'USER': 'postgres',
-        'PASSWORD': '12368811',
+        'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': '',  # django uses usefully 5432 port that is the postegres port
 
