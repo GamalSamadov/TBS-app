@@ -1,0 +1,125 @@
+{% extends 'ustoz_templates/elements/base.html' %}
+{% load static %}
+
+{% block page_heading %}
+   "{{ hujra.ism }}" xujrasi profili
+
+{% endblock page_heading %}
+
+{% block main_content %}
+ 
+  <div class="row">
+
+      <div class="col-lg-6">
+
+          <!-- Default Card Example -->
+          <div class="card mb-4">
+             
+              <div class="card-body">
+                <div class="d-flex flex-column align-items-center text-center">
+                    <img src="{% static "img/xujra.png" %}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
+                  <div class="mt-3">
+                    <h4>
+                      {% if hujra.ism %}{{ hujra.ism }}{% else %}Nomsiz{% endif %} 
+                    </h4>
+                    
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+
+    <div class="col-lg-6">
+
+      <div class="card mb-4">
+        <div class="card-body">
+          
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">
+                Ism
+              </h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if hujra.ism %}{{ hujra.ism }}{% else %}Nomsiz{% endif %} 
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Adres</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if hujra.adres %}{{ hujra.adres }}{% else %}Adres kiritilmagan{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Ustoz</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if hujra.ustoz %} {{ hujra.ustoz.admin.first_name }} {{ hujra.ustoz.admin.last_name }}{% else %}Ustoz kiritilmagan{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+        
+      <div class="card shadow mb-4">
+        <!-- Card Header - Accordion -->
+        <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse"
+            role="button" aria-expanded="true" aria-controls="collapseCardExample">
+            <h6 class="m-0 font-weight-bold text-primary">Xujraga mansub malumotlar</h6>
+        </a>
+        <!-- Card Content - Collapse -->
+        <div class="collapse show" id="collapseCardExample">
+          <div class="col-xl-12 col-md-6 mb-10 py-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <a href="{% url 'ustoz_hujra_profil_mudarrislar' hujra.id %}">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Xujradagi mudarrislar soni</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{mudarrislar_soni}} ta</div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="text-gray-300">Ko'rish uchun bosing...</div>
+                            <!-- <i class="fas fa-dollar-sign fa-2x text-gray-300"></i> -->
+                            <i class="fa-solid fa-screen-users text-gray-300"></i>
+                        </div>
+                      </div>
+                    </a>
+                </div>
+            </div>
+          </div>
+
+          <div class="col-xl-12 col-md-6 mb-10 py-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <a href="{% url 'ustoz_hujra_profil_talabalar' hujra.id %}">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Xujradagi talabalar soni</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{talabalar_soni}} ta</div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="text-gray-300">Ko'rish uchun bosing...</div>
+                            <!-- <i class="fas fa-dollar-sign fa-2x text-gray-300"></i> -->
+                            <i class="fa-solid fa-screen-users text-gray-300"></i>
+                        </div>
+                      </div>
+                    </a>
+                </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock main_content %}

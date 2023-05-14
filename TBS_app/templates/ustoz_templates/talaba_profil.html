@@ -1,0 +1,237 @@
+{% extends 'ustoz_templates/elements/base.html' %}
+{% load static %}
+
+{% block page_heading %}
+
+  Talaba {{ talaba.ism }} {{talaba.familya}} profili
+
+{% endblock page_heading %}
+
+{% block main_content %}
+ 
+  <div class="row">
+
+      <div class="col-lg-6">
+
+          <div class="card mb-4">
+             
+              <div class="card-body">
+                <div class="d-flex flex-column align-items-center text-center">
+                    {% if talaba.profil_surati %}
+                      
+                      <div class="image-container-profil">
+                        <div class="profil_surati rounded-circle img-thumbnail" id='profil_surati'>
+                          <img src="{{ talaba.profil_surati }}" alt="Admin" class="" width="150" id='img'>
+                        </div>
+                      </div>
+                    {% else %}
+                      {% if talaba.jins == 'Erkak' %}
+                        <img src="{% static "img/undraw_profile.svg" %}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
+                      {% elif talaba.jins == 'Ayol' %}
+                        <img src="{% static "img/undraw_profile_1.svg" %}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
+                      {% endif %}
+                    {% endif %}
+                  <div class="mt-3">
+                    <h4>
+                      {% if talaba.ism %}{{ talaba.ism }}{% else %}Ism-familya{% endif %} {% if talaba.familya %}{{ talaba.familya }}{% else %}kiritilmagan{% endif %}
+                    </h4>
+                    <div class="btn-success btn-icon-split btn-sm">
+                      <span class="icon text-white-50">
+                        <div><i class="fa-solid fa-school-flag"></i> Hujra</div>
+                      </span>
+                      <span class='text'>{% if talaba.hujra %}{{ talaba.hujra.ism }}{% else %}Ustoz kiritilmagan{% endif %}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <a href="#collapseCardExample2" class="d-block card-header py-3" data-toggle="collapse"
+                role="button" aria-expanded="true" aria-controls="collapseCardExample2">
+                <h6 class="m-0 font-weight-bold text-primary">Talaba paspurti</h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse show" id="collapseCardExample2">
+              {% if talaba.pasport_surati %}
+                <div class="d-flex flex-column align-items-center text-center">
+                  <div class="image-container">
+                    <div class="pasport_surati"><img src="{{ talaba.pasport_surati }}" alt=""></div>
+                  </div>
+                  <br>
+                  <div class="col-sm-12">
+                    <a class="btn btn-primary btn-icon-split" href="{% url 'talaba_paspurt_tahrirlash' talaba.id %}">
+                      <span class="icon text-white-50">
+                        <i class="fa-solid fa-pencil"></i>
+                      </span>
+                      <span class='text'>
+                        Tahrirlash
+                      </span>
+                    </a>
+                  </div>
+                  <br>
+                </div>
+              {% else %}
+                <div class="d-flex flex-column align-items-center text-center">
+                  <div class='p-2'>
+                    <div class='' style='font-size:100px'>
+                      <i class="fa-solid fa-address-card"></i>
+                    </div>
+                    <h4 class='mb-5'>Paspurt surati kiritilmagan <i class="fa-regular fa-face-frown"></i></h4>
+                  </div>
+                  <br>
+                </div>
+              {% endif %}
+
+              
+            </div>
+          </div>
+
+
+          <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <a href="#collapseCardExample1" class="d-block card-header py-3" data-toggle="collapse"
+                role="button" aria-expanded="true" aria-controls="collapseCardExample1">
+                <h6 class="m-0 font-weight-bold text-primary">Talabaga mansub malumotlar</h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse show" id="collapseCardExample1">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Saytga kiritilish vaqti</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {% if talaba.created_at != None %}
+                      {{ talaba.created_at }}
+                    {% else %}
+                      Muommo!
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+    
+              
+              
+            </div>
+          </div>
+
+          
+
+      </div>
+
+    <div class="col-lg-6">
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Ism va familya</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if talaba.ism %}{{ talaba.ism }}{% else %}Ism{% endif %} {% if talaba.familya %}{{ talaba.familya }}{% else %}kiritilmagan{{ ustoz.admin.first_name }}{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Adres</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if talaba.adres %}{{ talaba.adres }}{% else %}Adres kiritilmagan{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Jins</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if talaba.jins %}{{ talaba.jins }}{% else %}Jins kiritilmagan{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Xujra</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if talaba.hujra %}{{ talaba.hujra.ism }}{% else %}Xujra kiritilmagan{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+        
+      <div class="card shadow mb-4">
+        <!-- Card Header - Accordion -->
+        <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse"
+            role="button" aria-expanded="true" aria-controls="collapseCardExample">
+            <h6 class="m-0 font-weight-bold text-primary">Talabaga mansub malumotlar</h6>
+        </a>
+        <!-- Card Content - Collapse -->
+        <div class="collapse show" id="collapseCardExample">
+          <div class="col-xl-12 col-md-6 mb-10 py-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <a href="{% url 'ustoz_talaba_profil_fanlar' talaba.id %}">
+                      <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Fanlar soni</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{fanlar_soni}} ta</div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="text-gray-300">Ko'rish uchun bosing...</div>
+                            <!-- <i class="fas fa-dollar-sign fa-2x text-gray-300"></i> -->
+                            <i class="fa-solid fa-screen-users text-gray-300"></i>
+                        </div>
+                      </div>
+                    </a>
+                </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  {% comment %} Paspurt show {% endcomment %}
+  {% if talaba.pasport_surati %}
+    <div class='popup-image'>
+      <span>&times;</span>
+      <img src="{{ talaba.pasport_surati }}">
+    </div>
+  {% endif %}
+
+  {% comment %} Profil show {% endcomment %}
+  {% if talaba.profil_surati %}
+    <div class='popup-image-profil'>
+      <span>&times;</span>
+      <img src="{{ talaba.profil_surati }}">
+    </div>
+  {% endif %}
+
+{% endblock main_content %}
+
+{% block custom_css %}
+
+    <link rel="stylesheet" href="{% static 'css/paspurt-surati-show.css' %}">
+  
+  {% if talaba.profil_surati  %}
+    <link rel="stylesheet" href="{% static 'css/profil-surati-show.css' %}">
+  {% endif %}
+  
+{% endblock custom_css %}
+
+{% block custom_script %}
+
+      <script src="{% static 'js/paspurt-surati-show.js' %}"></script>
+
+      <script src="{% static 'js/profil-surati-show.js' %}"></script>
+
+{% endblock custom_script %}

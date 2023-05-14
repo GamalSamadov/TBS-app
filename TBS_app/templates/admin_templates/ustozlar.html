@@ -48,6 +48,7 @@
                       <th>Email</th>
                       <th>Jins</th>
                       <th>Parolga ishora</th>
+                      {% comment %} <th>Holat</th> {% endcomment %}
                       <th>Amalyot</th>
                   </tr>
               </thead>
@@ -58,6 +59,7 @@
                     <th>Email</th>
                     <th>Jins</th>
                     <th>Parolga ishora</th>
+                    {% comment %} <th>Holat</th> {% endcomment %}
                     <th>Amalyot</th>
                   </tr>
               </tfoot>
@@ -83,6 +85,15 @@
                       <td> {{ ustoz.admin.email }} </td>
                       <td> {{ ustoz.jins }} </td> 
                       <td> {{ ustoz.parolga_ishora }} </td>
+                      {% comment %} <td> 
+                        {% if ustoz.tasdiqlangan %}
+                          Tasdiqlangan
+                        {% else %}
+                          <a href="{% url 'ustoz_tasdiqlash' ustoz.admin.id %}" class="btn btn-success">
+                            Tasdiqlash
+                          </a>
+                        {% endif %}
+                      </td> {% endcomment %}
                       <td>
                         <a href="{% url 'ustoz_profil' ustoz.admin.id %}" class="btn btn-info btn-circle">
                           <i class="fa-solid fa-address-card"></i>

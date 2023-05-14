@@ -1,4 +1,4 @@
-{% extends 'admin_templates/elements/base.html' %}
+{% extends 'ustoz_templates/elements/base.html' %}
 {% load static %}
 
 {% block custom_css %}
@@ -21,19 +21,6 @@
 
 {% block main_content %}
 
-<div class="row">
-  <div class="col-lg-6">
-    <div class="mb-4">
-      <a href="{% url 'mudarris_kiritish' %}" class="btn btn-primary btn-icon-split">
-        <span class="icon text-white-50">
-          <i class="fa-sharp fa-solid fa-user-plus"></i>
-        </span>
-        <span class="text">Mudarris kiritish</span>
-      </a>
-    </div>
-  </div>
-</div>
-
 <div class="card shadow mb-4">
   <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary">Barcha mudarrislar tablitsasi</h6>
@@ -45,9 +32,7 @@
                   <tr>
                       <th>Profil surati</th>
                       <th>Ism</th>
-                      <th>Email</th>
                       <th>Jins</th>
-                      <th>Parolga ishora</th>
                       <th>Xujra</th>
                       <th>Amalyot</th>
                   </tr>
@@ -56,9 +41,7 @@
                   <tr>
                     <th>Profil surati</th>
                     <th>Ism</th>
-                    <th>Email</th>
                     <th>Jins</th>
-                    <th>Parolga ishora</th>
                     <th>Xujra</th>
                     <th>Amalyot</th>
                   </tr>
@@ -67,7 +50,7 @@
                 {% for mudarris in mudarrislar %}
                   <tr>
                       <td>
-                        <a href="{% url 'mudarris_profil' mudarris.admin.id %}">
+                        <a href="{% url 'ustoz_mudarris_profil' mudarris.admin.id %}">
                           {% if mudarris.profil_surati %}
                               <img src="{{ mudarris.profil_surati }}" alt="Admin" class="avatar-md rounded-circle img-thumbnail" width="50" id='profile-pic'>
                             </a>
@@ -82,12 +65,10 @@
                         </a>
                       </td>
                       <td> {{ mudarris.admin.first_name }} {{ mudarris.admin.last_name }} </td>
-                      <td> {{ mudarris.admin.email }} </td>
                       <td> {{ mudarris.jins }} </td> 
-                      <td> {{ mudarris.parolga_ishora }} </td>
                       <td> 
                         {% if mudarris.hujra %}
-                          <a href="{% url 'hujra_profil' mudarris.hujra.id %}">
+                          <a href="{% url 'ustoz_hujra_profil' mudarris.hujra.id %}">
                             {{ mudarris.hujra.ism }}
                           </a>
                         {% else %}
@@ -95,43 +76,18 @@
                         {% endif %}
                      </td>
                       <td>
-                        <a href="{% url 'mudarris_profil' mudarris.admin.id %}" class="btn btn-info btn-circle">
+                        <a href="{% url 'ustoz_mudarris_profil' mudarris.admin.id %}" class="btn btn-info btn-circle">
                           <i class="fa-solid fa-address-card"></i>
                       </a>
-                        <a href="#myModal" class="btn btn-danger btn-circle delete" data-toggle="modal">
-                          <i class="fa-sharp fa-solid fa-trash-can"></i>
-                        </a>
+                        
                       </td>
                   </tr>
 
-                  <div id="myModal" class="modal fade">
-                    <div class="modal-dialog modal-confirm">
-                      <div class="modal-content">
-                        <div class="modal-header flex-column">
-                          <div class="icon-box">
-                            <i class="fa-solid fa-trash"></i>
-                          </div>						
-                          <h4 class="modal-title w-100">Chindan ham "{{mudarris.admin.first_name}} {{mudarris.admin.last_name}}" mudarrisni o'chirmoqchimisiz?</h4>	
-                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                          <p>Agar chindan ham o'chirmoqchi bo'lsangiz "O'chirish" tugmasini bosing.</p>
-                        </div>
-                        <div class="modal-footer justify-content-center">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Bekor qilish</button>
-                          <a href="{% url 'mudarrisni_uchirish' mudarris.admin.id %}">
-                            <button type="button" class="btn btn-danger">O'chirish</button>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  
 
                 {% empty %}
                 <tr>
                   <td><h3>Mudarrislar yo'q. <i class="fa-solid fa-face-frown"></i> Mudarris kiriting. </h3></td>
-                  <td></td>
-                  <td></td>
                   <td></td>
                   <td></td>
                   <td></td>

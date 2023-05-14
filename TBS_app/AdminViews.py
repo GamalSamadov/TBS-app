@@ -158,6 +158,7 @@ def ustoz_kiritish(request):
             user.ustoz.adres = adres
             user.ustoz.jins = jins
             user.ustoz.profil_surati = profil_surati_url
+            user.ustoz.tasdiqlangan = True
             user.save()
             messages.success(
                 request, "Ustoz kiritish muvaffaqiyatli amalga oshirildi :)")
@@ -198,6 +199,20 @@ def ustoz_profil(request, id):
 
     }
     return render(request, 'admin_templates/ustoz_profil.html', context)
+
+
+# def ustoz_tasdiqlash(request, id):
+#     ustoz = Ustoz.objects.select_related('admin').get(admin=id)
+#     try:
+#         ustoz.tasdiqlangan = True
+#         ustoz.save()
+#         messages.success(
+#                 request, "Ustoz tasdiqlandi :)")
+#         return redirect('ustozlar')
+#     except:
+#         messages.error(
+#                 request, "Ustozni tasdiqlashda muommo yuz berdi :(")
+#         return redirect('ustozlar')
 
 
 def ustoz_profil_mudarrislar(request, id):
@@ -480,38 +495,26 @@ def hujra_profil_talabalar_kiritish(request, id):
     if request.method == 'GET':
         admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
         hujra = Hujra.objects.get(id=id)
+        talabalar = []
+        for talaba in Talaba.objects.all():
+            if talaba not in Talaba.objects.filter(hujra=hujra):
+                talabalar.append(talaba)
         context = {
             'admin' : admin,
-            'hujra': hujra
+            'hujra' : hujra,
+            'talabalar' : talabalar,
         }
         return render(request, 'admin_templates/hujra_profil_talabalar_kiritish.html', context)
     if request.method == 'POST':
-        ism = request.POST.get('ism')
-        familya = request.POST.get('familya')
-        adres = request.POST.get('adres')
-        jins = request.POST.get('jins')
+        talabalar = request.POST.getlist('talabalar')
         try:
-            if len(request.FILES) != 0:
-                profil_surati = request.FILES['profil_surati']
-                pasport_surati = request.FILES['pasport_surati']
-                fs = FileSystemStorage()
-                profile_filename = fs.save(profil_surati.name, profil_surati)
-                profil_surati_url = fs.url(profile_filename)
-                pasport_filename = fs.save(pasport_surati.name, pasport_surati)
-                pasport_surati_url = fs.url(pasport_filename)
-            else:
-                profil_surati_url = None
-                pasport_surati_url = None
-        
             hujra = Hujra.objects.get(id=id)
-            talaba = Talaba(ism=ism, familya=familya, adres=adres, jins=jins, profil_surati=profil_surati_url, pasport_surati=pasport_surati_url, hujra=hujra)
-            talaba.save()
-            messages.success(
-                request, "Talaba kiritish muvaffaqiyatli amalga oshirildi :)")
+            for i in talabalar:
+                hujra.talaba_set.add(Talaba.objects.get(id=i))
+            messages.success(request, 'Hujraga talaba/lar kiritildi')
             return HttpResponseRedirect(reverse('hujra_profil_talabalar', kwargs={'id': id}))
         except:
-            messages.error(
-                request, "Talaba kiritish ba'zi muommolar uchun amalga oshirilmadi :(")
+            messages.error(request, 'Hujraga talaba kiritishda qandaydur muommo yuz berdi')
             return HttpResponseRedirect(reverse('hujra_profil_talabalar', kwargs={'id': id}))
 
 
@@ -545,52 +548,26 @@ def hujra_profil_mudarrislar_kiritish(request, id):
     if request.method == 'GET':
         admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
         hujra = Hujra.objects.get(id=id)
+        mudarrislar = []
+        for mudarris in Mudarris.objects.all():
+            if mudarris not in Mudarris.objects.filter(hujra=hujra):
+                mudarrislar.append(mudarris)
         context = {
             'admin' : admin,
             'hujra' : hujra,
+            'mudarrislar' : mudarrislar,
         }
         return render(request, 'admin_templates/hujra_profil_mudarrislar_kiritish.html', context)
     if request.method == 'POST':
-        email =  request.POST.get('email')
-        username = request.POST.get('username')
-        parol = request.POST.get('parol')
-        parolga_ishora = request.POST.get('parolga_ishora')
-        ism = request.POST.get('ism')
-        familya = request.POST.get('familya')
-        adres = request.POST.get('adres')
-        telefon_raqam = request.POST.get('telefon_raqam')
-        jins = request.POST.get('jins')
-
-        if len(request.FILES) != 0:
-            profil_surati = request.FILES['profil_surati']
-            pasport_surati = request.FILES['pasport_surati']
-            fs = FileSystemStorage()
-            profile_filename = fs.save(profil_surati.name, profil_surati)
-            profil_surati_url = fs.url(profile_filename)
-            pasport_filename = fs.save(pasport_surati.name, pasport_surati)
-            pasport_surati_url = fs.url(pasport_filename)
-        else:
-            profil_surati_url = None
-            pasport_surati_url = None
+        mudarrislar = request.POST.getlist('mudarrislar')
         try:
             hujra = Hujra.objects.get(id=id)
-            user = CustomUser.objects.create_user(username=username, password=parol, email=email, first_name=ism, last_name=familya, user_type=3)
-            user.mudarris.telefon_raqami = telefon_raqam
-            user.mudarris.parolga_ishora = parolga_ishora
-            user.mudarris.adres = adres
-            user.mudarris.jins = jins
-            if profil_surati_url != None:
-                user.mudarris.profil_surati = profil_surati_url
-            if pasport_surati_url != None:
-                user.mudarris.pasport_surati = pasport_surati_url
-            user.mudarris.hujra = hujra
-            user.save()
-            messages.success(
-                request, "Mudarris kiritish muvaffaqiyatli amalga oshirildi :)")
+            for i in mudarrislar:
+                hujra.mudarris_set.add(Mudarris.objects.get(id=i))
+            messages.success(request, 'Hujraga mudarris/lar kiritildi')
             return HttpResponseRedirect(reverse('hujra_profil_mudarrislar', kwargs={'id': id}))
         except:
-            messages.error(
-                request, "Mudarris kiritish ba'zi muommolar uchun amalga oshirilmadi :(")
+            messages.error(request, 'Hujraga mudarris kiritishda qandaydur muommo yuz berdi')
             return HttpResponseRedirect(reverse('hujra_profil_mudarrislar', kwargs={'id': id}))
 
 
@@ -980,7 +957,7 @@ def mudarrisni_uchirish(request, id):
         if user.mudarris.pasport_surati:
             appDir = os.path.dirname(os.path.abspath(__file__))
             directory = os.path.dirname(appDir)
-            os.remove(directory + str(user.mudarris.paspurt_surati))
+            os.remove(directory + str(user.mudarris.pasport_surati))
         user.delete()
         messages.success(request, "Mudarris o\'chirildi.")
         return redirect('mudarrislar')
@@ -1216,10 +1193,10 @@ def talabani_uchirish(request, id):
             appDir = os.path.dirname(os.path.abspath(__file__))
             directory = os.path.dirname(appDir)
             os.remove(directory + str(talaba.profil_surati))
-        if talaba.paspurt_surati:
+        if talaba.pasport_surati:
             appDir = os.path.dirname(os.path.abspath(__file__))
             directory = os.path.dirname(appDir)
-            os.remove(directory + str(talaba.paspurt_surati))
+            os.remove(directory + str(talaba.pasport_surati))
         talaba.delete()
         messages.success(request, "Talaba o\'chirildi.")
         return redirect('talabalar')

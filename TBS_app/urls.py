@@ -7,8 +7,8 @@ urlpatterns = [
     path('', views.loginPage, name="login"),
     path('kirish/', views.doLogin, name="doLogin"),
     path('chiqish/', views.chiqish, name="chiqish"),
-    path('foydalanuvchi-nomini-tekshirish/', csrf_exempt(AdminViews.UsernameTekshirish.as_view()), name='foydalanuvchi_nomini_tekshirish'),
-    path('emailni-tekshirish/', csrf_exempt(AdminViews.EmailTekshirish.as_view()), name="emailni_tekshirish"),
+    path('admin-foydalanuvchi-nomini-tekshirish/', csrf_exempt(AdminViews.UsernameTekshirish.as_view()), name='foydalanuvchi_nomini_tekshirish'),
+    path('admin-emailni-tekshirish/', csrf_exempt(AdminViews.EmailTekshirish.as_view()), name="emailni_tekshirish"),
     # -------------------------
      # Admin Urls
      # Admin
@@ -20,6 +20,7 @@ urlpatterns = [
     path('ustozlar/', AdminViews.ustozlar, name="ustozlar"),
     path('ustozlar/kiritish/', AdminViews.ustoz_kiritish, name="ustoz_kiritish"),
     path('ustozlar/<int:id>/', AdminViews.ustoz_profil, name="ustoz_profil"),
+    # path('ustozlar/<int:id>/tasdiqlash/', AdminViews.ustoz_tasdiqlash, name="ustoz_tasdiqlash"),
     path('ustozlar/<int:id>/mudarrislar/', AdminViews.ustoz_profil_mudarrislar, name="ustoz_profil_mudarrislar"),
     path('ustozlar/<int:id>/talabalar/', AdminViews.ustoz_profil_talabalar, name="ustoz_profil_talabalar"),
     path('ustozlar/<int:id>/fanlar/', AdminViews.ustoz_profil_fanlar, name="ustoz_profil_fanlar"),
@@ -148,6 +149,31 @@ urlpatterns = [
     # -------------------------
     # Ustoz Urls
     path('ustoz_asosiy/', UstozViews.ustoz_asosiy, name="ustoz_asosiy"),
+    path('ustoz-foydalanuvchi-nomini-tekshirish/', csrf_exempt(UstozViews.UsernameTekshirish.as_view()), name='ustoz_foydalanuvchi_nomini_tekshirish'),
+    path('ustoz-emailni-tekshirish/', csrf_exempt(UstozViews.EmailTekshirish.as_view()), name="ustoz_emailni_tekshirish"),
+    path('ustoz_profil/', UstozViews.ustoz_profil, name="ustoz_profil"),
+    path('ustoz_profil/tahrirlash/', UstozViews.ustoz_profil_tahrirlash, name="ustoz_profil_tahrirlash"),
+    path('ustoz_profil/tahrirlash/suratni_uchirish/', UstozViews.ustoz_profil_suratni_uchirish, name="ustoz_profil_suratni_uchirish"),
+    # Xujralar
+    path('ustoz_xujralar/', UstozViews.hujralar, name="ustoz_hujralar"),
+    path('ustoz_xujralar/<int:id>/', UstozViews.hujra_profil, name="ustoz_hujra_profil"),
+    path('ustoz_xujralar/<int:id>/mudarrislar/', UstozViews.hujra_profil_mudarrislar, name="ustoz_hujra_profil_mudarrislar"),
+    path('ustoz_xujralar/<int:id>/talabalar/', UstozViews.hujra_profil_talabalar, name="ustoz_hujra_profil_talabalar"),
+    # Mudarrislar
+    path('ustoz_mudarrislar/', UstozViews.mudarrislar, name="ustoz_mudarrislar"),
+    path('ustoz_mudarrislar/<int:id>', UstozViews.mudarris_profil, name="ustoz_mudarris_profil"),
+    path('ustoz_mudarrislar/<int:id>/fanlar/', UstozViews.mudarris_profil_uz_fanlar, name="ustoz_mudarris_profil_uz_fanlar"),
+    path('ustoz_mudarrislar/<int:id>/o\'z_fanlar/', UstozViews.mudarris_profil_fanlar, name="ustoz_mudarris_profil_fanlar"),
+    path('ustoz_mudarrislar/<int:id>/talabalar/', UstozViews.mudarris_profil_talabalar, name="ustoz_mudarris_profil_talabalar"),
+    # Talabalar
+    path('ustoz_talabalar/', UstozViews.talabalar, name="ustoz_talabalar"),
+    path('ustoz_talabalar/<int:id>/', UstozViews.talaba_profil, name="ustoz_talaba_profil"),
+    path('ustoz_talabalar/<int:id>/fanlar/', UstozViews.talaba_profil_fanlar, name="ustoz_talaba_profil_fanlar"),
+    # Fanlar - Talaba
+    path('ustoz_fanlar/talaba/', UstozViews.fanlar_talaba, name='ustoz_fanlar_talaba'),
+    path('ustoz_fanlar/talaba/<int:id>/', UstozViews.fan_talaba_profil, name='ustoz_fan_talaba_profil'),
+    path('ustoz_fanlar/talaba/<int:id>/talabalar/', UstozViews.fan_talaba_profil_talabalar, name='ustoz_fan_talaba_profil_talabalar'),
+
     # -------------------------
     # Mudarris Urls
     path('mudarris_asosiy/', MudarrisViews.mudarris_asosiy, name="mudarris_asosiy"),

@@ -1,0 +1,160 @@
+{% extends 'ustoz_templates/elements/base.html' %}
+{% load static %}
+
+{% block page_heading %}
+  Ustoz profili
+{% endblock page_heading %}
+
+{% block main_content %}
+ 
+  <div class="row">
+
+      <div class="col-lg-6">
+
+          <!-- Default Card Example -->
+          <div class="card mb-4">
+             
+              <div class="card-body">
+                <div class="d-flex flex-column align-items-center text-center">
+                    {% if ustoz.profil_surati %}
+                      <div class="image-container-profil">
+                        <div class="profil_surati rounded-circle img-thumbnail">
+                          <img src="{{ ustoz.profil_surati }}" alt="Admin" class="" width="150">
+                        </div>
+                      </div>
+                    {% else %}
+                      <img src="{% static "img/undraw_profile.svg" %}" alt="Admin" class="rounded-circle img-thumbnail" width="150" id='img'>
+                    {% endif %}
+                  <div class="mt-3">
+                    <h4>
+                      {% if admin.first_name %}{{ admin.first_name }}{% else %}Ism-familya{% endif %} {% if admin.last_name %}{{ admin.last_name }}{% else %}kiritilmagan{{ admin.first_name }}{% endif %}
+                    </h4>
+                    <div class="btn-light btn-icon-split btn-sm">
+                      <span class="icon text-white-50">
+                        <i class="fa-solid fa-at">
+                          
+                        </i>
+                      </span>
+                      <span class='text'>{% if admin.username %}{{ admin.username }}{% else %}nomsiz{% endif %}</span>
+                    </div>
+                    
+                    {% comment %} <p class="text-muted font-size-sm">Staff</p> {% endcomment %}
+                    {% comment %} <button class="btn btn-primary">Follow</button>
+                    <button class="btn btn-outline-primary">Message</button> {% endcomment %}
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          <div class="card shadow mb-4">
+            <!-- Card Header - Accordion -->
+            <a href="#collapseCardExample1" class="d-block card-header py-3" data-toggle="collapse"
+                role="button" aria-expanded="true" aria-controls="collapseCardExample1">
+                <h6 class="m-0 font-weight-bold text-primary">Ustozga mansub malumotlar</h6>
+            </a>
+            <!-- Card Content - Collapse -->
+            <div class="collapse show" id="collapseCardExample1">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Oxirgi saytga kirish vaqti</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {% if admin.last_login != None%}
+                      {{ admin.last_login}}
+                    {% else %}
+                      Hali kirganicha yo'q!
+                    {% endif %}
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h6 class="mb-0">Saytga kiritilish vaqti</h6>
+                  </div>
+                  <div class="col-sm-9 text-secondary">
+                    {% if admin.date_joined != None%}
+                      {{ admin.date_joined}}
+                    {% else %}
+                      Muommo!
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+    
+              
+              
+            </div>
+          </div>
+
+
+      </div>
+
+    <div class="col-lg-6">
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Ism va familya</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if admin.first_name %}{{ admin.first_name }}{% else %}Ism-familya{% endif %} {% if admin.last_name %}{{ admin.last_name }}{% else %}kiritilmagan{{ admin.first_name }}{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">
+                Elektron pochta
+              </h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if admin.email %}{{ admin.email }}{% else %}Email kiritilmagan{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-3">
+              <h6 class="mb-0">Parolga ishora</h6>
+            </div>
+            <div class="col-sm-9 text-secondary">
+              {% if ustoz.parolga_ishora %}{{ ustoz.parolga_ishora }}{% else %}Parolgan ishora kiritilmagan{% endif %}
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-sm-12">
+              <a class="btn btn-primary btn-icon-split" href="{% url 'ustoz_profil_tahrirlash' %}">
+                <span class="icon text-white-50">
+                  <i class="fa-solid fa-pencil"></i>
+                    
+                  </i>
+                </span>
+                <span class='text'>Tahrirlash</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+        
+
+    </div>
+
+  </div>
+
+  <div class='popup-image-profil'>
+    <span>&times;</span>
+    <img src="{{ ustoz.profil_surati }}">
+  </div>
+
+{% endblock main_content %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'css/profil-surati-show.css' %}">
+{% endblock custom_css %}
+
+{% block custom_script %}
+      <script src="{% static 'js/profil-surati-show.js' %}"></script>
+{% endblock custom_script %}
+

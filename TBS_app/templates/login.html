@@ -1,9 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -89,6 +87,35 @@
 
             </div>
 
+        </div>
+
+        {% comment %} Alert {% endcomment %}
+        <div class="">
+            {% if messages %}
+                {% for message in messages %}
+                {% if message.tags == "error" %}
+                    <script>
+                        var myToast = $.toast({
+                            heading: 'Muommo',
+                            text: '{{ message }}',
+                            showHideTransition: 'slide',
+                            icon: 'error',
+                            position: 'top-right',
+                        })
+                    </script>
+                {% elif message.tags == "success" %}
+                    <script>
+                        var myToast = $.toast({
+                            heading: 'Juda soz',
+                            text: '{{ message }}',
+                            showHideTransition: 'slide',
+                            icon: 'success',
+                            position: 'top-right',
+                        })
+                    </script>
+                {% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
 
     </div>
