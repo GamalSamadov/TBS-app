@@ -1951,7 +1951,8 @@ def imtihon_baholar_ustoz_talaba_baholar(request, fanId, talabaId):
         'admin' : admin,
         'baholar' : baholar,
         'fan' : fan,
-        'talaba' : talaba
+        'talaba' : talaba,
+        'fan' : fan
     }
     return render(request, 'admin_templates/imtihon_baholar_ustoz_talaba_baholar.html', context)
 
@@ -1966,6 +1967,7 @@ def imtihon_baholar_ustoz_talaba_baholar_api(request, fanId, talabaId):
             'ustozga_baho' : baho.ustozga_baho,
             'izoh' : baho.izoh,
             'start' : baho.sana.strftime("%Y-%m-%d"),
+            'tugash_vaqti' : baho.fan.tugash_vaqti.strftime("%Y-%m-%d"),
             
             
         })
@@ -1978,11 +1980,14 @@ def imtihon_baholar_ustoz_talaba_baholar_kiritish(request, fanId, talabaId):
     ustozga_baho = request.GET.get('ustozga_baho', None)
     izoh = request.GET.get('izoh', None)
     fan = FanUstozTalaba.objects.get(id=fanId)
-    talaba = Talaba.objects.get(id=talabaId)
-    baho = ImtihonBahoUstozTalaba(umumiy_baho=int(title), fan=fan, talaba=talaba, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
-    baho.save()
-    data = {}
-    return JsonResponse(data)
+    if not fan.bitirilgan:
+        fan.bitirilgan = True
+        talaba = Talaba.objects.get(id=talabaId)
+        baho = ImtihonBahoUstozTalaba(umumiy_baho=int(title), fan=fan, talaba=talaba, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
+        baho.save()
+        fan.save()
+        data = {}
+        return JsonResponse(data)
 
 
 def imtihon_baholar_ustoz_talaba_baholar_sana_tahrirlash(request, fanId, talabaId):
@@ -2013,6 +2018,9 @@ def imtihon_baholar_ustoz_talaba_baholar_uchirish(request, fanId, talabaId):
     id = request.GET.get('id', None)
     baho = ImtihonBahoUstozTalaba.objects.get(id=id)
     baho.delete()
+    fan = FanUstozTalaba.objects.get(id=fanId)
+    fan.bitirilgan = False
+    fan.save()
     data = {}
     return JsonResponse(data)
 
@@ -2062,8 +2070,7 @@ def imtihon_baholar_ustoz_mudarris_baholar_api(request, fanId, mudarrisId):
             'ustozga_baho' : baho.ustozga_baho,
             'izoh' : baho.izoh,
             'start' : baho.sana.strftime("%Y-%m-%d"),
-            
-            
+            'tugash_vaqti' : baho.fan.tugash_vaqti.strftime("%Y-%m-%d"),
         })
     return JsonResponse(out, safe=False)
 
@@ -2074,11 +2081,14 @@ def imtihon_baholar_ustoz_mudarris_baholar_kiritish(request, fanId, mudarrisId):
     ustozga_baho = request.GET.get('ustozga_baho', None)
     izoh = request.GET.get('izoh', None)
     fan = FanUstozMudarris.objects.get(id=fanId)
-    mudarris = Mudarris.objects.get(id=mudarrisId)
-    baho = ImtihonBahoUstozMudarris(umumiy_baho=int(title), fan=fan, mudarris=mudarris, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
-    baho.save()
-    data = {}
-    return JsonResponse(data)
+    if not fan.bitirilgan:
+        fan.bitirilgan = True
+        mudarris = Mudarris.objects.get(id=mudarrisId)
+        baho = ImtihonBahoUstozMudarris(umumiy_baho=int(title), fan=fan, mudarris=mudarris, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
+        baho.save()
+        fan.save()
+        data = {}
+        return JsonResponse(data)
 
 
 def imtihon_baholar_ustoz_mudarris_baholar_sana_tahrirlash(request, fanId, mudarrisId):
@@ -2109,6 +2119,9 @@ def imtihon_baholar_ustoz_mudarris_baholar_uchirish(request, fanId, mudarrisId):
     id = request.GET.get('id', None)
     baho = ImtihonBahoUstozMudarris.objects.get(id=id)
     baho.delete()
+    fan = FanUstozMudarris.objects.get(id=fanId)
+    fan.bitirilgan = False
+    fan.save()
     data = {}
     return JsonResponse(data)
 
@@ -2158,6 +2171,7 @@ def imtihon_baholar_mudarris_talaba_baholar_api(request, fanId, talabaId):
             'ustozga_baho' : baho.ustozga_baho,
             'izoh' : baho.izoh,
             'start' : baho.sana.strftime("%Y-%m-%d"),
+            'tugash_vaqti' : baho.fan.tugash_vaqti.strftime("%Y-%m-%d"),
             
             
         })
@@ -2170,11 +2184,14 @@ def imtihon_baholar_mudarris_talaba_baholar_kiritish(request, fanId, talabaId):
     ustozga_baho = request.GET.get('ustozga_baho', None)
     izoh = request.GET.get('izoh', None)
     fan = FanMudarrisTalaba.objects.get(id=fanId)
-    talaba = Talaba.objects.get(id=talabaId)
-    baho = ImtihonBahoMudarrisTalaba(umumiy_baho=int(title), fan=fan, talaba=talaba, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
-    baho.save()
-    data = {}
-    return JsonResponse(data)
+    if not fan.bitirilgan:
+        fan.bitirilgan = True
+        talaba = Talaba.objects.get(id=talabaId)
+        baho = ImtihonBahoMudarrisTalaba(umumiy_baho=int(title), fan=fan, talaba=talaba, sana=start, ustozga_baho=int(ustozga_baho), izoh=izoh)
+        baho.save()
+        fan.save()
+        data = {}
+        return JsonResponse(data)
 
 
 def imtihon_baholar_mudarris_talaba_baholar_sana_tahrirlash(request, fanId, talabaId):
@@ -2205,6 +2222,9 @@ def imtihon_baholar_mudarris_talaba_baholar_uchirish(request, fanId, talabaId):
     id = request.GET.get('id', None)
     baho = ImtihonBahoMudarrisTalaba.objects.get(id=id)
     baho.delete()
+    fan = FanMudarrisTalaba.objects.get(id=fanId)
+    fan.bitirilgan = False
+    fan.save()
     data = {}
     return JsonResponse(data)
 

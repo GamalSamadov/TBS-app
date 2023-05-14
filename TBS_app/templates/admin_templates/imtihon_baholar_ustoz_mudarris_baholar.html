@@ -5,7 +5,7 @@
 {% endblock page_heading %}
 
 {% block main_content %}
-    <!-- Modal add baho -->
+  <!-- Modal add baho -->
   <div class="modal fade" id="addBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -106,6 +106,29 @@
               </div>
             </div>
           </div>
+
+          <div class="md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+              <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tugash vaqti:</div>
+                    <div class="row no-gutters align-items-center">
+                      <div class="col-auto">
+                        <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="tugashSanasi"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <i class="fa-solid fa-calendar-days fa-2x text-info"></i>
+                   
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
           <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
               <h6 class="m-0 font-weight-bold text-primary">Izoh</h6>
@@ -123,8 +146,8 @@
     </div>
   </div>
 
-   <!-- Modal Edit baho -->
-   <div class="modal fade" id="editBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- Modal Edit baho -->
+  <div class="modal fade" id="editBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -157,7 +180,6 @@
       </div>
     </div>
   </div>
-  
 
   <!-- Modal delete baho -->
   <div class="modal fade" id="deleteBaho" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -207,6 +229,7 @@
         editable: true,
         droppable: true,
         eventLimit: true,
+        {% if not fan.bitirilgan %}
         select: function(start, allDay) {
           var start = moment(start.startStr).format('YYYY-MM-DD HH:mm:ss');
           $('#addBaho').modal('toggle');
@@ -231,6 +254,7 @@
                                         position: 'top-right',
                                     })
                 $('#saveBtn').off("click")
+                window.location.reload()
                 
               },
               error: function(error) {
@@ -252,6 +276,7 @@
           };
           })  
           },
+        {% endif %}
         eventDrop: function(info) {
           var start = moment(info.event.start).format('YYYY-MM-DD HH:mm:ss');
           var id = info.event.id;
@@ -307,6 +332,8 @@
                   bahoProgressBar.style.width = umumiyBahoStyleValue
                   var ustozgaBahoStyleValue = new String(response[i].ustozga_baho) + '%'
                   ustozgaBahoProgressBar.style.width = ustozgaBahoStyleValue
+                  var tugashSanasi = document.getElementById('tugashSanasi');
+                  tugashSanasi.innerHTML = response[i].tugash_vaqti
 
                 }
               }
@@ -403,6 +430,7 @@
                                           position: 'top-right',
                                       })
                   $('#deleteBtn').off("click")
+                  window.location.reload()
                 },
                 error: function(data) {
                   var myToast = $.toast({
