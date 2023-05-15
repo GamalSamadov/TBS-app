@@ -803,6 +803,7 @@ def mudarris_profil_tahrirlash(request, id):
         return render(request, 'admin_templates/mudarris_profil_tahrirlash.html', context)
     if request.method == 'POST':
         email = request.POST.get('email')
+        print(email, '===============')
         username = request.POST.get('username')
         ism = request.POST.get('ism')
         familya = request.POST.get('familya')
@@ -852,6 +853,7 @@ def mudarris_profil_tahrirlash(request, id):
                 mudarris.jins = jins
 
             mudarris.save()
+            user.save()
 
             messages.success(request, "Mudarris profil muvaffaqiyatli yangilandi")
             return HttpResponseRedirect(reverse('mudarris_profil', kwargs={'id': id}))
