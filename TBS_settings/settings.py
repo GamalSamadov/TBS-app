@@ -14,7 +14,10 @@ SECRET_KEY = 'django-insecure--m$x*8jdxs27&xjxekj62d5x*o+2oz_d@4ekix7gv-@d-u3gpd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'talabalar-boshqaruv-sistemasi.herokuapp.com',
+    '127.0.0.1', 
+]
 
 
 # Application definition
@@ -42,6 +45,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'TBS_app.LoginCheckMiddleWare.LoginCheckMiddleWare',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
 
 ]
@@ -77,11 +81,11 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'tbs',
-        'USER': 'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '',  # django uses usefully 5432 port that is the postegres port
+        'NAME': 'd94de6053u75kg',
+        'USER': 'omlkrwcsggwrlo',
+        'PASSWORD': 'a36e069366acdf83c531c3fdc0ad21a2174234dc50e97f7f924c6aa8defef9f4',
+        'HOST': 'ec2-52-31-161-46.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432',  # django uses usefully 5432 port that is the postegres port
 
     }
 }
