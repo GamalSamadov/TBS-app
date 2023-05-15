@@ -15,7 +15,6 @@ import json, os
 
 
 def mudarris_asosiy(request):
-    print(request.user.id)
     return render(request, 'mudarris_templates/asosiy.html')
 
 
@@ -85,7 +84,7 @@ def mudarris_profil_tahrirlash(request):
 
 
 def mudarris_profil_suratni_uchirish(request):
-    mudarris = Ustoz.objects.get(admin=request.user.id)
+    mudarris = Mudarris.objects.get(admin=request.user.id)
     try:
         fs = FileSystemStorage()
         if mudarris.profil_surati:
