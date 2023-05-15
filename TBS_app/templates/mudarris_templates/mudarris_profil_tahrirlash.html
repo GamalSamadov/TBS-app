@@ -198,7 +198,7 @@
       if(usernameVal !== usernameEskiValue) {
         usernameSuccessOutPut.textContent = `${usernameVal} tekshirilmoqda...`;
         if(usernameVal.length > 0) {
-          fetch("{% url 'ustoz_foydalanuvchi_nomini_tekshirish' %}", {
+          fetch("{% url 'mudarris_foydalanuvchi_nomini_tekshirish' %}", {
             body : JSON.stringify({username: usernameVal}),
             method: "POST", 
           })
@@ -241,7 +241,7 @@
       if(emailVal !== emailEskiValue) {
         emailSuccessOutPut.textContent = `${emailVal} tekshirilmoqda...`;
         if(emailVal.length > 0) {
-          fetch("{% url 'ustoz_emailni_tekshirish' %}", {
+          fetch("{% url 'mudarris_emailni_tekshirish' %}", {
             body : JSON.stringify({email: emailVal}),
             method: "POST", 
           })

@@ -15,6 +15,7 @@ import json, os
 
 
 def mudarris_asosiy(request):
+    print(request.user.id)
     return render(request, 'mudarris_templates/asosiy.html')
 
 

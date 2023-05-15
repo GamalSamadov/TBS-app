@@ -21,14 +21,12 @@ def ustoz_asosiy(request):
     mudarrislar = []
     talabalar = []
     fanlar = []
-    for hujra in Hujra.objects.get(ustoz=ustoz):
+    for hujra in Hujra.objects.filter(ustoz=ustoz):
         hujralar.append(hujra)
-        if hujra.mudarris:
-            for mudarris in hujra.mudarris.all():
-                mudarrislar.append(mudarris)
-        if hujra.talaba:
-            for talaba in hujra.talaba.all():
-                talabalar.append(talaba)
+        for mudarris in hujra.mudarris_set.all():
+            mudarrislar.append(mudarris)
+        for talaba in hujra.talaba_set.all():
+            talabalar.append(talaba)
     for fan in FanUstozTalaba.objects.all():
         fanlar.append(fan)
     for fan in FanUstozMudarris.objects.all():
