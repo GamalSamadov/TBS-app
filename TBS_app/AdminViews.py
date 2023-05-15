@@ -172,7 +172,7 @@ def ustoz_kiritish(request):
 def ustoz_profil(request, id):
     admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
     ustoz = Ustoz.objects.select_related('admin').get(admin=id)
-    hujralar = ustoz.hujra_set.all()
+    hujralar = Hujra.objects.select_related('ustoz').filter(ustoz=ustoz)
     mudarrislar = []
     talabalar = []
     for hujra in hujralar:

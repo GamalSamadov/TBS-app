@@ -85,8 +85,8 @@
                 {% if admin.first_name %}{{ admin.first_name }}{% else %}Nom{% endif %} {% if admin.last_name %}{{ admin.last_name }}{% else %}kiritilmagan{{ admin.first_name }}{% endif %}
             </span>
               
-            {% if admin.admin.profile_pic %}
-                <img class="img-profile rounded-circle" src="{{ admin.admin.profile_pic }}">
+            {% if admin.admin.profil_surati %}
+                <img class="img-profile rounded-circle" src="{{ admin.admin.profil_surati }}">
             {% else %}
                 <img class="img-profile rounded-circle" src="{% static 'img/undraw_profile.svg' %}">
             {% endif %}

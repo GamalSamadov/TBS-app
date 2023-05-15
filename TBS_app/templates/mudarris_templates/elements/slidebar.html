@@ -18,6 +18,27 @@
           <span>Boshqaruv</span></a>
   </li>
 
+  {% url 'mudarris_talabalar' as mudarris_talabalar %}
+  <li class="nav-item {% if request.path == mudarris_talabalar %} active {% endif %}">
+      <a class="nav-link" href="{% url 'mudarris_talabalar' %}">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span>Talablar</span></a>
+  </li>
+
+  {% url 'mudarris_fanlar_talaba' as mudarris_fanlar_talaba %}
+  <li class="nav-item {% if request.path == mudarris_fanlar_talaba %} active {% endif %}">
+      <a class="nav-link" href="{% url 'mudarris_fanlar_talaba' %}">
+        <i class="fa-solid fa-book"></i>
+          <span>Fanlar</span></a>
+  </li>
+
+  {% url 'mudarris_baho_talaba' as mudarris_baho_talaba %}
+  <li class="nav-item {% if request.path == mudarris_baho_talaba %} active {% endif %}">
+      <a class="nav-link" href="{% url 'mudarris_baho_talaba' %}">
+        <i class="fa-solid fa-pen-to-square"></i>
+          <span>Baho kiritish</span></a>
+  </li>
+
   <hr class="sidebar-divider my-0">
 {% comment %} 
   {% url 'ustoz_talabalar' as ustoz_talabalar %}

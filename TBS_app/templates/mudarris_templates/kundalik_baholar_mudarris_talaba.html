@@ -1,0 +1,113 @@
+{% extends 'mudarris_templates/elements/base.html' %}
+{% load static %}
+
+{% block custom_css %}
+  <!-- Custom styles for this page -->
+  <link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/delete-alert.css' %}">
+{% endblock custom_css %}
+
+{% block page_heading %}
+  Talaba fanini tanlang
+{% endblock page_heading %}
+
+{% block main_content %}
+
+
+
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Barcha fanlar tablitsasi</h6>
+  </div>
+  <div class="card-body">
+      <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                  <tr>
+                      <th>Ism</th>
+                      <th>Ustoz</th>
+                      <th>Holat</th>
+                      <th>Amalyot</th>
+                  </tr>
+              </thead>
+              <tfoot>
+                  <tr>
+                    <th>Ism</th>
+                    <th>Ustoz</th>
+                    <th>Holat</th>
+                    <th>Amalyot</th>
+                  </tr>
+              </tfoot>
+              <tbody>
+                {% for fan in fanlar %}
+                  <tr>
+                      <td> 
+                        {% if fan.bitirilgan %}
+                        <div>{{ fan.ism }}</div>
+                        {% else %}
+                        <a href="{% url 'mudarris_baho_talaba_tanlash' fan.id %}">{{ fan.ism }}</a> </td>
+                        {% endif %}
+                      </td>
+                      <td> {{ fan.ustoz.admin.username }} </td>
+                      <td> 
+                        {% if fan.bitirilgan %}
+                        <div class="btn btn-success btn-icon-split">
+                          <span class="icon text-white-50">
+                            <i class="fas fa-check"></i>
+                          </span>
+                          <span class="text">Bitirilgan</span>
+                        </div>
+                        {% else %}
+                        <div class="btn btn-warning btn-icon-split">
+                          <span class="icon text-white-50">
+                            <i class="fa-solid fa-spinner"></i>
+                          </span>
+                          <span class="text">O'qilmoqda</span>
+                        </div>
+                        {% endif %}
+                      </td> 
+                      <td>
+                        {% if fan.bitirilgan %}
+                        <div class="btn btn-danger">
+                          <i class="fa-solid fa-x"></i> Tanlab bo'lmaydi
+                        </div>
+                        {% else %}
+                          <a href="{% url 'mudarris_baho_talaba_tanlash' fan.id %}" class="btn btn-info">
+                            <i class="fas fa-check"></i>  Tanlash
+                          </a>
+                        {% endif %}     
+                      </td>
+                  </tr>
+
+                 
+
+                {% empty %}
+                <tr>
+                  <td><h3>Fanlar yo'q. <i class="fa-solid fa-face-frown"></i> Admin kiritsagina chiqadi. </h3></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+
+
+{% endblock main_content %}
+
+
+{% block custom_script %}
+
+  <!-- Page level plugins -->
+  <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="{% static 'js/demo/datatables-demo.js' %}"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+{% endblock custom_script %}
+

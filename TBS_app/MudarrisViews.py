@@ -15,7 +15,23 @@ import json, os
 
 
 def mudarris_asosiy(request):
-    return render(request, 'mudarris_templates/asosiy.html')
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    mudarris = Mudarris.objects.get(admin=request.user.id)
+    fanlar = []
+    talabalar = []
+    for fan in FanMudarrisTalaba.objects.filter(mudarris=mudarris):
+        if fan not in fanlar:
+            fanlar.append(fan)
+        for talaba in fan.talaba.all():
+            if talaba not in talabalar:
+                talabalar.append(talaba)
+
+    context = {
+        'admin' : admin,
+        'fanlar_soni' : len(fanlar),
+        'talabalar_soni' : len(talabalar),
+    }
+    return render(request, 'mudarris_templates/asosiy.html', context)
 
 
 def mudarris_profil(request):
@@ -99,6 +115,178 @@ def mudarris_profil_suratni_uchirish(request):
         messages.error(request, "Afsuski mudarris profil surati o'chirilmadi")
         return redirect('mudarris_profil')
 
+
+# talabalar
+def talabalar(request):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    mudarris = Mudarris.objects.get(admin=request.user.id)
+    fanlar = FanMudarrisTalaba.objects.filter(mudarris=mudarris)
+    talabalar = []
+    for fan in fanlar:
+        for talaba in fan.talaba.all():
+            if talaba not in talabalar:
+                talabalar.append(talaba)
+    context = {
+        'admin' : admin,
+        'talabalar' : talabalar
+    }
+    return render(request, 'mudarris_templates/talabalar.html', context)
+
+
+def talaba_profil(request, id):
+    admin = CustomUser.objects.select_related('ustoz').get(id=request.user.id)
+    mudarris = Mudarris.objects.get(admin=request.user.id)
+    talaba = Talaba.objects.get(id=id)
+    fanlar = talaba.fanmudarristalaba_set.filter(mudarris=mudarris)
+    context = {
+        'admin' : admin,
+        'fanlar_soni' : fanlar.count(),
+    }
+    return render(request, 'mudarris_templates/talaba_profil.html', context)
+
+
+def talaba_profil_fanlar(request, id):
+    admin = CustomUser.objects.select_related('ustoz').get(id=request.user.id)
+    talaba = Talaba.objects.select_related('hujra').get(id=id)
+    talaba = Talaba.objects.get(id=id)
+    fanlar = talaba.fanmudarristalaba_set.filter(mudarris=mudarris)
+    context = {
+        'admin' : admin,
+        'talaba' : talaba,
+        'fanlar' : fanlar,
+    }
+    return render(request, 'mudarris_templates/talaba_profil_fanlar.html', context)
+
+
+# Fan talaba
+def fanlar_talaba(request):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    mudarris = Mudarris.objects.get(admin=request.user.id)
+    fanlar = FanMudarrisTalaba.objects.select_related('mudarris').prefetch_related('talaba').filter(mudarris=mudarris)
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar
+    }
+    return render(request, 'mudarris_templates/fanlar_mudarris_talaba.html', context)
+
+
+def fan_talaba_profil(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    fan = FanMudarrisTalaba.objects.select_related('mudarris').prefetch_related('talaba').get(id=id)
+    talabalar_soni = fan.talaba.count()
+    context = {
+        'admin' : admin,
+        'fan' : fan,
+        'talabalar_soni' : talabalar_soni
+    }
+    return render(request, 'mudarris_templates/fan_mudarris_talaba_profil.html', context)
+
+
+def fan_talaba_profil_talabalar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    fan = FanMudarrisTalaba.objects.select_related('mudarris').prefetch_related('talaba').get(id=id)
+    talabalar = fan.talaba.all()
+    context = {
+        'admin' : admin,
+        'fan' : fan,
+        'talabalar' : talabalar
+    }
+    return render(request, 'mudarris_templates/fan_mudarris_talaba_profil_talabalar.html', context)
+
+
+# Baho Talaba
+def baho_talaba(request):
+    admin = CustomUser.objects.get(id=request.user.id)
+    mudarris = Mudarris.objects.get(admin=request.user.id)
+    fanlar = FanMudarrisTalaba.objects.select_related('mudarris').prefetch_related('talaba').filter(mudarris=mudarris)
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar,
+    }
+    return render(request, 'mudarris_templates/kundalik_baholar_mudarris_talaba.html', context)
+
+
+def baho_talaba_tanlash(request, id):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fan = FanMudarrisTalaba.objects.select_related('mudarris').prefetch_related('talaba').get(id=id)
+    talabalar = fan.talaba.all()
+    context = {
+        'admin' : admin,
+        'talabalar' : talabalar,
+        'fan' : fan,
+    }
+    return render(request, 'mudarris_templates/kundalik_baholar_mudarris_talaba_talaba_tanlash.html', context)
+
+
+def baholar_talaba(request, fanId, talabaId):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fan = FanMudarrisTalaba.objects.get(id=fanId)
+    talaba = Talaba.objects.get(id=talabaId)
+    baholar = KundalikBahoMudarrisTalaba.objects.filter(fan__id=fanId).filter(talaba__id=talabaId)
+    context = {
+        'admin' : admin,
+        'baholar' : baholar,
+        'fan' : fan,
+        'talaba' : talaba
+    }
+    return render(request, 'mudarris_templates/kundalik_baholar_mudarris_talaba_baholar.html', context)
+
+
+def baholar_talaba_api(request, fanId, talabaId):
+    baholar = KundalikBahoMudarrisTalaba.objects.filter(fan__id=fanId).filter(talaba__id=talabaId)
+    out = []
+    for baho in baholar:
+        out.append({
+            'title' : baho.baho,
+            'id' : baho.id,
+            'start' : baho.sana.strftime("%Y-%m-%d"),
+            'izoh' : baho.izoh,
+            
+            
+        })
+    return JsonResponse(out, safe=False)
+
+
+def baholar_talaba_kiritish(request, fanId, talabaId):
+    start = request.GET.get('start', None)
+    title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
+    fan = FanMudarrisTalaba.objects.get(id=fanId)
+    talaba = Talaba.objects.get(id=talabaId)
+    baho = KundalikBahoMudarrisTalaba(baho=int(title), fan=fan, talaba=talaba, sana=start, izoh=izoh)
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def baholar_talaba_sana_tahrirlash(request, fanId, talabaId):
+    start = request.GET.get('start', None)
+    id = request.GET.get('id', None)
+    baho = KundalikBahoMudarrisTalaba.objects.get(id=id)
+    baho.sana = start
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def baholar_talaba_tahrirlash(request, fanId, talabaId):
+    title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
+    id = request.GET.get('id', None)
+    baho = KundalikBahoMudarrisTalaba.objects.get(id=id)
+    baho.baho = title
+    baho.izoh = izoh
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def baholar_talaba_uchirish(request, fanId, talabaId):
+    id = request.GET.get('id', None)
+    baho = KundalikBahoMudarrisTalaba.objects.get(id=id)
+    baho.delete()
+    data = {}
+    return JsonResponse(data)
 
 
 # Username ni tekshirish

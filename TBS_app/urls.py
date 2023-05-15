@@ -182,7 +182,7 @@ urlpatterns = [
     path('ustoz_baho/talaba_fan/<int:id>/', UstozViews.baho_talaba_tanlash, name='ustoz_baho_talaba_tanlash'),
     path('ustoz_baho/talaba_fan/<int:fanId>/talaba/<int:talabaId>/', UstozViews.baholar_talaba, name='ustoz_baholar_talaba'),
     path('ustoz_baho/talaba_fan/<int:fanId>/talaba/<int:talabaId>/api/', UstozViews.baholar_talaba_api, name='ustoz_baholar_talaba_api'),
-    path('ustoz_baho/ftalaba_an/<int:fanId>/talaba/<int:talabaId>/kiritish/', UstozViews.baholar_talaba_kiritish, name='ustoz_baholar_talaba_kiritish'),
+    path('ustoz_baho/talaba_fan/<int:fanId>/talaba/<int:talabaId>/kiritish/', UstozViews.baholar_talaba_kiritish, name='ustoz_baholar_talaba_kiritish'),
     path('ustoz_baho/talaba_fan/<int:fanId>/talaba/<int:talabaId>/sana/tahrirlash/', UstozViews.baholar_talaba_sana_tahrirlash, name='ustoz_baholar_talaba_sana_tahrirlash'),
     path('ustoz_baho/talaba_fan/<int:fanId>/talaba/<int:talabaId>/tahrirlash/', UstozViews.baholar_talaba_tahrirlash, name='ustoz_baholar_talaba_tahrirlash'),
     path('ustoz_baho/talaba_fan/<int:fanId>/talaba/<int:talabaId>/uchirish/', UstozViews.baholar_talaba_uchirish, name='ustoz_baholar_talaba_uchirish'),
@@ -203,5 +203,21 @@ urlpatterns = [
     path('mudarris_profil/', MudarrisViews.mudarris_profil, name="mudarris_profil"),
     path('mudarris_profil/tahrirlash/', MudarrisViews.mudarris_profil_tahrirlash, name="mudarris_profil_tahrirlash"),
     path('mudarris_profil/tahrirlash/suratni_uchirish/', MudarrisViews.mudarris_profil_suratni_uchirish, name="mudarris_profil_suratni_uchirish"),
-
+    # Talabalar
+    path('mudarris_talabalar/', MudarrisViews.talabalar, name="mudarris_talabalar"),
+    path('mudarris_talabalar/<int:id>/', MudarrisViews.talaba_profil, name="mudarris_talaba_profil"),
+    path('mudarris_talabalar/<int:id>/fanlar/', MudarrisViews.talaba_profil_fanlar, name="mudarris_talaba_profil_fanlar"),
+    # Fan
+    path('mudarris_fanlar/', MudarrisViews.fanlar_talaba, name='mudarris_fanlar_talaba'),
+    path('mudarris_fanlar/<int:id>/', MudarrisViews.fan_talaba_profil, name='mudarris_fan_talaba_profil'),
+    path('mudarris_fanlar/<int:id>/talabalar/', MudarrisViews.fan_talaba_profil_talabalar, name='mudarris_fan_talaba_profil_talabalar'),
+    # Baho
+    path('mudarris_baho/fan/', MudarrisViews.baho_talaba, name='mudarris_baho_talaba'),
+    path('mudarris_baho/fan/<int:id>/', MudarrisViews.baho_talaba_tanlash, name='mudarris_baho_talaba_tanlash'),
+    path('mudarris_baho/fan/<int:fanId>/talaba/<int:talabaId>/', MudarrisViews.baholar_talaba, name='mudarris_baholar_talaba'),
+    path('mudarris_baho/fan/<int:fanId>/talaba/<int:talabaId>/api/', MudarrisViews.baholar_talaba_api, name='mudarris_baholar_talaba_api'),
+    path('mudarris_baho/fan/<int:fanId>/talaba/<int:talabaId>/kiritish/', MudarrisViews.baholar_talaba_kiritish, name='mudarris_baholar_talaba_kiritish'),
+    path('mudarris_baho/fan/<int:fanId>/talaba/<int:talabaId>/sana/tahrirlash/', MudarrisViews.baholar_talaba_sana_tahrirlash, name='mudarris_baholar_talaba_sana_tahrirlash'),
+    path('mudarris_baho/fan/<int:fanId>/talaba/<int:talabaId>/tahrirlash/', MudarrisViews.baholar_talaba_tahrirlash, name='mudarris_baholar_talaba_tahrirlash'),
+    path('mudarris_baho/fan/<int:fanId>/talaba/<int:talabaId>/uchirish/', MudarrisViews.baholar_talaba_uchirish, name='mudarris_baholar_talaba_uchirish'),
 ]

@@ -416,7 +416,7 @@ def baholar_talaba(request, fanId, talabaId):
         'fan' : fan,
         'talaba' : talaba
     }
-    return render(request, 'admin_templates/kundalik_baholar_ustoz_talaba_baholar.html', context)
+    return render(request, 'ustoz_templates/kundalik_baholar_ustoz_talaba_baholar.html', context)
 
 
 def baholar_talaba_api(request, fanId, talabaId):
