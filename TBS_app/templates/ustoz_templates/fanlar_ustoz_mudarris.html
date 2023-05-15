@@ -8,7 +8,7 @@
 {% endblock custom_css %}
 
 {% block page_heading %}
-  Fanlar (Talaba)
+  Fanlar (Mudarris)
 {% endblock page_heading %}
 
 {% block main_content %}
@@ -39,7 +39,7 @@
               <tbody>
                 {% for fan in fanlar %}
                   <tr>
-                      <td> <a href="{% url 'ustoz_fan_talaba_profil' fan.id %}">{{ fan.ism }}</a> </td>
+                      <td> <a href="{% url 'ustoz_fan_mudarris_profil' fan.id %}">{{ fan.ism }}</a> </td>
                       <td> {{ fan.tugash_vaqti }} </td> 
                       <td> 
                         {% if fan.bitirilgan %}
@@ -59,7 +59,7 @@
                         {% endif %}
                       </td> 
                       <td>
-                        <a href="{% url 'ustoz_fan_talaba_profil' fan.id %}" class="btn btn-info btn-circle">
+                        <a href="{% url 'ustoz_fan_mudarris_profil' fan.id %}" class="btn btn-info btn-circle">
                           <i class="fa-solid fa-address-card"></i>
                       </a>
                       </td>

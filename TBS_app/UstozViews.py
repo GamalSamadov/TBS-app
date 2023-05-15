@@ -16,8 +16,30 @@ import json, os
 
 def ustoz_asosiy(request):
     admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    ustoz = Ustoz.objects.get(admin=request.user.id)
+    hujralar = []
+    mudarrislar = []
+    talabalar = []
+    fanlar = []
+    for hujra in Hujra.objects.get(ustoz=ustoz):
+        hujralar.append(hujra)
+        if hujra.mudarris:
+            for mudarris in hujra.mudarris.all():
+                mudarrislar.append(mudarris)
+        if hujra.talaba:
+            for talaba in hujra.talaba.all():
+                talabalar.append(talaba)
+    for fan in FanUstozTalaba.objects.all():
+        fanlar.append(fan)
+    for fan in FanUstozMudarris.objects.all():
+        fanlar.append(fan)
     context = {
         "admin" : admin,
+        "hujralar_soni" : len(hujralar),
+        "mudarrislar_soni" : len(mudarrislar),
+        'talabalar_soni' : len(talabalar),
+        'fanlar_soni' : len(fanlar)
+
         }
     return render(request, 'ustoz_templates/asosiy.html', context)
 
@@ -293,7 +315,7 @@ def talaba_profil_fanlar(request, id):
 def fanlar_talaba(request):
     admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
     ustoz = Ustoz.objects.get(admin=request.user.id)
-    fanlar = FanUstozTalaba.objects.select_related('ustoz').filter(ustoz=ustoz)
+    fanlar = FanUstozTalaba.objects.select_related('ustoz').prefetch_related('talaba').filter(ustoz=ustoz)
     context = {
         'admin' : admin,
         'fanlar' : fanlar
@@ -324,6 +346,226 @@ def fan_talaba_profil_talabalar(request, id):
     }
     return render(request, 'ustoz_templates/fan_ustoz_talaba_profil_talabalar.html', context)
 
+
+# Fan Mudarris
+def fanlar_mudarris(request):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    ustoz = Ustoz.objects.get(admin=request.user.id)
+    fanlar = FanUstozMudarris.objects.select_related('ustoz').filter(ustoz=ustoz)
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar
+    }
+    return render(request, 'ustoz_templates/fanlar_ustoz_mudarris.html', context)
+
+
+def fan_mudarris_profil(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    fan = FanUstozMudarris.objects.select_related('ustoz').prefetch_related('mudarris').get(id=id)
+    mudarrislar_soni = fan.mudarris.count()
+    context = {
+        'admin' : admin,
+        'fan' : fan,
+        'mudarrislar_soni' : mudarrislar_soni
+    }
+    return render(request, 'ustoz_templates/fan_ustoz_mudarris_profil.html', context)
+
+
+def fan_mudarris_profil_mudarrislar(request, id):
+    admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
+    fan = FanUstozMudarris.objects.select_related('ustoz').prefetch_related('mudarris').get(id=id)
+    mudarrislar = fan.mudarris.all()
+    context = {
+        'admin' : admin,
+        'fan' : fan,
+        'mudarrislar' : mudarrislar
+    }
+    return render(request, 'ustoz_templates/fan_ustoz_mudarris_profil_mudarrislar.html', context)
+
+
+# Baho Talaba
+def baho_talaba(request):
+    admin = CustomUser.objects.get(id=request.user.id)
+    ustoz = Ustoz.objects.get(admin=request.user.id)
+    fanlar = FanUstozTalaba.objects.select_related('ustoz').prefetch_related('talaba').filter(ustoz=ustoz)
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar,
+    }
+    return render(request, 'ustoz_templates/kundalik_baholar_ustoz_talaba.html', context)
+
+
+def baho_talaba_tanlash(request, id):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fan = FanUstozTalaba.objects.select_related('ustoz').prefetch_related('talaba').get(id=id)
+    talabalar = fan.talaba.all()
+    context = {
+        'admin' : admin,
+        'talabalar' : talabalar,
+        'fan' : fan,
+    }
+    return render(request, 'ustoz_templates/kundalik_baholar_ustoz_talaba_talaba_tanlash.html', context)
+
+
+def baholar_talaba(request, fanId, talabaId):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fan = FanUstozTalaba.objects.get(id=fanId)
+    talaba = Talaba.objects.get(id=talabaId)
+    baholar = KundalikBahoUstozTalaba.objects.filter(fan__id=fanId).filter(talaba__id=talabaId)
+    context = {
+        'admin' : admin,
+        'baholar' : baholar,
+        'fan' : fan,
+        'talaba' : talaba
+    }
+    return render(request, 'admin_templates/kundalik_baholar_ustoz_talaba_baholar.html', context)
+
+
+def baholar_talaba_api(request, fanId, talabaId):
+    baholar = KundalikBahoUstozTalaba.objects.filter(fan__id=fanId).filter(talaba__id=talabaId)
+    out = []
+    for baho in baholar:
+        out.append({
+            'title' : baho.baho,
+            'id' : baho.id,
+            'start' : baho.sana.strftime("%Y-%m-%d"),
+            'izoh' : baho.izoh,
+            
+            
+        })
+    return JsonResponse(out, safe=False)
+
+
+def baholar_talaba_kiritish(request, fanId, talabaId):
+    start = request.GET.get('start', None)
+    title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
+    fan = FanUstozTalaba.objects.get(id=fanId)
+    talaba = Talaba.objects.get(id=talabaId)
+    baho = KundalikBahoUstozTalaba(baho=int(title), fan=fan, talaba=talaba, sana=start, izoh=izoh)
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def baholar_talaba_sana_tahrirlash(request, fanId, talabaId):
+    start = request.GET.get('start', None)
+    id = request.GET.get('id', None)
+    baho = KundalikBahoUstozTalaba.objects.get(id=id)
+    baho.sana = start
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def baholar_talaba_tahrirlash(request, fanId, talabaId):
+    title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
+    id = request.GET.get('id', None)
+    baho = KundalikBahoUstozTalaba.objects.get(id=id)
+    baho.baho = title
+    baho.izoh = izoh
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def baholar_talaba_uchirish(request, fanId, talabaId):
+    id = request.GET.get('id', None)
+    baho = KundalikBahoUstozTalaba.objects.get(id=id)
+    baho.delete()
+    data = {}
+    return JsonResponse(data)
+
+
+# Baho - Mudarris
+def baho_mudarris(request):
+    admin = CustomUser.objects.get(id=request.user.id)
+    ustoz = Ustoz.objects.get(admin=request.user.id)
+    fanlar = FanUstozMudarris.objects.select_related('ustoz').prefetch_related('mudarris').filter(ustoz=ustoz)
+    context = {
+        'admin' : admin,
+        'fanlar' : fanlar,
+    }
+    return render(request, 'ustoz_templates/kundalik_baholar_ustoz_mudarris.html', context)
+
+
+def baho_mudarris_tanlash(request, id):
+    fan = FanUstozMudarris.objects.select_related('ustoz').prefetch_related('mudarris').get(id=id)
+    mudarrislar = fan.mudarris.all()
+    context = {
+        'mudarrislar' : mudarrislar,
+        'fan' : fan
+    }
+    return render(request, 'ustoz_templates/kundalik_baholar_ustoz_mudarris_mudarris_tanlash.html', context)
+
+
+def baholar_mudarris(request, fanId, mudarrisId):
+    admin = CustomUser.objects.get(id=request.user.id)
+    fan = FanUstozMudarris.objects.get(id=fanId)
+    mudarris = Mudarris.objects.get(id=mudarrisId)
+    baholar = KundalikBahoUstozMudarris.objects.filter(fan__id=fanId).filter(mudarris__id=mudarrisId)
+    context = {
+        'admin' : admin,
+        'baholar' : baholar,
+        'fan' : fan,
+        'mudarris' : mudarris
+    }
+    return render(request, 'ustoz_templates/kundalik_baholar_ustoz_mudarris_baholar.html', context)
+
+
+def baholar_mudarris_api(request, fanId, mudarrisId):
+    baholar = KundalikBahoUstozMudarris.objects.filter(fan__id=fanId).filter(mudarris__id=mudarrisId)
+    out = []
+    for baho in baholar:
+        out.append({
+            'title' : baho.baho,
+            'id' : baho.id,
+            'start' : baho.sana.strftime("%Y-%m-%d"),
+            'izoh':baho.izoh,
+        })
+    return JsonResponse(out, safe=False)
+
+
+def baholar_mudarris_kiritish(request, fanId, mudarrisId):
+    start = request.GET.get('start', None)
+    title = request.GET.get('title', None)
+    fan = FanUstozMudarris.objects.filter(id=fanId).get(mudarris__id=mudarrisId)
+    mudarris = Mudarris.objects.get(id=mudarrisId)
+    baho = KundalikBahoUstozMudarris(baho=int(title), fan=fan, mudarris=mudarris, sana=start)
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def baholar_mudarris_sana_tahrirlash(request, fanId, mudarrisId):
+    start = request.GET.get('start', None)
+    id = request.GET.get('id', None)
+    baho = KundalikBahoUstozMudarris.objects.get(id=id)
+    baho.sana = start
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def baholar_mudarris_tahrirlash(request, fanId, mudarrisId):
+    title = request.GET.get('title', None)
+    izoh = request.GET.get('izoh', None)
+    id = request.GET.get('id', None)
+    baho = KundalikBahoUstozMudarris.objects.get(id=id)
+    baho.baho = title
+    baho.izoh = izoh
+    baho.save()
+    data = {}
+    return JsonResponse(data)
+
+
+def baholar_mudarris_uchirish(request, fanId, mudarrisId):
+    id = request.GET.get('id', None)
+    baho = KundalikBahoUstozMudarris.objects.get(id=id)
+    baho.delete()
+    data = {}
+    return JsonResponse(data)
 
 
 # Username ni tekshirish

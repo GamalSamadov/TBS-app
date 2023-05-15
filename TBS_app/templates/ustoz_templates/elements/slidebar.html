@@ -45,16 +45,33 @@
   <hr class="sidebar-divider d-none d-md-block">
   
   {% url 'ustoz_fanlar_talaba' as ustoz_fanlar_talaba %}
-  <li class="nav-item {% if request.path == ustoz_fanlar_talaba or request.path == ustoz_fanlar_talaba %} active {% endif %}">
-    <a class="nav-link {% if request.path != ustoz_fanlar_talaba and request.path != ustoz_fanlar_talaba %} collapsed {% endif %}" href="#" data-toggle="collapse" data-target="#collapseFanlar"
+  {% url 'ustoz_fanlar_mudarris' as ustoz_fanlar_mudarris %}
+  <li class="nav-item {% if request.path == ustoz_fanlar_talaba or request.path == ustoz_fanlar_mudarris %} active {% endif %}">
+    <a class="nav-link {% if request.path != ustoz_fanlar_talaba and request.path != ustoz_fanlar_mudarris %} collapsed {% endif %}" href="#" data-toggle="collapse" data-target="#collapseFanlar"
         aria-expanded="true" aria-controls="collapseTwo">
         <i class="fa-solid fa-book"></i>
         <span>Fanlar</span>
     </a>
-    <div id="collapseFanlar" class="collapse {% if request.path == ustoz_fanlar_talaba or request.path == ustoz_fanlar_talaba %} show {% endif %}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    <div id="collapseFanlar" class="collapse {% if request.path == ustoz_fanlar_talaba or request.path == ustoz_fanlar_mudarris %} show {% endif %}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
           <a class="collapse-item {% if request.path == ustoz_fanlar_talaba %} active {% endif %}" href="{% url 'ustoz_fanlar_talaba' %}">Talaba</a>
-          <a class="collapse-item {% if request.path == ustoz_fanlar_talaba %} active {% endif %}" href="{% url 'ustoz_fanlar_talaba' %}">Mudarris</a>
+          <a class="collapse-item {% if request.path == ustoz_fanlar_mudarris %} active {% endif %}" href="{% url 'ustoz_fanlar_mudarris' %}">Mudarris</a>
+        </div>
+    </div>
+  </li>
+
+  {% url 'ustoz_baho_talaba' as ustoz_baho_talaba %}
+  {% url 'ustoz_baho_mudarris' as ustoz_baho_mudarris %}
+  <li class="nav-item {% if request.path == ustoz_baho_talaba or request.path == ustoz_baho_mudarris %} active {% endif %}">
+    <a class="nav-link {% if request.path != ustoz_baho_talaba and request.path != ustoz_baho_mudarris %} collapsed {% endif %}" href="#" data-toggle="collapse" data-target="#collapseBaholar"
+        aria-expanded="true" aria-controls="collapseTwo">
+        <i class="fa-solid fa-pen-to-square"></i>
+        <span>Baho</span>
+    </a>
+    <div id="collapseBaholar" class="collapse {% if request.path == ustoz_baho_talaba or request.path == ustoz_baho_mudarris %} show {% endif %}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+          <a class="collapse-item {% if request.path == ustoz_baho_talaba %} active {% endif %}" href="{% url 'ustoz_baho_talaba' %}">Talaba</a>
+          <a class="collapse-item {% if request.path == ustoz_baho_mudarris %} active {% endif %}" href="{% url 'ustoz_baho_mudarris' %}">Mudarris</a>
         </div>
     </div>
   </li>

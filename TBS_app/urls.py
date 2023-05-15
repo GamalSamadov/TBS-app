@@ -173,9 +173,35 @@ urlpatterns = [
     path('ustoz_fanlar/talaba/', UstozViews.fanlar_talaba, name='ustoz_fanlar_talaba'),
     path('ustoz_fanlar/talaba/<int:id>/', UstozViews.fan_talaba_profil, name='ustoz_fan_talaba_profil'),
     path('ustoz_fanlar/talaba/<int:id>/talabalar/', UstozViews.fan_talaba_profil_talabalar, name='ustoz_fan_talaba_profil_talabalar'),
-
+    # Fanlar - Mudarris
+    path('ustoz_fanlar/mudarris/', UstozViews.fanlar_mudarris, name='ustoz_fanlar_mudarris'),
+    path('ustoz_fanlar/mudarris/<int:id>/', UstozViews.fan_mudarris_profil, name='ustoz_fan_mudarris_profil'),
+    path('ustoz_fanlar/mudarris/<int:id>/mudarrislar/', UstozViews.fan_mudarris_profil_mudarrislar, name='ustoz_fan_mudarris_profil_mudarrislar'),
+    # Baho - Talaba
+    path('ustoz_baho/talaba_fan/', UstozViews.baho_talaba, name='ustoz_baho_talaba'),
+    path('ustoz_baho/talaba_fan/<int:id>/', UstozViews.baho_talaba_tanlash, name='ustoz_baho_talaba_tanlash'),
+    path('ustoz_baho/talaba_fan/<int:fanId>/talaba/<int:talabaId>/', UstozViews.baholar_talaba, name='ustoz_baholar_talaba'),
+    path('ustoz_baho/talaba_fan/<int:fanId>/talaba/<int:talabaId>/api/', UstozViews.baholar_talaba_api, name='ustoz_baholar_talaba_api'),
+    path('ustoz_baho/ftalaba_an/<int:fanId>/talaba/<int:talabaId>/kiritish/', UstozViews.baholar_talaba_kiritish, name='ustoz_baholar_talaba_kiritish'),
+    path('ustoz_baho/talaba_fan/<int:fanId>/talaba/<int:talabaId>/sana/tahrirlash/', UstozViews.baholar_talaba_sana_tahrirlash, name='ustoz_baholar_talaba_sana_tahrirlash'),
+    path('ustoz_baho/talaba_fan/<int:fanId>/talaba/<int:talabaId>/tahrirlash/', UstozViews.baholar_talaba_tahrirlash, name='ustoz_baholar_talaba_tahrirlash'),
+    path('ustoz_baho/talaba_fan/<int:fanId>/talaba/<int:talabaId>/uchirish/', UstozViews.baholar_talaba_uchirish, name='ustoz_baholar_talaba_uchirish'),
+    # Baho - Mudarris
+    path('ustoz_baho/mudarris_fan/', UstozViews.baho_mudarris, name='ustoz_baho_mudarris'),
+    path('ustoz_baho/mudarris_fan/<int:id>/', UstozViews.baho_mudarris_tanlash, name='ustoz_baho_mudarris_tanlash'),
+    path('ustoz_baho/mudarris_fan/<int:fanId>/mudarris/<int:mudarrisId>/', UstozViews.baholar_mudarris, name='ustoz_baholar_mudarris'),
+    path('ustoz_baho/mudarris_fan/<int:fanId>/mudarris/<int:mudarrisId>/api/', UstozViews.baholar_mudarris_api, name='ustoz_baholar_mudarris_api'),
+    path('ustoz_baho/mudarris_fan/<int:fanId>/mudarris/<int:mudarrisId>/kiritish/', UstozViews.baholar_mudarris_kiritish, name='ustoz_baholar_mudarris_kiritish'),
+    path('ustoz_baho/mudarris_fan/<int:fanId>/mudarris/<int:mudarrisId>/sana/tahrirlash/', UstozViews.baholar_mudarris_sana_tahrirlash, name='ustoz_baholar_mudarris_sana_tahrirlash'),
+    path('ustoz_baho/mudarris_fan/<int:fanId>/mudarris/<int:mudarrisId>/tahrirlash/', UstozViews.baholar_mudarris_tahrirlash, name='ustoz_baholar_mudarris_tahrirlash'),
+    path('ustoz_baho/mudarris_fan/<int:fanId>/mudarris/<int:mudarrisId>/uchirish/', UstozViews.baholar_mudarris_uchirish, name='ustoz_baholar_mudarris_uchirish'),
     # -------------------------
     # Mudarris Urls
     path('mudarris_asosiy/', MudarrisViews.mudarris_asosiy, name="mudarris_asosiy"),
+    path('mudarris-foydalanuvchi-nomini-tekshirish/', csrf_exempt(MudarrisViews.UsernameTekshirish.as_view()), name='mudarris_foydalanuvchi_nomini_tekshirish'),
+    path('mudarris-emailni-tekshirish/', csrf_exempt(MudarrisViews.EmailTekshirish.as_view()), name="mudarris_emailni_tekshirish"),
+    path('mudarris_profil/', MudarrisViews.mudarris_profil, name="mudarris_profil"),
+    path('mudarris_profil/tahrirlash/', MudarrisViews.mudarris_profil_tahrirlash, name="mudarris_profil_tahrirlash"),
+    path('mudarris_profil/tahrirlash/suratni_uchirish/', MudarrisViews.mudarris_profil_suratni_uchirish, name="mudarris_profil_suratni_uchirish"),
 
 ]

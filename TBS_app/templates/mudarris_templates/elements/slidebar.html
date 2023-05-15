@@ -1,0 +1,37 @@
+{% load static %}
+
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+  <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'admin_asosiy' %}">
+      <div class="sidebar-brand-icon">
+        <i class="fa-sharp fa-solid fa-school-flag"></i>
+      </div>
+      <div class="sidebar-brand-text mx-3">TBS <sup>tm</sup></div>
+  </a>
+
+  <hr class="sidebar-divider my-0">
+
+  {% url 'mudarris_asosiy' as mudarris_asosiy %}
+  <li class="nav-item {% if request.path == mudarris_asosiy %} active {% endif %}">
+      <a class="nav-link" href="{% url 'mudarris_asosiy' %}">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Boshqaruv</span></a>
+  </li>
+
+  <hr class="sidebar-divider my-0">
+{% comment %} 
+  {% url 'ustoz_talabalar' as ustoz_talabalar %}
+  <li class="nav-item {% if request.path == ustoz_talabalar %} active {% endif %}">
+      <a class="nav-link" href="{% url 'ustoz_talabalar' %}">
+        <i class="fa-solid fa-graduation-cap"></i>
+          <span>Talabalar</span></a>
+  </li>   {% endcomment %}
+
+
+  <hr class="sidebar-divider d-none d-md-block">
+
+  <div class="text-center d-none d-md-inline">
+      <button class="rounded-circle border-0" id="sidebarToggle"></button>
+  </div>
+
+</ul>

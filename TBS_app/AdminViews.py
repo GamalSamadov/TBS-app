@@ -201,20 +201,6 @@ def ustoz_profil(request, id):
     return render(request, 'admin_templates/ustoz_profil.html', context)
 
 
-# def ustoz_tasdiqlash(request, id):
-#     ustoz = Ustoz.objects.select_related('admin').get(admin=id)
-#     try:
-#         ustoz.tasdiqlangan = True
-#         ustoz.save()
-#         messages.success(
-#                 request, "Ustoz tasdiqlandi :)")
-#         return redirect('ustozlar')
-#     except:
-#         messages.error(
-#                 request, "Ustozni tasdiqlashda muommo yuz berdi :(")
-#         return redirect('ustozlar')
-
-
 def ustoz_profil_mudarrislar(request, id):
     admin = CustomUser.objects.select_related('admin').get(id=request.user.id)
     ustoz = Ustoz.objects.select_related('admin').get(admin=id)
@@ -828,11 +814,12 @@ def mudarris_profil_tahrirlash(request, id):
         hujra_id = request.POST.get('hujra')
         
         try:
+            user = CustomUser.objects.get(id=id)
             mudarris = Mudarris.objects.get(admin=id)
-            mudarris.admin.first_name = ism
-            mudarris.admin.last_name = familya
-            mudarris.admin.email = email
-            mudarris.admin.username = username
+            user.first_name = ism
+            user.last_name = familya
+            user.email = email
+            user.username = username
 
             if parol != None and parol != "":
                 mudarris.admin.password = parol
@@ -1754,9 +1741,11 @@ def kundalik_baholar_ustoz_mudarris(request):
 
 
 def kundalik_baholar_ustoz_mudarris_mudarris_tanlash(request, id):
+    admin = CustomUser.objects.get(id=request.user.id)
     fan = FanUstozMudarris.objects.select_related('ustoz').prefetch_related('mudarris').get(id=id)
     mudarrislar = fan.mudarris.all()
     context = {
+        'admin' : admin,
         'mudarrislar' : mudarrislar,
         'fan' : fan
     }

@@ -1,4 +1,4 @@
-{% extends 'ustoz_templates/elements/base.html' %}
+{% extends 'mudarris_templates/elements/base.html' %}
 {% load static %}
 {% block page_heading %}
   Asosiy
@@ -6,7 +6,28 @@
 
 {% block main_content %}
 
-<div class="row">
+{% comment %} <div class="row"> 
+
+<!-- Ustozlar Card -->
+  <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+          <a href="{% url 'ustozlar' %}">
+            <div class="card-body">
+              <div class="row no-gutters align-items-center">
+                  <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                          Ustozlar</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ ustozlar_soni }}</div>
+                  </div>
+                  <div class="col-auto">
+                      <i class="fa-solid fa-user fa-2x text-gray-300"></i>
+                      
+                  </div>
+              </div>
+          </div>
+          </a>
+      </div>
+  </div>
 
   <!-- Mudarrislar Card -->
   <div class="col-xl-3 col-md-6 mb-4">
@@ -72,26 +93,6 @@
           </a>
       </div>
   </div>
-</div>
-
-<!-- Ustozlar Card -->
-<div class="col-xl-3 col-md-6 mb-4">
-    <div class="card border-left-primary shadow h-100 py-2">
-        <a href="{% url 'ustozlar' %}">
-          <div class="card-body">
-            <div class="row no-gutters align-items-center">
-                <div class="col mr-2">
-                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                        Fanlar</div>
-                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{ fanlar_soni }}</div>
-                </div>
-                <div class="col-auto">
-                    <i class="fa-solid fa-book fa-2x text-gray-300"></i>                    
-                </div>
-            </div>
-        </div>
-        </a>
-    </div>
-</div>
+</div> {% endcomment %}
 
 {% endblock main_content %}

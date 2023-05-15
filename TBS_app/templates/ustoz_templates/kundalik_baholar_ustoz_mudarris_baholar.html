@@ -1,7 +1,7 @@
 {% extends 'ustoz_templates/elements/base.html' %}
 {% load static %}
 {% block page_heading %}
-  Kundalik baholar (Ustoz: "{{fan.ustoz.admin.first_name}} {{fan.ustoz.admin.last_name}}" - Talaba: "{{talaba.ism}} {{talaba.familya}}")
+  Kundalik baholar (Mudarris: "{{mudarris.admin.first_name}} {{mudarris.admin.last_name}}")
 {% endblock page_heading %}
 
 {% block main_content %}
@@ -161,7 +161,7 @@
         themeSystem: 'standard',
         themeSystem: 'bootstrap',
         headerToolbar: { left: 'prev,next today', center: 'title', right: 'multiMonthYear,dayGridMonth' },
-        events: "{% url 'ustoz_baholar_talaba_api' fan.id talaba.id %}",
+        events: "{% url 'ustoz_baholar_mudarris_api' fan.id mudarris.id %}",
         selectable: true,
         selectHelper: true,
         editable: true,
@@ -176,7 +176,7 @@
             if (title) {
             $.ajax({
               type: 'GET',
-              url: "{% url 'ustoz_baholar_talaba_kiritish' fan.id talaba.id %}",
+              url: "{% url 'ustoz_baholar_mudarris_kiritish' fan.id mudarris.id %}",
               data: {'title' : title, 'start' : start, 'izoh' : izoh},
               dataType: "json",
               success: function(response){
@@ -220,7 +220,7 @@
           var id = info.event.id;
           $.ajax({
             type: 'GET',
-            url: "{% url 'ustoz_baholar_talaba_sana_tahrirlash' fan.id talaba.id %}",
+            url: "{% url 'ustoz_baholar_mudarris_sana_tahrirlash' fan.id mudarris.id %}",
             data: {'start' : start, 'id' : id},
             dataType: "json",
             success: function(data){
@@ -250,7 +250,7 @@
           $('#infoBaho').modal('toggle');
           $.ajax({
             type: 'GET',
-            url: "{% url 'ustoz_baholar_talaba_api' fan.id talaba.id %}",
+            url: "{% url 'ustoz_baholar_mudarris_api' fan.id mudarris.id %}",
             data: {'id' : id},
             dataType: "json",
             success: function(response){
@@ -278,7 +278,7 @@
 
             $.ajax({
             type: 'GET',
-            url: "{% url 'ustoz_baholar_talaba_api' fan.id talaba.id %}",
+            url: "{% url 'ustoz_baholar_mudarris_api' fan.id mudarris.id %}",
             data: {'id' : id},
             dataType: "json",
             success: function(response){
@@ -286,11 +286,11 @@
               data = response
               for (i=0; i < data.length; i++) {
                 if(response[i].id == id) {
-                  var umumiyBahoEdit = document.getElementById('umumiyBahoEdit')
                   var umumiyBahoEditSlider = document.getElementById('umumiyBahoEditSlider');
+                  var umumiyBahoEdit = document.getElementById('umumiyBahoEdit')
                   var izohInfo = document.getElementById('izohEdit');
-                  umumiyBahoEdit.innerHTML = response[i].title
                   umumiyBahoEditSlider.value = response[i].title;
+                  umumiyBahoEdit.innerHTML = response[i].title
                   izohInfo.innerHTML = response[i].izoh
             
                   
@@ -307,7 +307,7 @@
             var izoh = document.getElementById('izohEdit').value;
             $.ajax({
               type: "GET",
-              url: "{% url 'ustoz_baholar_talaba_tahrirlash' fan.id talaba.id %}",
+              url: "{% url 'ustoz_baholar_mudarris_tahrirlash' fan.id mudarris.id %}",
               data: {'id' : id, 'title' : title, 'izoh' : izoh},
               dataType: "json",
               success: function(response){
@@ -341,7 +341,7 @@
               var id = info.event.id;
               $.ajax({
                 type: "GET",
-                url: "{% url 'ustoz_baholar_talaba_uchirish' fan.id talaba.id %}",
+                url: "{% url 'ustoz_baholar_mudarris_uchirish' fan.id mudarris.id %}",
                 data: {'id' : id},
                 dataType: "json",
                 success: function(data){
