@@ -15,7 +15,8 @@ SECRET_KEY = 'django-insecure--m$x*8jdxs27&xjxekj62d5x*o+2oz_d@4ekix7gv-@d-u3gpd
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '*'
+    'tbs-production.up.railway.app',
+    'ozsmanagement.com',
 ]
 
 
@@ -152,6 +153,24 @@ INTERNAL_IPS = [
     # ...
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+
 CSRF_TRUSTED_ORIGINS = [
-    'https://tbs-production.up.railway.app/',
+    'https://ozsmanagement.com',
+    'https://tbs-production.up.railway.app'
 ]
+
+CORS_REPLACE_HTTPS_REFERER = True
+
+CSRF_COOKIE_DOMAIN = 'ozsmanagement.com'
+
+CORS_ORIGIN_WHITELIST = (
+    'https://ozsmanagement.com',
+    'ozsmanagement.com',
+    'https://tbs-production.up.railway.app',
+)
