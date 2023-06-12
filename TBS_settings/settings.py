@@ -168,6 +168,8 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_REPLACE_HTTPS_REFERER = True
 
 CSRF_COOKIE_DOMAIN = 'ozsmanagement.com'
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
 
 CORS_ORIGIN_WHITELIST = (
     'https://ozsmanagement.com',
