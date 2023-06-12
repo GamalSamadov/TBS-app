@@ -153,5 +153,5 @@ INTERNAL_IPS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    '*'
+    'https://tbs-production.up.railway.app/',
 ]
