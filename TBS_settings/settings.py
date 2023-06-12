@@ -12,10 +12,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure--m$x*8jdxs27&xjxekj62d5x*o+2oz_d@4ekix7gv-@d-u3gpd'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    '*'
+    'talabalar-boshqaruv-sistemasi.herokuapp.com',
+    '127.0.0.1', 
 ]
 
 
@@ -79,12 +80,12 @@ DATABASES = {
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'u874235169_ozsmanagement',
-        'USER': 'u874235169_ozsmanagement',
-        'PASSWORD': 'aWs.12368811',
-        'HOST': '89.116.147.154',
-        'PORT': '3306',  # django uses usefully 5432 port that is the postegres port
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd94de6053u75kg',
+        'USER': 'omlkrwcsggwrlo',
+        'PASSWORD': 'a36e069366acdf83c531c3fdc0ad21a2174234dc50e97f7f924c6aa8defef9f4',
+        'HOST': 'ec2-52-31-161-46.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432',  # django uses usefully 5432 port that is the postegres port
 
     }
 }
