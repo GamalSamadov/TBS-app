@@ -15,8 +15,7 @@ SECRET_KEY = 'django-insecure--m$x*8jdxs27&xjxekj62d5x*o+2oz_d@4ekix7gv-@d-u3gpd
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'talabalar-boshqaruv-sistemasi.herokuapp.com',
-    '127.0.0.1', 
+    '*'
 ]
 
 
