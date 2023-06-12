@@ -80,11 +80,11 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd94de6053u75kg',
-        'USER': 'omlkrwcsggwrlo',
-        'PASSWORD': 'a36e069366acdf83c531c3fdc0ad21a2174234dc50e97f7f924c6aa8defef9f4',
-        'HOST': 'ec2-52-31-161-46.eu-west-1.compute.amazonaws.com',
-        'PORT': '5432',  # django uses usefully 5432 port that is the postegres port
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'rSe967UjBt9phR0GbqRw',
+        'HOST': 'containers-us-west-41.railway.app',
+        'PORT': '7112',  # django uses usefully 5432 port that is the postegres port
 
     }
 }
