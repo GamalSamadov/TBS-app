@@ -1,1 +1,1 @@
-web: gunicorn TBS_settings.wsgi --log-file--
+web: gunicorn TBS_settings.wsgi --log-file -
