@@ -46,48 +46,6 @@
               </div>
           </div>
 
-          <div class="card shadow mb-4">
-            <!-- Card Header - Accordion -->
-            <a href="#collapseCardExample2" class="d-block card-header py-3" data-toggle="collapse"
-                role="button" aria-expanded="true" aria-controls="collapseCardExample2">
-                <h6 class="m-0 font-weight-bold text-primary">Talaba paspurti</h6>
-            </a>
-            <!-- Card Content - Collapse -->
-            <div class="collapse show" id="collapseCardExample2">
-              {% if talaba.pasport_surati %}
-                <div class="d-flex flex-column align-items-center text-center">
-                  <div class="image-container">
-                    <div class="pasport_surati"><img src="{{ talaba.pasport_surati }}" alt=""></div>
-                  </div>
-                  <br>
-                  <div class="col-sm-12">
-                    <a class="btn btn-primary btn-icon-split" href="{% url 'talaba_paspurt_tahrirlash' talaba.id %}">
-                      <span class="icon text-white-50">
-                        <i class="fa-solid fa-pencil"></i>
-                      </span>
-                      <span class='text'>
-                        Tahrirlash
-                      </span>
-                    </a>
-                  </div>
-                  <br>
-                </div>
-              {% else %}
-                <div class="d-flex flex-column align-items-center text-center">
-                  <div class='p-2'>
-                    <div class='' style='font-size:100px'>
-                      <i class="fa-solid fa-address-card"></i>
-                    </div>
-                    <h4 class='mb-5'>Paspurt surati kiritilmagan <i class="fa-regular fa-face-frown"></i></h4>
-                  </div>
-                  <br>
-                </div>
-              {% endif %}
-
-              
-            </div>
-          </div>
-
 
           <div class="card shadow mb-4">
             <!-- Card Header - Accordion -->
