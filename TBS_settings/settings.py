@@ -55,7 +55,10 @@ ROOT_URLCONF = 'TBS_settings.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            "/home/html/tbs-production.up.railway.app.com",
+            "/home/html/default",
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -171,7 +174,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_REPLACE_HTTPS_REFERER = True
 
-CSRF_COOKIE_DOMAIN = 'https://tbs-production.up.railway.app'
+CSRF_COOKIE_DOMAIN = 'tbs-production.up.railway.app'
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
