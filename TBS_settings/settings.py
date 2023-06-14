@@ -166,10 +166,13 @@ CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     'https://ozsmanagement.com',
+    'https://www.ozsmanagement.com',
     'https://tbs-production.up.railway.app'
     'http://ozsmanagement.com',
+    'http://www.ozsmanagement.com',
     'http://tbs-production.up.railway.app'
     'ozsmanagement.com',
+    'www.ozsmanagement.com',
     'tbs-production.up.railway.app'
 ]
 
