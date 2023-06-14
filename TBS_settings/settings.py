@@ -3,6 +3,7 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# BASE_DIR = Path(__file__).resolve().parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -15,10 +16,10 @@ SECRET_KEY = 'django-insecure--m$x*8jdxs27&xjxekj62d5x*o+2oz_d@4ekix7gv-@d-u3gpd
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'tbs-production.up.railway.app',
+    'talabalar-boshqaruv-sistemasi.herokuapp.com',
     'ozsmanagement.com',
     'www.ozsmanagement.com',
-    '127.0.0.1'
+    '127.0.0.1',
 ]
 
 
@@ -35,6 +36,7 @@ INSTALLED_APPS = [
     # "debug_toolbar",
     'TBS_app',
     'phone_field', 
+    'storages'
 ]
 
 MIDDLEWARE = [
@@ -58,8 +60,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            "/home/html/tbs-production.up.railway.app.com",
-            "/home/html/default",
+            # "/home/html/tbs-production.up.railway.app.com",
+            # "/home/html/default",
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -139,10 +141,10 @@ else:
 
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 
 
-# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
@@ -168,7 +170,6 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     'https://ozsmanagement.com',
     'https://www.ozsmanagement.com',
-    'https://tbs-production.up.railway.app'
     'http://ozsmanagement.com',
     'http://www.ozsmanagement.com',
     'http://tbs-production.up.railway.app'
@@ -189,4 +190,40 @@ CORS_ORIGIN_WHITELIST = (
     'https://tbs-production.up.railway.app',
     'http://tbs-production.up.railway.app',
     'tbs-production.up.railway.app',
+    'talabalar-boshqaruv-sistemasi.herokuapp.com'
+    'https://talabalar-boshqaruv-sistemasi.herokuapp.com'
+    'http://talabalar-boshqaruv-sistemasi.herokuapp.com'
 )
+
+
+# # S3 
+# AWS_ACCESS_KEY_ID = 'AKIA5ETDILD6GADA524M'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'ozsmanagement'
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.eu-north-1.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+# MEDIAFILES_LOCATION = 'media'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+
+# STATICFILES_LOCATION = 'static'
+# MEDIAFILES_LOCATION = 'media'
+
+# AWS_ACCESS_KEY_ID = 'AKIA5ETDILD6GADA524M'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'ozsmanagement'
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = None
+# AWS_S3_HOST = 's3.eu-north-1.amazonaws.com'
+# AWS_S3_REGION_NAME = 'eu-north-1'
+
+# AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.eu-north-1.amazonaws.com'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+# MEDIA_ROOT = os.path.join (BASE_DIR, 'media')
+# STATIC_ROOT = os.path.join (BASE_DIR, 'static')
+
+# STATIC_URL = AWS_S3_CUSTOM_DOMAIN + '/static/' 
+# MEDIA_URL = AWS_S3_CUSTOM_DOMAIN + '/media/' 
