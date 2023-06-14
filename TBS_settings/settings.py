@@ -163,17 +163,24 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     'https://ozsmanagement.com',
     'https://tbs-production.up.railway.app'
+    'http://ozsmanagement.com',
+    'http://tbs-production.up.railway.app'
+    'ozsmanagement.com',
+    'tbs-production.up.railway.app'
 ]
 
 CORS_REPLACE_HTTPS_REFERER = True
 
-CSRF_COOKIE_DOMAIN = 'ozsmanagement.com'
+CSRF_COOKIE_DOMAIN = 'https://tbs-production.up.railway.app'
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
 
 CORS_ORIGIN_WHITELIST = (
     'https://ozsmanagement.com',
+    'http://ozsmanagement.com',
     'ozsmanagement.com',
     'https://tbs-production.up.railway.app',
+    'http://tbs-production.up.railway.app',
+    'tbs-production.up.railway.app',
 )
