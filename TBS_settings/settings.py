@@ -18,6 +18,7 @@ ALLOWED_HOSTS = [
     'tbs-production.up.railway.app',
     'ozsmanagement.com',
     'www.ozsmanagement.com',
+    '127.0.0.1'
 ]
 
 
@@ -171,9 +172,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://ozsmanagement.com',
     'http://www.ozsmanagement.com',
     'http://tbs-production.up.railway.app'
-    'ozsmanagement.com',
-    'www.ozsmanagement.com',
-    'tbs-production.up.railway.app'
+
 ]
 
 CORS_REPLACE_HTTPS_REFERER = True
