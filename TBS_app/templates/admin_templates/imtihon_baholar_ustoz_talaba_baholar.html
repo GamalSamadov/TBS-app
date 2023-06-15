@@ -230,6 +230,7 @@
         editable: true,
         droppable: true,
         eventLimit: true,
+        longPressDelay: 1,
         select: function(start, allDay) {
           var start = moment(start.startStr).format('YYYY-MM-DD HH:mm:ss');
           $('#addBaho').modal('toggle');
