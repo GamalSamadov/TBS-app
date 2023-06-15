@@ -168,14 +168,14 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://ozsmanagement.com',
-    'https://www.ozsmanagement.com',
-    'http://ozsmanagement.com',
-    'http://www.ozsmanagement.com',
-    'http://tbs-production.up.railway.app'
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://ozsmanagement.com',
+#     'https://www.ozsmanagement.com',
+#     'http://ozsmanagement.com',
+#     'http://www.ozsmanagement.com',
+#     'http://tbs-production.up.railway.app'
 
-]
+# ]
 
 CORS_REPLACE_HTTPS_REFERER = True
 
@@ -183,6 +183,10 @@ CSRF_COOKIE_DOMAIN = 'tbs-production.up.railway.app'
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
+
+
+CSRF_TRUSTED_ORIGINS = ['https://*.railway.app','https://*.127.0.0.1']
+
 
 CORS_ORIGIN_WHITELIST = (
     'https://ozsmanagement.com',
@@ -195,6 +199,8 @@ CORS_ORIGIN_WHITELIST = (
     'https://talabalar-boshqaruv-sistemasi.herokuapp.com'
     'http://talabalar-boshqaruv-sistemasi.herokuapp.com'
 )
+
+
 
 
 # # S3 
