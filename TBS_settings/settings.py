@@ -195,7 +195,6 @@ CORS_ORIGIN_WHITELIST = (
     'https://tbs-production.up.railway.app',
     'http://tbs-production.up.railway.app',
     'tbs-production.up.railway.app',
-    'talabalar-boshqaruv-sistemasi.herokuapp.com'
     'https://talabalar-boshqaruv-sistemasi.herokuapp.com'
     'http://talabalar-boshqaruv-sistemasi.herokuapp.com'
 )
