@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     # "debug_toolbar",
     'TBS_app',
     'phone_field', 
-    'storages'
+    # 'storages'
 ]
 
 MIDDLEWARE = [
