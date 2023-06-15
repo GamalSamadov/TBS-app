@@ -17,6 +17,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'talabalar-boshqaruv-sistemasi.herokuapp.com',
+    'tbs-production.up.railway.app',
     'ozsmanagement.com',
     'www.ozsmanagement.com',
     '127.0.0.1',
