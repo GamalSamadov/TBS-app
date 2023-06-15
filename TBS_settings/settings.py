@@ -176,7 +176,7 @@ CORS_ALLOW_CREDENTIALS = True
 #     'http://tbs-production.up.railway.app'
 
 # ]
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CORS_REPLACE_HTTPS_REFERER = True
 
 CSRF_COOKIE_DOMAIN = 'tbs-production.up.railway.app'
